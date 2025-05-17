@@ -32,7 +32,7 @@ public enum StatusBerichtVanBetaling {
      * @return De gevraagde "<i>Status</i> van betaling".
      * @throws IllegalStateException wanneer de status niet op basis van het volgordenummer kan worden gevonden.
      */
-    public static StatusBerichtVanBetaling fromVolgorde(int volgorde) {
+    public StatusBerichtVanBetaling fromVolgorde(int volgorde) {
         return Arrays.stream(values())
                 .filter(status -> status.getVolgorde() == volgorde)
                 .findFirst()
