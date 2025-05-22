@@ -15,7 +15,7 @@ public class EnumTests {
         StatusBerichtVanBetaling status = StatusBerichtVanBetaling.AANGEBODEN;
         assertEquals(2, status.getVolgorde(),1);
 
-        // Wanneer: Een status wordt opgevraagd op basis van het volgnummer.
+        // Wanneer: Een status wordt opgevraagd op basis van het volgnummer,
         // Dan:     Dient de betreffende status te worden geretourneerd.
         status = status.fromVolgorde(3);
         assertEquals(3, status.getVolgorde());

@@ -1,7 +1,3 @@
-# V1
-#
-#
-
 USE thieving_magpie;
 
 -- Client
@@ -131,24 +127,3 @@ BEGIN
     WHERE b.id = NEW.id;
 END;
 
-
-
-# -- Bericht van betaling
-# CREATE TABLE bericht_van_betaling
-# (
-#         id CHAR(36) PRIMARY KEY COMMENT 'Unieke identificatevan de betaling, uitgegeven door de applicatie als UUID.',
-#         betaling_id CHAR(36) NOT NULL COMMENT 'Verplicht te specificeren referentie naar de betaling waarop het bericht betrekking heeft.',
-#         dossier_id CHAR(36) NOT NULL COMMENT 'Verplichte referentie naar id van het dossier.',
-#         schuldeiser_id CHAR(36) NOT NULL COMMENT 'Verplichte referentie naar id van de schuldeiser.',
-#         status VARCHAR(50) NOT NULL COMMENT 'De actuele status van het bericht van betaling afkomstig van de enumeratie.',
-#         aangemaakt_op DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Het tijdstip waarop de betaling is aangemaakt. Wordt automatisch gespecificeerd bij het aanmaken van het bericht.',
-#         opmerking TEXT COMMENT 'Een eventuele toelichtig of aanvulling van de schuldhulpverlener met betrekkking tot de betaling',
-#
-#         FOREIGN KEY (dossier_id) REFERENCES dossier (id),
-#         FOREIGN KEY (schuldeiser_id) REFERENCES schuldeiser (id),
-#         FOREIGN KEY (betaling_id) REFERENCES betaling(id),
-#
-#         INDEX idx_bericht_van_betaling_dossier (dossier_id),
-#         INDEX idx_bericht_van_betaling_betaling (betaling_id),
-#         INDEX idx_bericht_van_betaling_schuldeiser (schuldeiser_id)
-# );
