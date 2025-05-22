@@ -1,9 +1,18 @@
+version: '3.8'
+
 services:
-  sqlserver:
-    image: 'mcr.microsoft.com/mssql/server:latest'
-    environment:
-      - 'ACCEPT_EULA=yes'
-      - 'MSSQL_PID=express'
-      - 'MSSQL_SA_PASSWORD=verYs3cret'
+  mysql:
+    image: mysql:9.1.0
+    container_name: magpie
     ports:
-      - '1433'
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: thieving-magpie
+      MYSQL_USER: hulpverlener
+      MYSQL_PASSWORD: #10Oliver$
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
