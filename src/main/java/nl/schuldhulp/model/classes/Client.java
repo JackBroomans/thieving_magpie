@@ -5,13 +5,14 @@ import lombok.*;
 
 import java.util.UUID;
 
+
 @Entity
 @Table(
-        name = "client",
-        indexes = {
-                @Index(name = "idx_client_clientnummer", columnList = "clientnummer"),
-                @Index(name = "idx_client_familienaam", columnList = "familienaam")
-        }
+    name = "client",
+    indexes = {
+        @Index(name = "idx_client_clientnummer", columnList = "clientnummer"),
+        @Index(name = "idx_client_familienaam", columnList = "familienaam")
+    }
 )
 @Data
 @NoArgsConstructor
