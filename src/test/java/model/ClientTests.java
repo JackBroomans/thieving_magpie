@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+import static nl.schuldhulp.functies.clientFuncties.isClientnummerGeldig;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = SchuldhulpApplication.class)
@@ -23,30 +24,66 @@ public class ClientTests {
     private ClientRepository clientRepository;
 
     @Test
+    public void clientNummerGeldigTest() {
+
+        // Wanneer: Een clientnummer is gegenereerd en het formaat is ongeldig,
+        // Dan:     Geeft de validatie 'false' terug.
+        // Bij:     Onvolledig datumdeel
+        String clientnummer = "25040-0000";
+        assertFalse(isClientnummerGeldig(clientnummer));
+        // Bij:     Ontbrekend koppelteken
+        clientnummer = "2505230116";
+        assertFalse(isClientnummerGeldig(clientnummer));
+        // Bij:     Ongeldig volgnummer (te lang, te kort of geen getal)
+        clientnummer = "250523-01234";
+        assertFalse(isClientnummerGeldig(clientnummer));
+        clientnummer = "250523-012";
+        assertFalse(isClientnummerGeldig(clientnummer));
+        clientnummer = "250523-A012";
+        assertFalse(isClientnummerGeldig(clientnummer));
+        // BIJ:     Datumdeel representeert geen bestaande datum
+        clientnummer = "251831-0011";
+        assertFalse(isClientnummerGeldig(clientnummer));
+
+
+        // Wanneer: Een clientnummer is gegenereeerd en het formaat is geldig,
+        // Dan:     Geeft de validatie 'true' terug.
+        clientnummer = "200523-0123";
+        assertTrue(isClientnummerGeldig(clientnummer));
+    }
+
+
+    @Test
     public void clientNieuwID() {
 
         // Wanneer: Een (nieuwe) cliënt wordt geinitieerd,
-        // Dan: Wordt er een nieuwe identiteit (UUID) toegekend als tekenreeks.
+        // Dan:     Wordt er een nieuwe identiteit (UUID) toegekend als tekenreeks.
         Client client = new Client();
         assertEquals(36, client.getId().length());
     }
 
+
     @Test
     public void testCRUD() {
-        // 1. Maak een nieuwe client aan en specifieer de attributen
-        Client client = Client.builder()
+
+        // 1. Nieuwe client aan en specifieer de attributen
+
+        // Wanneer: Een nieuwe client wordt aangemaakt en één van de verplichte attributen is niet gespecificeerd.
+        // Dan:     Wordt een 'DataIntegrityViolationException' gegenereerd.
+        //
+        Client clientPuk = Client.builder()
                 .id(UUID.randomUUID().toString())
-                .clientnummer("12345678901234")
                 .familienaam("Petteflat")
                 .voorvoegsels("van de")
                 .voorletters("Puk")
                 .build();
+        clientPuk.setClientnummer("250523-0001");
 
-        client = clientRepository.save(client);
-        String id = client.getId();
+        clientPuk = clientRepository.save(clientPuk);
 
+        String id = clientPuk.getId();
         assertNotNull(id);
-        assertEquals(36, client.getId().length());
+        assertEquals(36, clientPuk.getId().length());
 
         // 2. Read
         Client fetched = clientRepository.findById(id).orElse(null);
