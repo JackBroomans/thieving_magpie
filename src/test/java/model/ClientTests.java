@@ -1,5 +1,5 @@
 package model;
-
+import nl.schuldhulp.functies.clientFuncties.*;
 import nl.schuldhulp.SchuldhulpApplication;
 import nl.schuldhulp.model.repository.ClientRepository;
 import nl.schuldhulp.model.classes.Client;
@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+import static nl.schuldhulp.functies.clientFuncties.isClientnummerGeldig;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = SchuldhulpApplication.class)
@@ -84,7 +85,7 @@ public class ClientTests {
         //
         Client clientPuk = Client.builder()
                 .id(UUID.randomUUID().toString())
-                .clientnummer("12345678901234")
+                .clientnummer("250228-0001")
                 .familienaam("Petteflat")
                 .voorvoegsels("van de")
                 .voorletters("Puk")
@@ -92,11 +93,11 @@ public class ClientTests {
 
         clientPuk = clientRepository.save(clientPuk);
 
-        assertNotNull(id);
+        assertNotNull(clientPuk.getId());
         assertEquals(36, clientPuk.getId().length());
 
         // 2. Read
-        Client fetched = clientRepository.findById(id).orElse(null);
+        Client fetched = clientRepository.findById(clientPuk.getId()).orElse(null);
         assertNotNull(fetched);
         assertEquals("Petteflat", fetched.getFamilienaam());
 
@@ -104,12 +105,12 @@ public class ClientTests {
         fetched.setFamilienaam("Kraanwagen");
         clientRepository.save(fetched);
 
-        Client updated = clientRepository.findById(id).orElse(null);
+        Client updated = clientRepository.findById(clientPuk.getId()).orElse(null);
         assertEquals("Kraanwagen", updated.getFamilienaam());
         assertEquals("Puk", updated.getVoorletters());
 
         // 4. Verwijder de cliënt
-        clientRepository.deleteById(id);
-        assertFalse(clientRepository.existsById(id));
+        clientRepository.deleteById(clientPuk.getId());
+        assertFalse(clientRepository.existsById(clientPuk.getId()));
     }
 }
