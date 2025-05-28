@@ -1,11 +1,10 @@
 package nl.schuldhulp.model.repository;
 
-import nl.schuldhulp.model.classes.Client;
+import nl.schuldhulp.model.classes.Clientnummers;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ClientRepository extends JpaRepository<Client, String> {
+public interface ClientnummersRepository extends JpaRepository<Clientnummers, String> {
 
 }
-

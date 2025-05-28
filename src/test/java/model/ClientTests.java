@@ -24,7 +24,7 @@ public class ClientTests {
     private ClientRepository clientRepository;
 
     @Test
-    public void clientNummerGeldigTest() {
+    public void isClientnummerGeldigTest() {
 
         // Wanneer: Een clientnummer is gegenereerd en het formaat is ongeldig,
         // Dan:     Geeft de validatie 'false' terug.
@@ -45,11 +45,23 @@ public class ClientTests {
         clientnummer = "251831-0011";
         assertFalse(isClientnummerGeldig(clientnummer));
 
-
         // Wanneer: Een clientnummer is gegenereeerd en het formaat is geldig,
         // Dan:     Geeft de validatie 'true' terug.
         clientnummer = "200523-0123";
         assertTrue(isClientnummerGeldig(clientnummer));
+    }
+
+    @Test
+    public void getNieuwClientnummerTest() {
+        // Wanneer: Een nieuw klantnummer wordt aangevraagd,
+        // En:      Er is geen client op dezelfde dag aangemeld
+        // Dan:     Voldoet het klantnummer aan het juiste formaat en is nummer 0001 toegevoegd.
+
+        // Wanneer: Een nieuw klantnummer wordt aangevraagd,
+        // En:      Er is een client op dezelfde dag aangemeld
+        // Dan:     Wordt de huidige datum omgevormd tot de juiste reeks van zes cijfers, wordt het koppelteken
+        //          toegevoegd en het hoogste uitgegeven client nummer van die dag met één verhoogd en aan het
+        //          clientnummer toegevoegd. (0002).
     }
 
 
