@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static nl.schuldhulp.functies.clientFuncties.isClientnummerGeldig;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = SchuldhulpApplication.class)
@@ -85,15 +84,14 @@ public class ClientTests {
         //
         Client clientPuk = Client.builder()
                 .id(UUID.randomUUID().toString())
+                .clientnummer("12345678901234")
                 .familienaam("Petteflat")
                 .voorvoegsels("van de")
                 .voorletters("Puk")
                 .build();
-        clientPuk.setClientnummer("250523-0001");
 
         clientPuk = clientRepository.save(clientPuk);
 
-        String id = clientPuk.getId();
         assertNotNull(id);
         assertEquals(36, clientPuk.getId().length());
 
