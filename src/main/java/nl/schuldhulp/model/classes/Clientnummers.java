@@ -25,7 +25,7 @@ public class Clientnummers {
     @Override
     public String toString() {
         return "Clientnummer:\n\t" +
-            "Datumdeel: " + (this.datumCode == null ? "" : this.datumCode) + "\n\t" +
-            "Volgnummer (int): " + this.volgnummer + "\n\n";
+            "Datumdeel = " + (this.datumCode == null ? "" : this.datumCode) + "\n\t" +
+            "Volgnummer (int) = " + this.volgnummer + "\n\n";
     }
 }

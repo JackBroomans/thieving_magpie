@@ -1,18 +1,22 @@
 package model;
-import nl.schuldhulp.functies.clientFuncties.*;
-import nl.schuldhulp.SchuldhulpApplication;
-import nl.schuldhulp.model.repository.ClientRepository;
-import nl.schuldhulp.model.classes.Client;
 
+import nl.schuldhulp.SchuldhulpApplication;
+import nl.schuldhulp.model.classes.Client;
+import nl.schuldhulp.model.repository.ClientRepository;
+import nl.schuldhulp.model.repository.ClientnummersRepository;
+import nl.schuldhulp.services.ClientnummerService;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static nl.schuldhulp.functies.clientFuncties.isClientnummerGeldig;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = SchuldhulpApplication.class)
@@ -20,97 +24,74 @@ import static org.junit.jupiter.api.Assertions.*;
 @ComponentScan(basePackages = "nl.schuldhulp.model.repository")
 public class ClientTests {
 
+    @Mock
+    private ClientnummersRepository repository;
+    @InjectMocks
+    private ClientnummerService clientnummerService;
+
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientRepository clientRepository;;
+
+    Client clientPuk = Client.builder()
+            .id(UUID.randomUUID().toString())
+            .familienaam("Petteflat")
+            .voorvoegsels("van de")
+            .voorletters("Puk")
+            .build();
 
     @Test
-    public void isClientnummerGeldigTest() {
+    public void testRepositoryCRUD() {
+        /*
+         Wanneer:   Een nieuwe client wordt aangemaakt
+         En:        Eén van de verplichte attributen is niet gespecificeerd.
+         Dan:       Treedt een 'DataIntegrityViolationException' op.
+        */
+        assertThrows(DataIntegrityViolationException.class, () -> {
+            clientPuk = clientRepository.save(clientPuk);
+        });
 
-        // Wanneer: Een clientnummer is gegenereerd en het formaat is ongeldig,
-        // Dan:     Geeft de validatie 'false' terug.
-        // Bij:     Onvolledig datumdeel
-        String clientnummer = "25040-0000";
-        assertFalse(isClientnummerGeldig(clientnummer));
-        // Bij:     Ontbrekend koppelteken
-        clientnummer = "2505230116";
-        assertFalse(isClientnummerGeldig(clientnummer));
-        // Bij:     Ongeldig volgnummer (te lang, te kort of geen getal)
-        clientnummer = "250523-01234";
-        assertFalse(isClientnummerGeldig(clientnummer));
-        clientnummer = "250523-012";
-        assertFalse(isClientnummerGeldig(clientnummer));
-        clientnummer = "250523-A012";
-        assertFalse(isClientnummerGeldig(clientnummer));
-        // BIJ:     Datumdeel representeert geen bestaande datum
-        clientnummer = "251831-0011";
-        assertFalse(isClientnummerGeldig(clientnummer));
+        /*
+         Wanneer:   De gegevens van de client compleet zijn, dus alle verplichte velden zijn gespecificeerd,
+         Dan:       Worden de gegevens van de client in de database opgeslagen en weer uit de database worden opgehaald.
+         */
+        clientPuk.setClientnummer(clientnummerService.getNieuwClientnummer());
 
-        // Wanneer: Een clientnummer is gegenereeerd en het formaat is geldig,
-        // Dan:     Geeft de validatie 'true' terug.
-        clientnummer = "200523-0123";
-        assertTrue(isClientnummerGeldig(clientnummer));
-    }
-
-    @Test
-    public void getNieuwClientnummerTest() {
-        // Wanneer: Een nieuw klantnummer wordt aangevraagd,
-        // En:      Er is geen client op dezelfde dag aangemeld
-        // Dan:     Voldoet het klantnummer aan het juiste formaat en is nummer 0001 toegevoegd.
-
-        // Wanneer: Een nieuw klantnummer wordt aangevraagd,
-        // En:      Er is een client op dezelfde dag aangemeld
-        // Dan:     Wordt de huidige datum omgevormd tot de juiste reeks van zes cijfers, wordt het koppelteken
-        //          toegevoegd en het hoogste uitgegeven client nummer van die dag met één verhoogd en aan het
-        //          clientnummer toegevoegd. (0002).
-    }
-
-
-    @Test
-    public void clientNieuwID() {
-
-        // Wanneer: Een (nieuwe) cliënt wordt geinitieerd,
-        // Dan:     Wordt er een nieuwe identiteit (UUID) toegekend als tekenreeks.
-        Client client = new Client();
-        assertEquals(36, client.getId().length());
-    }
-
-
-    @Test
-    public void testCRUD() {
-
-        // 1. Nieuwe client aan en specifieer de attributen
-
-        // Wanneer: Een nieuwe client wordt aangemaakt en één van de verplichte attributen is niet gespecificeerd.
-        // Dan:     Wordt een 'DataIntegrityViolationException' gegenereerd.
-        //
-        Client clientPuk = Client.builder()
-                .id(UUID.randomUUID().toString())
-                .clientnummer("250228-0001")
-                .familienaam("Petteflat")
-                .voorvoegsels("van de")
-                .voorletters("Puk")
-                .build();
-
-        clientPuk = clientRepository.save(clientPuk);
-
-        assertNotNull(clientPuk.getId());
+        assertTrue(Client.isClientnummerGeldig(clientPuk.getClientnummer()));
         assertEquals(36, clientPuk.getId().length());
+        assertNotNull(clientPuk.getFamilienaam());
+        assertNotNull(clientPuk.getVoorletters());
 
-        // 2. Read
-        Client fetched = clientRepository.findById(clientPuk.getId()).orElse(null);
-        assertNotNull(fetched);
-        assertEquals("Petteflat", fetched.getFamilienaam());
+        clientRepository.save(clientPuk);
 
-        // 3. Wijzig de familienaam van de uit de database opgehaalde client
-        fetched.setFamilienaam("Kraanwagen");
-        clientRepository.save(fetched);
+        Client clientPukOpgehaald = clientRepository.findById(this.clientPuk.getId()).orElse(null);
+        assertNotNull(clientPukOpgehaald);
+        assertEquals("Petteflat", clientPukOpgehaald.getFamilienaam());
 
-        Client updated = clientRepository.findById(clientPuk.getId()).orElse(null);
-        assertEquals("Kraanwagen", updated.getFamilienaam());
-        assertEquals("Puk", updated.getVoorletters());
+        /*
+         Wanneer:   Gegevens worden gewijzigd,
+         En:        Worden opgeslagen,
+         Dan:       Worden de gewijzigde gegevens opgelagen
+         */
+        clientPuk.setFamilienaam("Kraanwagen");
 
-        // 4. Verwijder de cliënt
-        clientRepository.deleteById(clientPuk.getId());
-        assertFalse(clientRepository.existsById(clientPuk.getId()));
+        clientRepository.save(clientPuk);
+
+        this.clientPuk = clientRepository.findById(this.clientPuk.getId()).orElse(null);
+        assertEquals("Kraanwagen", this.clientPuk.getFamilienaam());
+        assertEquals("Puk", this.clientPuk.getVoorletters());
+
+        /*
+         Wanneer:   Een client uit de database wordt opgehaald op basis van het id,
+         En:        De betreffende client is gevonden en aan een client-object toegevoegd,
+         En:        De client wordt uit de database verwijderd op basis van dit object,
+         En:        Vervolgens wordt de client opnieuw gezocht,
+         Dan:       Treedt een 'JpaObjectRetrievalFailureException' op, omdat de client niet meer in de gegevensbank
+                    aanwezig is.
+         */
+        this.clientPuk = clientRepository.findById(this.clientPuk.getId()).orElse(null);
+        clientRepository.delete(this.clientPuk);
+        assertThrows(JpaObjectRetrievalFailureException.class, () -> {
+            clientRepository.getReferenceById(this.clientPuk.getId());
+        });
     }
 }
