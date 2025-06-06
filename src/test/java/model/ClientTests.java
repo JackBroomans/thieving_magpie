@@ -1,5 +1,6 @@
 package model;
 
+import lombok.Builder;
 import nl.schuldhulp.SchuldhulpApplication;
 import nl.schuldhulp.model.classes.Client;
 import nl.schuldhulp.model.repository.ClientRepository;
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ComponentScan
 @SpringBootTest(classes = SchuldhulpApplication.class)
 @Transactional
 @ComponentScan(basePackages = "nl.schuldhulp.model.repository")

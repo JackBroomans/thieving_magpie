@@ -2,10 +2,13 @@ package nl.schuldhulp.model.classes;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Entity
 @Table(
@@ -16,12 +19,11 @@ import java.util.UUID;
     }
 )
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Getter
 @Setter
+@Builder
 public class Client {
 
     // Basisvorm: jjmmdd-nnnn
@@ -45,7 +47,19 @@ public class Client {
 
     @Column(length = 31)
     private String voorletters;
-/**
+
+    @Column(length = 31)
+    private String aanhef;
+
+    public String getFamilienaam() {
+        return familienaam;
+    }
+
+    public void setFamilienaam(String familienaam) {
+        this.familienaam = familienaam;
+    }
+
+    /**
         * <strong>isClientnummerGeldig<i>(String)</i></strong>
             * Valideert een cliëntnummer of dit aan de eisen voldoet. Er wordt op de volgende punten gevalideerd:
             * <ul>
