@@ -1,4 +1,4 @@
-USE thieving_magpie;
+USE schuldhulp;
 
 -- Koppeltabel om veel-op-veel relatie te implementeren
 CREATE TABLE schuldeiser_dossier (

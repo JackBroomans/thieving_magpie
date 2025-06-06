@@ -1,4 +1,4 @@
-use thieving_magpie;
+use schuldhulp;
 
 ALTER TABLE client
     RENAME COLUMN voorvoegsel to voorvoegsels;

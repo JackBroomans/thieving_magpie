@@ -4,11 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.UUID;
-import java.util.regex.Pattern;
-
 
 @Entity
 @Table(
@@ -22,6 +19,7 @@ import java.util.regex.Pattern;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class Client {
@@ -31,6 +29,8 @@ public class Client {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(length = 36, nullable = false)
     private String id = UUID.randomUUID().toString();
 
@@ -45,18 +45,14 @@ public class Client {
 
     @Column(length = 31)
     private String voorletters;
-
-    @Column(length = 31)
-    private String aanhef;
-
-   /**
-     * <strong>isClientnummerGeldig<i>(String)</i></strong>
-     * Valideert een cliëntnummer of dit aan de eisen voldoet. Er wordt op de volgende punten gevalideerd:
-     * <ul>
+/**
+        * <strong>isClientnummerGeldig<i>(String)</i></strong>
+            * Valideert een cliëntnummer of dit aan de eisen voldoet. Er wordt op de volgende punten gevalideerd:
+            * <ul>
      *      <li>Het formaat voldoet, met eenreguliere expressie (jjmmdd-nnnn).</li>
-     *      <li>Het datumdeel is gebaseerd op een bestaande datum.</li>
-     * </ul>
-     * @param clientnummer Tekenreeks van het te controleren cliëntnummer.
+            *      <li>Het datumdeel is gebaseerd op een bestaande datum.</li>
+            * </ul>
+            * @param clientnummer Tekenreeks van het te controleren cliëntnummer.
      * @return <i>true</i> wanneer hel cliëntnummer geldig is, anders  wordt <i>false</i> geretourneerd.
      */
     public static boolean isClientnummerGeldig(String clientnummer) {
@@ -77,11 +73,11 @@ public class Client {
     @Override
     public String toString() {
         return "Client:\n\t" +
-            "Id = " + this.id + "\n\t" +
-            "Clientnummer = " + (this.clientnummer == null ? "" : this.clientnummer) + "\n\t" +
-            "Familienaam = " + (this.familienaam == null ? "" : this.familienaam) + "\n\t" +
-            "Voorvoegsels = " + (this.voorvoegsels == null ? "" : this.voorvoegsels) + "\n\t" +
-            "Voorletters = " + (this.voorletters == null ? "" : this.voorletters) + "\n\t" +
-            "Aanhef = " + (this.aanhef == null ? "" : this.aanhef) + "\n\n";
+                "Id = " + this.id + "\n\t" +
+                "Clientnummer = " + (this.clientnummer == null ? "" : this.clientnummer) + "\n\t" +
+                "Familienaam = " + (this.familienaam == null ? "" : this.familienaam) + "\n\t" +
+                "Voorvoegsels = " + (this.voorvoegsels == null ? "" : this.voorvoegsels) + "\n\t" +
+                "Voorletters = " + (this.voorletters == null ? "" : this.voorletters) + "\n\t" +
+                "Aanhef = " + (this.aanhef == null ? "" : this.aanhef) + "\n\n";
     }
 }
