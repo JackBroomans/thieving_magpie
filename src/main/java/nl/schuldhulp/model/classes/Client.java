@@ -2,7 +2,6 @@ package nl.schuldhulp.model.classes;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
