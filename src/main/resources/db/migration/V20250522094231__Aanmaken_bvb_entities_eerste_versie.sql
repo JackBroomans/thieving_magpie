@@ -1,4 +1,4 @@
-USE thieving_magpie;
+USE schuldhulp;
 
 -- Client
 CREATE TABLE client (

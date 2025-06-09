@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -34,7 +35,10 @@ public class Client {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(length = 36, nullable = false)
-    private String id = UUID.randomUUID().toString();
+    private String id;
+    @Version
+    @Column(nullable = false)
+    private Timestamp version;
 
     @Column(length = 11, nullable = false)
     private String clientnummer;
