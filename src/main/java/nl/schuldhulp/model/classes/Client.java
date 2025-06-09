@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Entity
@@ -64,13 +63,13 @@ public class Client {
     }
 
     /**
-        * <strong>isClientnummerGeldig<i>(String)</i></strong>
-            * Valideert een cliëntnummer of dit aan de eisen voldoet. Er wordt op de volgende punten gevalideerd:
-            * <ul>
+     * <strong>isClientnummerGeldig<i>(String)</i></strong>
+     * Valideert een cliëntnummer of dit aan de eisen voldoet. Er wordt op de volgende punten gevalideerd:
+     * <ul>
      *      <li>Het formaat voldoet, met eenreguliere expressie (jjmmdd-nnnn).</li>
-            *      <li>Het datumdeel is gebaseerd op een bestaande datum.</li>
-            * </ul>
-            * @param clientnummer Tekenreeks van het te controleren cliëntnummer.
+     *      <li>Het datumdeel is gebaseerd op een bestaande datum.</li>
+     * </ul>
+     * @param clientnummer Tekenreeks van het te controleren cliëntnummer.
      * @return <i>true</i> wanneer hel cliëntnummer geldig is, anders  wordt <i>false</i> geretourneerd.
      */
     public static boolean isClientnummerGeldig(String clientnummer) {
