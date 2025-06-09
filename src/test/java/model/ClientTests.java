@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("SpellCheckingInspection")
 @ComponentScan
 @SpringBootTest(classes = SchuldhulpApplication.class)
 @Transactional
@@ -25,11 +26,12 @@ public class ClientTests {
 
     @Mock
     private ClientnummersRepository repository;
+
     @InjectMocks
     private ClientnummerService clientnummerService;
 
     @Autowired
-    private ClientRepository clientRepository;;
+    private ClientRepository clientRepository;
 
     Client clientPuk = Client.builder()
             .familienaam("Petteflat")
