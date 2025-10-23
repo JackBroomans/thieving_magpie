@@ -9,11 +9,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
-// todo: 23-10-2025 Unit test the Lombok Getters of the attributes of entity class 'backend.model.entities.Person'
-// todo: 24-10-2025 Associate attributes of entity class 'backend.model.entities.Person' with the corresponding database table 'postgres.thieving.person' columns.
-// todo: 23-10-2025 Implement a method 'toPrettyString()' in entity class 'backend.model.entities.Person' to show the properties of the current enumerated value in an easy readable manner.
-// todo: 23-10-2025 Add Javadoc for entity class 'backend.model.entities.Person'.
-// todo: 25-10-2025 Document mapping between entity class 'backend.model.entities.Person' and database table 'postgres.thieving.person'.
 @Getter
 @Entity
 public abstract class Person {
@@ -56,4 +51,20 @@ public abstract class Person {
     private Instant createdAt = Instant.now();
     private Instant updatedAt;
 
+    /**
+     * <strong>toPrettyString(<i></i>)</strong><br><br>
+     * Converts the person's object current instance to an easy readable format.
+     */
+    public String toPrettyString() {
+        return "Class: " + this.getClass().getName() + "\n" +
+                "\tId: " + this.getId() == null ? "-" : this.getId().toString() +
+                "\tFamily name: " + this.familyName == null  ? "-" : this.familyName +
+                "\tPrefix(es) (name): " + this.prefixesFamilyName == null ? "-" : this.prefixesFamilyName +
+                "\tGiven name: " + this.givenName == null ? "-" : this.givenName +
+                "\tInitials: " + this.surnames == null ? "-" : this.surnames +
+                "\tNick name: " + this.nickName == null ? "-" : this.nickName +
+                "\tPrefix(es) (titles): " + this.namePrefixes == null ? "-" : this.namePrefixes +
+                "\tSuffix(es): " + this.nameSuffixes == null ? "-" : this.nameSuffixes +
+                "\tFamily name: " + this.preferredNameUse == null ? "-" : this.preferredNameUse.getDisplayName();
+    }
 }
