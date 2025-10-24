@@ -52,12 +52,12 @@ public abstract class Person {
     private Instant updatedAt;
 
     /**
-     * <strong>toPrettyString(<i></i>)</strong><br><br>
-     * Converts the person's object current instance to an easy readable format.
+     * <strong>toPrettyString(<i></i>)</strong> (method)<br><br>
+     * Assembles the person's object attributes from current instance and converts them into an easy readable format.
      */
     public String toPrettyString() {
-        return "Class: " + this.getClass().getName() + "\n" +
-                "\tId: " + this.getId() == null ? "-" : this.getId().toString() +
+        return "Class: PreferredNameUses\n" +
+                "\tId: " + this.id.toString() +
                 "\tFamily name: " + this.familyName == null  ? "-" : this.familyName +
                 "\tPrefix(es) (name): " + this.prefixesFamilyName == null ? "-" : this.prefixesFamilyName +
                 "\tGiven name: " + this.givenName == null ? "-" : this.givenName +
@@ -65,6 +65,6 @@ public abstract class Person {
                 "\tNick name: " + this.nickName == null ? "-" : this.nickName +
                 "\tPrefix(es) (titles): " + this.namePrefixes == null ? "-" : this.namePrefixes +
                 "\tSuffix(es): " + this.nameSuffixes == null ? "-" : this.nameSuffixes +
-                "\tFamily name: " + this.preferredNameUse == null ? "-" : this.preferredNameUse.getDisplayName();
+                "\tFamily name: " + this.preferredNameUse.getDisplayName();
     }
 }
