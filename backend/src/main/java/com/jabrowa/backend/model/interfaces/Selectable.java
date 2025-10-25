@@ -2,15 +2,17 @@ package com.jabrowa.backend.model.interfaces;
 
 /**
  * <strong>Selectable</strong> - interface<br><br>
- * This interface must be implemented by each enumerator which applies a default setting for an element which can be
- * pre-selected. It forces to implement:
- * <ul>
- *     <li>An attribute which points to the element what is set as the default one, enabling pre-selection.</li>
- *     <li>A (setter) method, which sets the isSelected flag when an element is selected.</li>
- * </ul>
+ * This interface should be implemented by each enumerator that contains:
+ * <ol>
+ *     <li>A default marking for a particular constant, so this constant can be pre-selected, and</li>
+ *     <li>A default marking for a particular constant, so this constant can be pre-selected.</li>
+ *
+ *
+ * </ol> It also subscribes
  */
 public interface Selectable {
-    boolean defaultElement();
+    Boolean isDefaultValue();
+    String getDisplay();
 
-    void selectDefaultElement();
 }
+

@@ -65,6 +65,6 @@ public abstract class Person {
                 "\tNick name: " + this.nickName == null ? "-" : this.nickName +
                 "\tPrefix(es) (titles): " + this.namePrefixes == null ? "-" : this.namePrefixes +
                 "\tSuffix(es): " + this.nameSuffixes == null ? "-" : this.nameSuffixes +
-                "\tFamily name: " + this.preferredNameUse.getDisplayName();
+                "\tName use: " + this.preferredNameUse.getDisplay();
     }
 }

@@ -1,5 +1,6 @@
 package com.jabrowa.backend.model.enums;
 
+import com.jabrowa.backend.model.interfaces.Selectable;
 import lombok.Getter;
 
 /**
@@ -19,23 +20,28 @@ import lombok.Getter;
  * When both parts exist and are applied, they will be separated by a hyphen.
  */
 @Getter
-public enum PreferredNameUses {
+public enum PreferredNameUses implements Selectable {
     GIVEN_NAME_ONLY ("", true),
     FAMILY_NAME_AND_GIVEN_NAME ("", false),
     GIVEN_NAME_AND_FAMILY_NAME("", false),
     FAMILY_NAME_ONLY("", false);
 
-    private String displayName;
-    private boolean isDefault;
-    PreferredNameUses(String displayName, boolean isDefault) {
-        this.displayName = displayName;
-        this.isDefault = isDefault;
+    private String display;
+    private boolean isDefaultValue;
+    PreferredNameUses(String display, boolean isDefault) {
+        this.display = display;
+        this.isDefaultValue = isDefault;
     }
 
-    public PreferredNameUses getDefaultsSetting() {
-
+    /**
+     * <strong>selectDefault</strong>()<br><br>
+     * Retrieves the default set PreferredNameUses value based on its default setting.
+     *
+     * @return The default set PreferredNameUses. When there's no element set as default, <i>null</i> is returned.
+     */
+    public Boolean isDefaultValue() {
+        return isDefaultValue;
     }
-
 
 
     /**
@@ -43,9 +49,9 @@ public enum PreferredNameUses {
      * Assembles the person's object attributes from current instance and converts them into an easy readable format.
      */
     public String toPrettyString() {
-        return "Enumerator: PreferredNameUses" + "\n" +
+        return "Enumerator: " + this.getClass().getName() + "\n" +
                 "\tOption:          " + this.name() + "\n" +
-                "\tDisplay name:    " + this.displayName + "\n" +
-                "\tDefault setting: " + (this.isDefault ? "Yes" : "No");
+                "\tDisplay name:    " + this.display + "\n" +
+                "\tDefault setting: " + (this.isDefaultValue ? "Yes" : "No");
     }
 }

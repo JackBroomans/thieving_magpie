@@ -1,11 +1,13 @@
 package com.jabrowa.backend.model.entities;
 
+import com.jabrowa.backend.model.enums.UserRoles;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -37,7 +39,7 @@ public class Users {
     private boolean twoFactorEnabled = false;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<UserRole> roles = new HashSet<>();
+    private Set<UserRoles> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<TwoFactorCredential> twoFactorCredentials = new HashSet<>();
