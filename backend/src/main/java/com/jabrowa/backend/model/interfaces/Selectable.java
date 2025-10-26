@@ -6,13 +6,14 @@ package com.jabrowa.backend.model.interfaces;
  * <ol>
  *     <li>A default marking for a particular constant, so this constant can be pre-selected, and</li>
  *     <li>A default marking for a particular constant, so this constant can be pre-selected.</li>
- *
- *
- * </ol> It also subscribes
+ * </ol>
  */
 public interface Selectable {
     Boolean isDefaultValue();
     String getDisplay();
+
+    Enum selectDefault();
+    String toPrettyString();
 
 }
 

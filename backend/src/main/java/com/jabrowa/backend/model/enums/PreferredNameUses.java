@@ -1,6 +1,7 @@
 package com.jabrowa.backend.model.enums;
 
 import com.jabrowa.backend.model.interfaces.Selectable;
+import com.jabrowa.backend.utilities.EnumUtilities;
 import lombok.Getter;
 
 /**
@@ -8,23 +9,21 @@ import lombok.Getter;
  * Enumerator which contains the options to use the given- and the family names in a particular way, according to the
  * meet the legal preferences offered. The following options are available:
  * <ul>
- *     <li>Use of only the given name. The family name (partner's name) is ignored. However when the given name is not
- *     specified, then the family name is used.</li>
- *     <li>Using family name followed by the given name. When one of the two name components aren't specified, then it
- *     will be ignored.</li>
- *     <li>Given name followed by the family name. When one of the two name components aren't specified, then it
+ *     <li>Using the given name only. The partner's name is ignored. However when the given name is not specified,
+ *     then the family name of the partner is used.</li>
+ *     <li>Using the family name of the partner followed by the given name.</li>
+ *     <li>Given name followed by the family name of the partner. When one of the two name components aren't specified, then it
  *     will be ignored. </li>
- *     <li>Use of the family name only.The given name (namegiven at birth) is ignored. However when the family name is
+ *     <li>Use of the family name of the partner only.The given name is ignored. However when the family name is
  *     not specified, then the family name is used.</li>
  * </ul>
- * When both parts exist and are applied, they will be separated by a hyphen.
  */
 @Getter
 public enum PreferredNameUses implements Selectable {
-    GIVEN_NAME_ONLY ("", true),
-    FAMILY_NAME_AND_GIVEN_NAME ("", false),
-    GIVEN_NAME_AND_FAMILY_NAME("", false),
-    FAMILY_NAME_ONLY("", false);
+    GIVEN_NAME_ONLY ("Alleen geboortenaam.", true),
+    FAMILY_NAME_AND_GIVEN_NAME ("Naam partner gevolgd door geboortenaam.", false),
+    GIVEN_NAME_AND_FAMILY_NAME("Geboortenaam gevolgd door naam partner.", false),
+    FAMILY_NAME_ONLY("Alleen naam partner.", false);
 
     private String display;
     private boolean isDefaultValue;
@@ -43,15 +42,27 @@ public enum PreferredNameUses implements Selectable {
         return isDefaultValue;
     }
 
+    @Override
+    public String getDisplay() { return this.display; }
+
+
+    /**
+     * <strong>(<i></i>)</strong><br><br>
+     * @return
+     */
+    public PreferredNameUses selectDefault() {
+        return EnumUtilities.selectDefault(PreferredNameUses.class);
+    }
+
 
     /**
      * <strong>toPrettyString(<i></i>)</strong><br><br>
      * Assembles the person's object attributes from current instance and converts them into an easy readable format.
      */
     public String toPrettyString() {
-        return "Enumerator: " + this.getClass().getName() + "\n" +
-                "\tOption:          " + this.name() + "\n" +
+        return "\nEnumerator: " + this.getClass().getSimpleName() + "\n" +
+                "\tConstant:        " + this.name() + "\n" +
                 "\tDisplay name:    " + this.display + "\n" +
-                "\tDefault setting: " + (this.isDefaultValue ? "Yes" : "No");
+                "\tDefault setting: " + (this.isDefaultValue ? "Ja" : "Nee");
     }
 }

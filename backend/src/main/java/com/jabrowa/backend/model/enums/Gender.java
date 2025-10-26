@@ -1,7 +1,7 @@
 package com.jabrowa.backend.model.enums;
 
 import com.jabrowa.backend.model.interfaces.Selectable;
-import lombok.Getter;
+import com.jabrowa.backend.utilities.EnumUtilities;
 
 // done: 23-10-2025 Add attributes 'displayName', and 'isDefault' to the enumerator 'backend.model.enums.Gender'
 // todo: 23-10-2025 Implement the getters for the enumerator attributes of enumerator 'backend.model.enums,Gender'.
@@ -10,7 +10,6 @@ import lombok.Getter;
 // todo: 23-10-2025 Add the Javadoc for the enumerator 'backend.model.enums.Gender'.
 // todo: 23-10-2025 Unit test the Lombok generated getters for the attributes of enumerator 'backend.model.enums.Gender'.
 // todo: 23-10-2025 Unit test the methods 'selectDefault()' and 'toPrettyString()' in enumerator 'backend.model.enums.Gender'.
-@Getter
 public enum Gender implements Selectable {
     MALE ("Man", false),
     FEMALE ("Vrouw", false),
@@ -25,17 +24,20 @@ public enum Gender implements Selectable {
         this.display = display;
         this.isDefaultValue = isDefault;
     }
+    public Boolean isDefaultValue() { return isDefaultValue; }
+    public String getDisplay() { return display; }
 
     /**
      * <strong>SelectDefault</strong>()<br><br>
-     * Retrieves the default marked Gender constant, based on its default setting.
+     * Selects the default marked Gender constant.
      * @return The default marked Gender constant. When there's no constant is marked as default, <i>null</i> is
      * returned, and when several constants are marked as default, the ordinal first is returned.
+     * @throws RuntimeException When the generic selection of the default marked constant fails due to the missing
+     *                          isDefault() argument.
      */
-    public Boolean isDefaultValue() {
-        return isDefaultValue;
+    public Gender selectDefault() throws RuntimeException {
+        return EnumUtilities.selectDefault(Gender.class);
     }
-
 
     /**
      * <strong>toPrettyString(<i></i>)</strong><br><br>
@@ -43,7 +45,7 @@ public enum Gender implements Selectable {
      *  an easy readable format.
      */
     public String toPrettyString() {
-        return "Class: " + this.getClass().getName() + "\n" +
+        return "\nClass: " + this.getClass().getSimpleName() + "\n" +
                 "\tOption:          " + this.name() + "\n" +
                 "\tDisplay name:    " + this.display + "\n" +
                 "\tDefault setting: " + (this.isDefaultValue() ? "Yes" : "No");

@@ -3,6 +3,7 @@ package com.jabrowa.backend.utilities;
 import java.text.Normalizer;
 import java.util.regex.PatternSyntaxException;
 
+// todo: Plan the (temporary completion of the StringUtilities() utilty class
 public class StringUtilities {
 
     /**

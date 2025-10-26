@@ -3,13 +3,17 @@ package com.jabrowa.backend.model.entities;
 import com.jabrowa.backend.model.enums.Gender;
 import com.jabrowa.backend.model.enums.PreferredNameUses;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
+@Setter
 @Entity
 public abstract class Person {
 
@@ -21,7 +25,7 @@ public abstract class Person {
     private String familyName;
     @Column(name= "prefix_family_name", length = 63)
     private String prefixesFamilyName;
-    @Column(name= "given_name", length = 127)
+    @Column(name= "given_name", nullable = false, length = 127)
     private String givenName;
     @Column(nullable = false)
     private String surnames;
@@ -56,15 +60,15 @@ public abstract class Person {
      * Assembles the person's object attributes from current instance and converts them into an easy readable format.
      */
     public String toPrettyString() {
-        return "Class: PreferredNameUses\n" +
+        return "Class: " + this.getClass().getName() + "\n" +
                 "\tId: " + this.id.toString() +
-                "\tFamily name: " + this.familyName == null  ? "-" : this.familyName +
-                "\tPrefix(es) (name): " + this.prefixesFamilyName == null ? "-" : this.prefixesFamilyName +
-                "\tGiven name: " + this.givenName == null ? "-" : this.givenName +
-                "\tInitials: " + this.surnames == null ? "-" : this.surnames +
-                "\tNick name: " + this.nickName == null ? "-" : this.nickName +
-                "\tPrefix(es) (titles): " + this.namePrefixes == null ? "-" : this.namePrefixes +
-                "\tSuffix(es): " + this.nameSuffixes == null ? "-" : this.nameSuffixes +
+                "\tFamily name: " + (this.familyName == null  ? "-" : this.familyName) +
+                "\tPrefix(es) (name): " + (this.prefixesFamilyName == null ? "-" : this.prefixesFamilyName) +
+                "\tGiven name: " + (this.givenName == null ? "-" : this.givenName) +
+                "\tInitials: " + (this.surnames == null ? "-" : this.surnames) +
+                "\tNick name: " + (this.nickName == null ? "-" : this.nickName) +
+                "\tPrefix(es) (titles): " + (this.namePrefixes == null ? "-" : this.namePrefixes) +
+                "\tSuffix(es): " + (this.nameSuffixes == null ? "-" : this.nameSuffixes) +
                 "\tName use: " + this.preferredNameUse.getDisplay();
     }
 }

@@ -1,9 +1,22 @@
 package com.jabrowa.backend.utilities;
 
+import com.jabrowa.backend.model.interfaces.Selectable;
+
 import java.util.Arrays;
+import java.util.Optional;
 
-//
+// todo: plan implementation, documentation and unit testing of 'fromDisplay()'
 
+import static com.jabrowa.backend.utilities.StringUtilities.normalizeString;
+
+/**
+ * <strong>EnumUtilities</strong> - Utility class<br><br>
+ * Utility class containing all generic (shared) functionality for enumerators;
+ * <ol>
+ *     <li><strong>selectDefault()</strong><br>Method which returns the default marked constant.</li>
+ *     <li><strong>selectDisplayValue()</strong><br>Method to select the display value argument of a constant.</li>
+ * </ol>
+ */
 public class EnumUtilities {
 
     private EnumUtilities() {
@@ -34,34 +47,32 @@ public class EnumUtilities {
                 .findFirst()
                 .orElse(null);
     }
-}
 
-//public class EnumUtilities {
-//    public static <E extends Enum<E> & Selectable> E fromDisplay(Class<E> enumClass, String display) {
-//
-//        return fromDisplaySafe(enumClass, display)
-//                .orElseThrow(() -> new IllegalArgumentException("No enum constant with display value: " + display));
-//
-//    }
-//
-//
-//    /**
-//     * <strong>fromDisplaySafe(<i>Class<E>, (String)</i></strong><br><br>
-//     * The method searches for a given display (description) in a given enumerator. Since the enumerator(s) inherits
-//     * the EnumDisplay interface, the existence of the display field should be guaranteed.<br>
-//     * The search is case-insensitive, and all diacritics are replaced by there common characters.
-//     * @param enumClass The enumerator class which contains the display definition Getter().
-//     * @param display The value of the 'display field' in the enumerator to search for.
-//     * @return The enumerator item which contains the display-field with the given value.
-//     * @throws NullPointerException When the display (description) isn't accepted by the normalize method.
-//     * @throws PatternSyntaxException When regular expression of the normalizeString() method can't be applied.
-//     */
-//    static <E> Optional<E> fromDisplaySafe(Class<E> enumClass, String display)
-//            throws NullPointerException, PatternSyntaxException {
-//
-//        return Arrays.stream(enumClass.getEnumConstants())
-//                .filter(e -> normalizeString(e.getDisplay()).equalsIgnoreCase(normalizeString(display)))
-//                .findFirst();
-//
-//    }
-//}
+    public static <T extends Enum<T> & Selectable> T getFromDisplay(Class<T> enumClass, String display) {
+
+        return fromDisplaySafe(enumClass, display)
+                .orElseThrow(() -> new IllegalArgumentException("No enum constant with display value: " + display));
+    }
+
+    /**
+     * <strong>fromDisplaySafe(<i>Class<E>, (String)</i></strong><br><br>
+     * Searches for a given display-(description) in a given enumerator.
+     * Since the enumerator(s) inherits the EnumDisplay interface, the existence of the display field is certain.<br>
+     * The search is case-insensitive, and all diacritics are replaced by there corresponding characters.
+     * @param enumClass Class<E> The class of the enumerator from which the display definition (method)
+     * @param display The value of the 'display field' in the enumerator to search for.
+     * @return The enumerator item which contains the display-field with the given value.
+     */
+
+    private static <E extends Enum<E> & Selectable>
+
+    Optional<E> fromDisplaySafe(Class<E> enumClass, String display) {
+
+        String normalizedInput = normalizeString(display);
+        return Arrays.stream(enumClass.getEnumConstants())
+                .filter(e -> normalizeString(e.getDisplay()).equalsIgnoreCase(normalizedInput))
+                .findFirst();
+
+    }
+
+}
