@@ -72,4 +72,5 @@ public abstract class Person {
                 "\tSuffix(es): " + (this.nameSuffixes == null ? "-" : this.nameSuffixes) +
                 "\tName use: " + this.preferredNameUse.getDisplay();
     }
+    ;
 }
