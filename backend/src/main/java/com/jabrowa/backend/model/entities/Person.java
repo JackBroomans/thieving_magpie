@@ -15,6 +15,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
+@Table(name = "person")
 public abstract class Person {
 
     @Id

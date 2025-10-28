@@ -32,12 +32,7 @@ public enum PreferredNameUses implements Selectable {
         this.isDefaultValue = isDefault;
     }
 
-    /**
-     * <strong>selectDefault</strong>()<br><br>
-     * Retrieves the default set PreferredNameUses value based on its default setting.
-     *
-     * @return The default set PreferredNameUses. When there's no element set as default, <i>null</i> is returned.
-     */
+    @Override
     public Boolean isDefaultValue() {
         return isDefaultValue;
     }
@@ -47,8 +42,9 @@ public enum PreferredNameUses implements Selectable {
 
 
     /**
-     * <strong>(<i></i>)</strong><br><br>
-     * @return
+     * <strong>selectDefault</strong>()<br><br>
+     * Selects the default marked constant as indicate by the 'isDefault' attribute.
+     * @return The default marked constant. When there's no element set as default, <i>null</i> is returned.
      */
     public PreferredNameUses selectDefault() {
         return EnumUtilities.selectDefault(PreferredNameUses.class);

@@ -2,17 +2,22 @@ package com.jabrowa.backend.model.interfaces;
 
 /**
  * <strong>Selectable</strong> - interface<br><br>
- * This interface should be implemented by each enumerator that contains:
+ * An interface from which a default marked constant can be selected to use for pre-selecting that constant.
+ * The interface forces the implementation of the following elements:
  * <ol>
- *     <li>A default marking for a particular constant, so this constant can be pre-selected, and</li>
- *     <li>A default marking for a particular constant, so this constant can be pre-selected.</li>
+ *     <li>A getter for the default marking indicator of the constant/li>
+ *     <li>A getter for the display value of the constant.</li>
+ *     <li>A  method that selects the default marked constant in the enumerator.</li>
+ *     <li>The (common) method to present the current selected constant and the atrributes in a readable manner.</li>
  * </ol>
  */
 public interface Selectable {
     Boolean isDefaultValue();
+
     String getDisplay();
 
     Enum selectDefault();
+
     String toPrettyString();
 
 }

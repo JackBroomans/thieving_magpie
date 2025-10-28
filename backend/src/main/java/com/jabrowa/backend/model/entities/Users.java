@@ -39,7 +39,7 @@ public class Users {
     private boolean twoFactorEnabled = false;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<UserRoles> roles = new HashSet<>();
+    private Set<UserRole> roles = new HashSet<>();
 
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 //    private Set<TwoFactorCredential> twoFactorCredentials = new HashSet<>();
