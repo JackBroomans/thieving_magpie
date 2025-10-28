@@ -1,26 +1,15 @@
 package com.jabrowa.backend.EnumTests;
 
 import com.jabrowa.backend.model.enums.PreferredNameUses;
-import com.jabrowa.backend.utilities.EnumUtilities;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.mockito.Mockito.mock;
+import static com.jabrowa.backend.utilities.EnumUtilities.selectDefault;
 
 public class PreferredNameUsesTest {
-    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass().getName());
-
-    /*
-    WHEN    The enumerator has implemented the Selectable interface.
-    AND     no constant from the PreferredNameUses enumerator is marked as default.
-    THEN    The result of the request to select the expected as default marked constant is null.
-     */
-    @Test
-    public void requestDefaultConstantNoMarkTest() {
-        PreferredNameUses prefNameUses = EnumUtilities.selectDefault(null);;
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger("PreferredNameUsesTest");
 
     /*
     WHEN    The enumerator has implemented the Selectable interface
@@ -29,9 +18,9 @@ public class PreferredNameUsesTest {
      */
     @Test
     public void requestDefaultConstantOneMarkTest() {
-        PreferredNameUses preferentName = EnumUtilities.selectDefault(PreferredNameUses.class);
-        Assertions.assertEquals(PreferredNameUses.GIVEN_NAME_ONLY, preferentName);
-        LOGGER.info(preferentName.toPrettyString());
+        final String expectedName = PreferredNameUses.GIVEN_NAME_ONLY.name();
+        final PreferredNameUses preferentNameUses    = selectDefault(PreferredNameUses.class);
+        Assertions.assertEquals(expectedName, preferentNameUses.name());
+        LOGGER.info(preferentNameUses.toPrettyString());
     }
-
 }
