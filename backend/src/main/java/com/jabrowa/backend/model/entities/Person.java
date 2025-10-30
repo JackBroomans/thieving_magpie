@@ -3,9 +3,7 @@ package com.jabrowa.backend.model.entities;
 import com.jabrowa.backend.model.enums.Gender;
 import com.jabrowa.backend.model.enums.PreferredNameUses;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
@@ -16,6 +14,31 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "person")
+/**
+ * <strong>Person</strong> - abstract class<br><br>
+ * This class serves as a base class for all person-related entities in the system. This means that any entity representing a person
+ * should inherit from this class to ensure consistency and reusability of common attributes and behaviors associated with a person.
+ * The properties of this class are:
+ * <ul>
+ *      <li>id - Unique identifier for the person (UUID)</li>
+ *      <li>familyName - The family name (surname) of the person</li>
+ *      <li>prefixesFamilyName - Any prefixes associated with the family name (e.g., "van", "de")</li>
+ *      <li>givenName - The given name (first name) of the person</li>
+ *      <li>surnames - The initials of the person</li>
+ *      <li>nickName - The nickname of the person</li>
+ *      <li>namePrefixes - Any prefixes associated with the person's name (e.g., titles like "Dr.", "Mr.,Msc, Dr")</li>
+ *      <li>nameSuffixes - Any suffixes associated with the person's name (e.g., "Jr.", "Sr..")</li>
+ *      <li>preferredNameUse - The preferred way to use the person's name, represented by the PreferredNameUses enum</li>
+ *      <li>dateOfBirth - The date of birth of the person</li>
+ *      <li>age - The age of the person, calculated from the date of birth</li>
+ *      <li>placeOfBirth - The place where the person was born</li>
+ *      <li>countryOfBirth - The country where the person was born</li>
+ *      <li>gender - The gender of the person, represented by the Gender enum</li>
+ *      <li>createdAt - The timestamp when the person entity was created</li>
+ *      <li>updatedAt - The timestamp when the person entity was last updated</li>
+ * </ul>
+ * This class is annotated with JPA annotations to map it to a database table named "person".
+ */
 public abstract class Person {
 
     @Id
@@ -62,15 +85,14 @@ public abstract class Person {
      */
     public String toPrettyString() {
         return "Class: " + this.getClass().getName() + "\n" +
-                "\tId: " + this.id.toString() +
-                "\tFamily name: " + (this.familyName == null  ? "-" : this.familyName) +
-                "\tPrefix(es) (name): " + (this.prefixesFamilyName == null ? "-" : this.prefixesFamilyName) +
-                "\tGiven name: " + (this.givenName == null ? "-" : this.givenName) +
-                "\tInitials: " + (this.surnames == null ? "-" : this.surnames) +
-                "\tNick name: " + (this.nickName == null ? "-" : this.nickName) +
-                "\tPrefix(es) (titles): " + (this.namePrefixes == null ? "-" : this.namePrefixes) +
-                "\tSuffix(es): " + (this.nameSuffixes == null ? "-" : this.nameSuffixes) +
-                "\tName use: " + this.preferredNameUse.getDisplay();
+                "\tId: " + (this.id != null ? this.id.toString() : "-") + "\n" +
+                "\tFamily name: " + (this.familyName == null  ? "-" : this.familyName) + "\n" +
+                "\tPrefix(es) (name): " + (this.prefixesFamilyName == null ? "-" : this.prefixesFamilyName) + "\n" +
+                "\tGiven name: " + (this.givenName == null ? "-" : this.givenName) + "\n" +
+                "\tInitials: " + (this.surnames != null ? "-" : this.surnames) + "\n" +
+                "\tNick name: " + (this.nickName != null ? this.nickName : "-") + "\n" +
+                "\tPrefix(es) (titles): " + (this.namePrefixes != null ? this.namePrefixes : "-") + "\n" +
+                "\tSuffix(es): " + (this.nameSuffixes != null ? this.nameSuffixes : "-") + "\n" +
+                "\tName use: " + (this.preferredNameUse != null ? this.preferredNameUse.getDisplay() : "-");
     }
-    ;
 }

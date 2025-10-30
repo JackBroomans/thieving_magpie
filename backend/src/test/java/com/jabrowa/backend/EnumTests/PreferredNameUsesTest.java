@@ -7,10 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.mockito.Mockito.mock;
-
-public class PreferredNameUsesTest {
-    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass().getName());
+class PreferredNameUsesTest {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     /*
     WHEN    The enumerator has implemented the Selectable interface.
@@ -18,8 +16,9 @@ public class PreferredNameUsesTest {
     THEN    The result of the request to select the expected as default marked constant is null.
      */
     @Test
-    public void requestDefaultConstantNoMarkTest() {
-        PreferredNameUses prefNameUses = EnumUtilities.selectDefault(null);;
+    void requestDefaultConstantNoMarkTest() {
+        PreferredNameUses prefNameUses = EnumUtilities.selectDefault(null);
+        Assertions.assertNull(prefNameUses);
     }
 
     /*
@@ -28,10 +27,11 @@ public class PreferredNameUsesTest {
     THEN    Requesting the default marked constant returns the expected constant.
      */
     @Test
-    public void requestDefaultConstantOneMarkTest() {
+    void requestDefaultConstantOneMarkTest() {
         PreferredNameUses preferentName = EnumUtilities.selectDefault(PreferredNameUses.class);
         Assertions.assertEquals(PreferredNameUses.GIVEN_NAME_ONLY, preferentName);
-        LOGGER.info(preferentName.toPrettyString());
+        logger.debug(preferentName.toPrettyString());
+
     }
 
 }
