@@ -1,10 +1,9 @@
 package com.jabrowa.backend.model.codes.ladis;
 
-import lombok.Getter;
+import com.jabrowa.backend.utilities.EnumUtilities;
 
 public record SourceOfIncome(int number, String display, boolean isActive, boolean isDefault) {
 
-    @Getter
     public enum _SourceOfIncome {
         LOON (1, "loon zelfstandig eigen bedrijf", true, false),
         UITKERING (2, "uitkering", true, false),
@@ -27,13 +26,7 @@ public record SourceOfIncome(int number, String display, boolean isActive, boole
         }
 
         public String toNiceString() {
-        return "Bron van inkomen\n" +
-            "\tLadis code:      " + this.getNumber() + "\n" +
-            "\tOmschrijving:    " + this.getDisplay() + "\n" +
-            "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
-            "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";
+            return EnumUtilities.ladisCodeToPrettyString(_SourceOfIncome.class, this.name());
         }
-
     }
 }
-

@@ -1,10 +1,9 @@
 package com.jabrowa.backend.model.codes.ladis;
 
-import lombok.Getter;
+import com.jabrowa.backend.utilities.EnumUtilities;
 
 public record AddictionDuration(Integer number, String display, boolean isActive, boolean isDefault) {
 
-    @Getter
     public enum _AddictionDuration {
         M1TM3(1, "1 tot 3 maanden", true, false),
         M3TM6(2, "3 tot 6 maanden", true, false),
@@ -15,25 +14,20 @@ public record AddictionDuration(Integer number, String display, boolean isActive
         J10PLUS(7, "meer dan 10 jaar", true, false),
         ONBEKEND(9, "onbekend", true, false);
 
-        private final int number;
-        private final String display;
-        private final boolean isActive;
-        private final boolean isDefault;
+        // private final int number;
+        // private final String display;
+        // private final boolean isActive;
+        // private final boolean isDefault;
 
         _AddictionDuration(int number, String display, boolean isActive, boolean isDefault) {
-            this.number = number;
-            this.display = display;
-            this.isActive = isActive;
-            this.isDefault = isDefault;
+            // this.number = number;
+            // this.display = display;
+            // this.isActive = isActive;
+            // this.isDefault = isDefault;
         }
 
-         public String toNiceString() {
-        return "Duur problematiek/n" +
-            "\tLadis code:      " + this.getNumber() + "\n" +
-            "\tOmschrijving:    " + this.getDisplay() + "\n" +
-            "\tActief:          " + (this.isActive ? "ja" : "Nee") + "\n" +
-            "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";
+        public String toNiceString() {
+            return EnumUtilities.ladisCodeToPrettyString(_AddictionDuration.class, this.name());
         }
     }
-
 }

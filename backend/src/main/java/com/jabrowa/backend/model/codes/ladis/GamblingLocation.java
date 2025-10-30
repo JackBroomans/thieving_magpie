@@ -1,10 +1,10 @@
 package com.jabrowa.backend.model.codes.ladis;
 
-import lombok.Getter;
+import com.jabrowa.backend.utilities.EnumUtilities;
+
 
 public record GamblingLocation(int number, String display, boolean isActive, boolean isDefault) {
 
-    @Getter
     public enum _GamblingLocation {
         ONBEKEND (9, "onbekend", true, false),
         HOLLAND_CASINO (10, "Holland Casino", true, false),
@@ -26,12 +26,7 @@ public record GamblingLocation(int number, String display, boolean isActive, boo
         }
 
         public String toNiceString() {
-        return "Favoriete plaatst om te gokken\n" +
-            "\tLadis code:      " + this.getNumber() + "\n" +
-            "\tOmschrijving:    " + this.getDisplay() + "\n" +
-            "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
-            "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";
+            return EnumUtilities.ladisCodeToPrettyString(_GamblingLocation.class, this.name());
         }
     }
-
 }

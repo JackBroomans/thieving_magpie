@@ -1,10 +1,10 @@
 package com.jabrowa.backend.model.codes.ladis;
 
-import lombok.Getter;
+import com.jabrowa.backend.utilities.EnumUtilities;
 
  public record InjectionPractice(int number, String display, boolean isActive, boolean isDefault) {
 
-    @Getter
+
     public enum _InjectionPractice {
         OOIT(1, "ooit", true, false),
         RECENT(2, "recent (laatste jaar)", true, false),
@@ -26,15 +26,9 @@ import lombok.Getter;
         }
 
          public String toNiceString() {
-        return "Spuiten (praktijk of historie)\n" +
-            "\tLadis code:      " + this.getNumber() + "\n" +
-            "\tOmschrijving:    " + this.getDisplay() + "\n" +
-            "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
-            "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";
+            return EnumUtilities.ladisCodeToPrettyString(_InjectionPractice.class, this.name());
 
         }
-
     }
-
 }
 

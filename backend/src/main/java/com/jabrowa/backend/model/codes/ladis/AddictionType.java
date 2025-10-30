@@ -1,10 +1,9 @@
 package com.jabrowa.backend.model.codes.ladis;
 
-import lombok.Getter;
+import com.jabrowa.backend.utilities.EnumUtilities;
 
 public record AddictionType(int number, String type, String display, boolean isActive, boolean isDefault) {
 
-    @Getter
     public enum _AddictionType {
         ALCOHOL(10, "alcoholverslaving", true, false),
         DRUGS(20, "drugsverslaving", true, false),
@@ -29,12 +28,7 @@ public record AddictionType(int number, String type, String display, boolean isA
         }
 
         public String toNiceString() {
-        return "Type verslaving (geen Ladis code)\n" +
-                "\tLadis code:      " + this.getNumber() + "\n" +
-                "\tOmschrijving:    " + this.getDisplay() + "\n" +
-                "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
-                "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";
+            return EnumUtilities.ladisCodeToPrettyString(_AddictionType.class, this.name());
         }
     }
-
 }

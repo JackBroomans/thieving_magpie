@@ -1,5 +1,7 @@
 package com.jabrowa.backend.model.codes.ladis;
 
+import com.jabrowa.backend.utilities.EnumUtilities;
+
 import lombok.Getter;
 
 public record AddictionSeverity(int number, String display, boolean isActive, boolean isDefault) {
@@ -27,11 +29,7 @@ public record AddictionSeverity(int number, String display, boolean isActive, bo
         }
 
         public String toNiceString() {
-        return "Algemene toestand cliënt\n" +
-                "\tLadis code:      " + this.getNumber() + "\n" +
-                "\tOmschrijving:    " + this.getDisplay() + "\n" +
-                "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
-                "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";
+            return EnumUtilities.ladisCodeToPrettyString(_AddictionSeverity.class, this.name());
         }
     }
 

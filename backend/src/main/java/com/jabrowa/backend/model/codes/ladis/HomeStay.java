@@ -1,10 +1,9 @@
 package com.jabrowa.backend.model.codes.ladis;
 
-import lombok.Getter;
+import com.jabrowa.backend.utilities.EnumUtilities;
 
 public record HomeStay(int number, String display, boolean isActive, boolean isDefault) {
 
-    @Getter
     public enum _HomeStay {
         EIGEN_HUIS(10, "eigen huis (huur/koop)", true, false),
         PENSION_KOSTHUIS(11, "pension/kosthuis", true, false),
@@ -34,11 +33,7 @@ public record HomeStay(int number, String display, boolean isActive, boolean isD
         }
 
         public String toNiceString() {
-        return "Verblijslocatie\n" +
-                "\tLadis code:      " + this.getNumber() + "\n" +
-                "\tOmschrijving:    " + this.getDisplay() + "\n" +
-                "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
-                "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";
+            return EnumUtilities.ladisCodeToPrettyString(_HomeStay.class, this.name());
        }
     }
 }

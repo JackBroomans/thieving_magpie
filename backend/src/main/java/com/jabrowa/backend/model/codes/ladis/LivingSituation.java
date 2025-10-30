@@ -1,10 +1,9 @@
 package com.jabrowa.backend.model.codes.ladis;
 
-import lombok.Getter;
+import com.jabrowa.backend.utilities.EnumUtilities;
 
 public record LivingSituation(int number, String display, boolean isActive, boolean isDefault) {
 
-    @Getter
     public enum _LivingSituation {
         ALLEENSTAAND(10, "alleenstaand", true, false),
         ALLEEN_MET_KIND(20, "met kind(eren) zonder partner", true, false),
@@ -30,11 +29,7 @@ public record LivingSituation(int number, String display, boolean isActive, bool
         }
 
         public String toNiceString() {
-        return "Samenleefsituatie\n" +
-                "\tLadis code:      " + this.getNumber() + "\n" +
-                "\tOmschrijving:    " + this.getDisplay() + "\n" +
-                "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
-                "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";
+            return EnumUtilities.ladisCodeToPrettyString(_LivingSituation.class, this.name());
         }
     }    
 }

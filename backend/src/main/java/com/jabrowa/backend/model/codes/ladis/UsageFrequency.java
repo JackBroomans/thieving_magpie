@@ -1,10 +1,9 @@
 package com.jabrowa.backend.model.codes.ladis;
 
-import lombok.Getter;
+import com.jabrowa.backend.utilities.EnumUtilities;
 
 public record UsageFrequency(int number, String display, boolean isActive, boolean isDefault) {
 
-    @Getter
     public enum _UsageFrequency {
         DAG_MEERMALIG(1, "meermalen daags", true, false),
         DAGELIJKS(2, "dagelijks", true, false),
@@ -27,11 +26,7 @@ public record UsageFrequency(int number, String display, boolean isActive, boole
         }
 
         public String toNiceString() {
-        return "Frequentie van gebruik\n" +
-                "\tLadis code:      " + this.getNumber() + "\n" +
-                "\tOmschrijving:    " + this.getDisplay() + "\n" +
-                "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
-                "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";
+            return EnumUtilities.ladisCodeToPrettyString(_UsageFrequency.class, this.name());
         }
     }
 }

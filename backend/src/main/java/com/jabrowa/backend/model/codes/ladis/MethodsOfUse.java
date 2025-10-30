@@ -1,13 +1,11 @@
 package com.jabrowa.backend.model.codes.ladis;
 
-import lombok.Getter;
+import com.jabrowa.backend.utilities.EnumUtilities;
 
- 
+
 public record MethodsOfUse(int number, String diplay, boolean isActivective, boolean isDefault) {
 
-     @Getter
-
-    public enum _WayOfUse {
+    public enum _MethodsOfUse {
         SPUITEN(1, "spuiten", true, false),
         ROKEN(2, "roken/basen/chinezen", true, false),
         SNUIVEN(3, "snuiven", true, false),
@@ -21,7 +19,7 @@ public record MethodsOfUse(int number, String diplay, boolean isActivective, boo
         private final boolean isActive;
         private final boolean isDefault;
 
-        _WayOfUse(int number, String display, boolean isActive, boolean isDefault) {
+        _MethodsOfUse(int number, String display, boolean isActive, boolean isDefault) {
             this.number = number;
             this.display = display;
             this.isActive = isActive;
@@ -30,11 +28,7 @@ public record MethodsOfUse(int number, String diplay, boolean isActivective, boo
         }
 
         public String toNiceString() {
-        return "Wijze van gebruik\n" +
-            "\tLadis code:      " + this.getNumber() + "\n" +
-            "\tOmschrijving:    " + this.getDisplay() + "\n" +
-            "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
-            "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";
+            return EnumUtilities.ladisCodeToPrettyString(_MethodsOfUse.class, this.name());
         }
     }
 }

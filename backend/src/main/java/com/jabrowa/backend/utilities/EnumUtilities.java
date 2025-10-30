@@ -39,14 +39,13 @@ public class EnumUtilities {
 
             try {
                 buffer.append("Code: ").append(ladisCodeName).append("\n");
-                buffer.append("\tLadis code:      ").append(enumClass.getDeclaredMethod("getNumber()")).append("\n");
-                buffer.append("\tOmschrijving:    ").append(enumClass.getDeclaredMethod("getDisplay()")).append("\n");
-                buffer.append("\tActief:          ").append(enumClass.getDeclaredMethod("isActive()")).append("\n");
-                buffer.append("\tStandaard keuze: ").append(enumClass.getDeclaredMethod("isDefault")).append("\n");
+                buffer.append("\tLadis code:      ").append(enumClass.getField("number()")).append("\n");
+                buffer.append("\tOmschrijving:    ").append(enumClass.getField("display()")).append("\n");
+                buffer.append("\tActief:          ").append(enumClass.getField("isActive()")).append("\n");
+                buffer.append("\tStandaard keuze: ").append(enumClass.getField("isDefault")).append("\n");
 
             } catch (Exception ex) {
-                throw new IllegalArgumentException(String.format("Enum %s doen't have all required methods!\n", 
-                ladisCodeName) + ex.getMessage());
+                throw new IllegalArgumentException(String.format("Enum %s doen't have all required methods!\n", ladisCodeName));
             } 
         return buffer.toString();
            
