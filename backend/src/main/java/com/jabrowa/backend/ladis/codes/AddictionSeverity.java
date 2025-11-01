@@ -1,36 +1,39 @@
 package com.jabrowa.backend.ladis.codes;
 
-import com.jabrowa.backend.utilities.EnumUtilities;
-
 import lombok.Getter;
 
-public record AddictionSeverity(int number, String display, boolean isActive, boolean isDefault) {
+@Getter
+public enum AddictionSeverity {
+    VERSLECTERD(0, "Verslechterd", true, false),
+    ENIGZINS_VERSLECHTERRD(0, "Enigszins verslechterd", true, false),
+    ONVERANDERD(0, "Onveranderd", true, false),
+    ENIGZINS_VERBETERD(0, "Enigszins verbeterd", true, false),
+    VERBETERD(0, "Verbeterd", true, false),
+    KLACHTENVRIJ(0, "Klachtenvrij", true, false),
+    ONBEKEND(0, "Onbekend", true, true);
 
-     @Getter
-    public enum _AddictionSeverity {
-        VERSLECTERD(0, "Verslechterd", true, false),
-        ENIGZINS_VERSLECHTERRD(0, "Enigszins verslechterd", true, false),
-        ONVERANDERD(0, "Onveranderd", true, false),
-        ENIGZINS_VERBETERD(0, "Enigszins verbeterd", true, false),
-        VERBETERD(0, "Verbeterd", true, false),
-        KLACHTENVRIJ(0, "Klachtenvrij", true, false),
-        ONBEKEND(0, "Onbekend", true, true);
- 
-        private final int number;
-        private final String display;
-        private final boolean isActive;
-        private final boolean isDefault;
- 
-        _AddictionSeverity (int number, String display, boolean isActive, boolean isDefault) {
-            this.number = number;
-            this.display = display;
-            this.isActive = isActive;
-            this.isDefault = isDefault;
-        }
+    private final int number;
+    private final String display;
+    private final boolean isActive;
+    private final boolean isDefault;
 
-//        public String toNiceString() {
-//            return EnumUtilities.ladisCodeToPrettyString(_AddictionSeverity.class, this.name());
-//        }
+    AddictionSeverity(int number, String display, boolean isActive, boolean isDefault) {
+        this.number = number;
+        this.display = display;
+        this.isActive = isActive;
+        this.isDefault = isDefault;
     }
 
+    /**
+     * <strong>toNiceString(<i>Class, String</i>)</strong><br><br>
+     * Constructs an easy readable string representation from the attributes of the current enum constant.
+     * @return Returns a pretty formatted string representation of the current enum constant.
+     */
+    public String toNiceString() {
+        return "\nEnumerator: " + this.getClass().getSimpleName() + "\n" +
+                "\tLadis code:      " + this.getNumber() + "\n" +
+                "\tOmschrijving:    " + this.getDisplay() + "\n" +
+                "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
+                "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";
+    }
 }

@@ -27,22 +27,22 @@ public enum AddictionDuration {
     }
 
     /**
-     * <strong>tranformToLadisCode<i>()</i></strong><br><br>
-     * Creates a new instances of a Ladis code record, containing te attribute values of the current constant.
-     * @return A Ladis code record for the curren constant.
+     * <strong>createLadisCodeFromEnum<i>()</i></strong><br><br>
+     * Creates a new instances of a Ladis-code-record, containing the attribute values of the current enum constant.
+     * @return A Ladis-code-record created from the current enum constant.
      */
-    public LadisCode tranformToLadisCode() {
+    public LadisCode createLadisCodeFromEnum() {
         return new LadisCode(this.getClass().getSimpleName(), this.getNumber(), this.getDisplay(),
                 this.isActive(), this.isDefault());
     }
 
     /**
      * <strong>toNiceString(<i>Class, String</i>)</strong><br><br>
-     * Constructs a nicely formatted string representation from the attributes of the current enum constant..
-     * @return Returns a nicely formatted string representation of the current enum constant.
+     * Constructs an easy readable string representation from the attributes of the current enum constant.
+     * @return Returns a pretty formatted string representation of the current enum constant.
      */
     public String toNiceString() {
-        return "Enumerator: " + this.getClass().getSimpleName() + "\n" +
+        return "\nEnumerator: " + this.getClass().getSimpleName() + "\n" +
                 "\tLadis code:      " + this.getNumber() + "\n" +
                 "\tOmschrijving:    " + this.getDisplay() + "\n" +
                 "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +

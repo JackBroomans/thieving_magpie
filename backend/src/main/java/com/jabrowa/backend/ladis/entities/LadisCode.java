@@ -7,10 +7,10 @@ package com.jabrowa.backend.ladis.entities;
  * fit for a DTO-projection.
  *
  * @param typeName  The name of the specific type of the Ladis code (SourceOfIncome, ClientType, AddictionDuration etc.)
- * @param number
- * @param display
- * @param isActive
- * @param isDefault
+ * @param number The numeric code identifier
+ * @param display The shor description of the Ladis-code
+ * @param isActive Indicates if the Ladis-code is active. (Codes aren't removed to ensure database integrity)
+ * @param isDefault Indicates if the particular Ladis-code is the default constant of the enumerated constants.
  */
 public record LadisCode(
         String typeName,
@@ -19,15 +19,14 @@ public record LadisCode(
         boolean isActive,
         boolean isDefault) {
 
-
     /**
      * <strong>toNiceString(<i>Class, String</i>)</strong><br><br>
      * Constructs a nicely formatted string representation from the attributes of Ladis code instance.
      * @return Returns a nicely formatted string representation of the current enum constant.
      */
     public String toNiceString() {
-        return "Ladis code:\n" +
-                "\tLadis code:      " + this.number() + "\n" +
+        return "\nLadis code -> " + this.typeName() + "\n" +
+                "\tCode:            " + this.number() + "\n" +
                 "\tOmschrijving:    " + this.display() + "\n" +
                 "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
                 "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";

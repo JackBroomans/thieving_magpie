@@ -40,7 +40,7 @@ public class LadisCodeTests {
         THEN
          */
         AddictionDuration addictionDuration = AddictionDuration.M1TM3;
-        LadisCode ladisCode = addictionDuration.tranformToLadisCode();
+        LadisCode ladisCode = addictionDuration.createLadisCodeFromEnum();
 
         /*
         Log in pretty readable format
