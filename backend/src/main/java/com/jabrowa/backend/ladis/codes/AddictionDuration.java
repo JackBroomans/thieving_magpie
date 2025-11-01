@@ -1,4 +1,4 @@
-package com.jabrowa.backend.model.codes.ladis;
+package com.jabrowa.backend.ladis.codes;
 
 import lombok.Getter;
 
