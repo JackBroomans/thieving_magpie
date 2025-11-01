@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jabrowa.backend.model.codes.ladis.AddictionDuration;
+import com.jabrowa.backend.utilities.EnumUtilities;
 
 @Testable
 public class EntityUtilitiesTest {
@@ -14,9 +15,8 @@ public class EntityUtilitiesTest {
     @Test
     public void CorrectlyFormatsLadisCodeEnumToPrettyString() {
 
-        
-        System.out.println(AddictionDuration._AddictionDuration.J1TM2.toNiceString());
-
+        AddictionDuration duration = AddictionDuration.J1TM2;
+        System.out.println(EnumUtilities.ladisCodeToPrettyString(duration.getClass(), "Test"));
     }
 
 }

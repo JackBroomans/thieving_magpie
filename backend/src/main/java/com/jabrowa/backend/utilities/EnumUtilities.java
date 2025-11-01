@@ -2,6 +2,7 @@ package com.jabrowa.backend.utilities;
 
 import com.jabrowa.backend.model.interfaces.Selectable;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -16,41 +17,6 @@ import static com.jabrowa.backend.utilities.StringUtilities.normalizeString;
  * </ol>
  */
 public class EnumUtilities {
-
-    private EnumUtilities() {
-        // Prevent instantiation
-    }
-
-    /**
-     * <strong>ladisCodeToPrettyString(<i>Class, String</i>)</strong><br><br>
-     * Returns a nicely formatted string representation of a certain Ladis code enum constant.  
-     * @param enumClass The enum class type from which the Ladis code constant must be presented in a nicely format.
-     * @param ladisCodeName The name of the Ladis code enum to be represented as header.
-     * @return A nicely formatted string representation of a certain Ladis code enum constant. When an error occurs, an
-     * IllegalArgumentException is thrown.
-     */
-    public static String ladisCodeToPrettyString(Class<?> enumClass, String ladisCodeName) {
-        StringBuffer buffer = new StringBuffer();
-        
-       if(enumClass == null) {
-            return buffer.toString();
-        }
-        ladisCodeName = (ladisCodeName == null || ladisCodeName.isEmpty() ? "" : ladisCodeName);
-
-            try {
-                buffer.append("Code: ").append(ladisCodeName).append("\n");
-                buffer.append("\tLadis code:      ").append(enumClass.getField("number()")).append("\n");
-                buffer.append("\tOmschrijving:    ").append(enumClass.getField("display()")).append("\n");
-                buffer.append("\tActief:          ").append(enumClass.getField("isActive()")).append("\n");
-                buffer.append("\tStandaard keuze: ").append(enumClass.getField("isDefault")).append("\n");
-
-            } catch (Exception ex) {
-                throw new IllegalArgumentException(String.format("Enum %s doen't have all required methods!\n", ladisCodeName));
-            } 
-        return buffer.toString();
-           
-        }
-
 
     /**
      * <strong>selectDefault(<i>Class</i>)</strong><br><br>
@@ -70,7 +36,7 @@ public class EnumUtilities {
                 .filter(e -> {
                     try {
                         return (boolean) enumClass
-                                .getDeclaredMethod("isDefaultValue")
+                                .getDeclaredMethod("isDefault")
                                 .invoke(e);
                     } catch (Exception ex) {
                         throw new RuntimeException("Enum type must have isDefaultValue() method", ex);
