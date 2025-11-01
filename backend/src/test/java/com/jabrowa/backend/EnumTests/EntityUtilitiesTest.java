@@ -1,0 +1,22 @@
+package com.jabrowa.backend.EnumTests;
+
+import org.junit.platform.commons.annotation.Testable;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.jabrowa.backend.model.codes.ladis.AddictionDuration;
+import com.jabrowa.backend.utilities.EnumUtilities;
+
+@Testable
+public class EntityUtilitiesTest {
+ private final Logger logger = LoggerFactory.getLogger(EntityUtilitiesTest.class);
+
+    @Test
+    public void CorrectlyFormatsLadisCodeEnumToPrettyString() {
+
+        AddictionDuration duration = AddictionDuration.J1TM2;
+        System.out.println(EnumUtilities.ladisCodeToPrettyString(duration.getClass(), "Test"));
+    }
+
+}

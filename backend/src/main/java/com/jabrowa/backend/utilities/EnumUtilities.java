@@ -2,10 +2,9 @@ package com.jabrowa.backend.utilities;
 
 import com.jabrowa.backend.model.interfaces.Selectable;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Optional;
-
-// todo: plan implementation, documentation and unit testing of 'fromDisplay()'
 
 import static com.jabrowa.backend.utilities.StringUtilities.normalizeString;
 
@@ -19,10 +18,6 @@ import static com.jabrowa.backend.utilities.StringUtilities.normalizeString;
  */
 public class EnumUtilities {
 
-    private EnumUtilities() {
-        // Prevent instantiation
-    }
-
     /**
      * <strong>selectDefault(<i>Class</i>)</strong><br><br>
      * Returns the enum constant marked as default (isDefaultValue = true). This isDefaultValue() is part of the
@@ -34,11 +29,14 @@ public class EnumUtilities {
      * (NoSuchMethodException), a RuntimeException is thrown.
      */
     public static <T extends Enum<T>> T selectDefault(Class<T> enumClass) {
+        if(enumClass == null) {
+            return null;
+        }
         return Arrays.stream(enumClass.getEnumConstants())
                 .filter(e -> {
                     try {
                         return (boolean) enumClass
-                                .getDeclaredMethod("isDefaultValue")
+                                .getDeclaredMethod("isDefault")
                                 .invoke(e);
                     } catch (Exception ex) {
                         throw new RuntimeException("Enum type must have isDefaultValue() method", ex);
@@ -56,7 +54,7 @@ public class EnumUtilities {
 
     /**
      * <strong>fromDisplaySafe(<i>Class<E>, (String)</i></strong><br><br>
-     * Searches for a given display-(description) in a given enumerator.
+     * Searches for a certain display-(description) in a given enumerator.
      * Since the enumerator(s) inherits the EnumDisplay interface, the existence of the display field is certain.<br>
      * The search is case-insensitive, and all diacritics are replaced by there corresponding characters.
      * @param enumClass Class<E> The class of the enumerator from which the display definition (method)
