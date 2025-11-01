@@ -22,9 +22,9 @@ public record ClientType(int number, String disply, boolean isActive, boolean is
             this.isDefault = isDefault;
         }
 
-        public String toNiceString() {
-            return EnumUtilities.ladisCodeToPrettyString(_ClientType.class, this.name());
-        }
+//        public String toNiceString() {
+//            return EnumUtilities.ladisCodeToPrettyString(_ClientType.class, this.name());
+//        }
 
     }
 }

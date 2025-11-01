@@ -25,10 +25,10 @@ import com.jabrowa.backend.utilities.EnumUtilities;
 
         }
 
-         public String toNiceString() {
-            return EnumUtilities.ladisCodeToPrettyString(_InjectionPractice.class, this.name());
-
-        }
+//         public String toNiceString() {
+//            return EnumUtilities.ladisCodeToPrettyString(_InjectionPractice.class, this.name());
+//
+//        }
     }
 }
 

@@ -25,8 +25,8 @@ public record UsageFrequency(int number, String display, boolean isActive, boole
             this.isDefault = isDefault;
         }
 
-        public String toNiceString() {
-            return EnumUtilities.ladisCodeToPrettyString(_UsageFrequency.class, this.name());
-        }
+//        public String toNiceString() {
+//            return EnumUtilities.ladisCodeToPrettyString(_UsageFrequency.class, this.name());
+//        }
     }
 }

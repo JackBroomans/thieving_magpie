@@ -27,8 +27,8 @@ public record AddictionType(int number, String type, String display, boolean isA
             this.isDefault = isDefault;
         }
 
-        public String toNiceString() {
-            return EnumUtilities.ladisCodeToPrettyString(_AddictionType.class, this.name());
-        }
+//        public String toNiceString() {
+//            return EnumUtilities.ladisCodeToPrettyString(_AddictionType.class, this.name());
+//        }
     }
 }

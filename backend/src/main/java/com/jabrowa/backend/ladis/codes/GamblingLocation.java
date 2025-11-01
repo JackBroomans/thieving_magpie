@@ -25,8 +25,8 @@ public record GamblingLocation(int number, String display, boolean isActive, boo
             this.isDefault = isDefault;
         }
 
-        public String toNiceString() {
-            return EnumUtilities.ladisCodeToPrettyString(_GamblingLocation.class, this.name());
-        }
+//        public String toNiceString() {
+//            return EnumUtilities.ladisCodeToPrettyString(_GamblingLocation.class, this.name());
+//        }
     }
 }

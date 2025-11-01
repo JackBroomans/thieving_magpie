@@ -28,9 +28,9 @@ public record AddictionSeverity(int number, String display, boolean isActive, bo
             this.isDefault = isDefault;
         }
 
-        public String toNiceString() {
-            return EnumUtilities.ladisCodeToPrettyString(_AddictionSeverity.class, this.name());
-        }
+//        public String toNiceString() {
+//            return EnumUtilities.ladisCodeToPrettyString(_AddictionSeverity.class, this.name());
+//        }
     }
 
 }

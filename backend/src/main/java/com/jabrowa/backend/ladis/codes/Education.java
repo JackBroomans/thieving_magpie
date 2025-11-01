@@ -33,9 +33,9 @@ public record Education(int number, String display, boolean isActive, boolean is
             this.isDefault = isDefault;
         }
 
-        public String toNiceString() {
-            return EnumUtilities.ladisCodeToPrettyString(_Education.class, this.name());
-        }
+//        public String toNiceString() {
+//            return EnumUtilities.ladisCodeToPrettyString(_Education.class, this.name());
+//        }
     }
 }
 

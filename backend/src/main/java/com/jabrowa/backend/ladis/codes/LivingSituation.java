@@ -28,8 +28,8 @@ public record LivingSituation(int number, String display, boolean isActive, bool
 
         }
 
-        public String toNiceString() {
-            return EnumUtilities.ladisCodeToPrettyString(_LivingSituation.class, this.name());
-        }
+//        public String toNiceString() {
+//            return EnumUtilities.ladisCodeToPrettyString(_LivingSituation.class, this.name());
+//        }
     }    
 }

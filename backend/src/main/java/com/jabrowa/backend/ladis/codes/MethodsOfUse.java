@@ -27,8 +27,8 @@ public record MethodsOfUse(int number, String diplay, boolean isActivective, boo
 
         }
 
-        public String toNiceString() {
-            return EnumUtilities.ladisCodeToPrettyString(_MethodsOfUse.class, this.name());
-        }
+//        public String toNiceString() {
+//            return EnumUtilities.ladisCodeToPrettyString(_MethodsOfUse.class, this.name());
+//        }
     }
 }

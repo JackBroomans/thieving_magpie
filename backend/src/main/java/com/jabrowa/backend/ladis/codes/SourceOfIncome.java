@@ -25,8 +25,8 @@ public record SourceOfIncome(int number, String display, boolean isActive, boole
             this.isDefault = isDefault;
         }
 
-        public String toNiceString() {
-            return EnumUtilities.ladisCodeToPrettyString(_SourceOfIncome.class, this.name());
-        }
+//        public String toNiceString() {
+//            return EnumUtilities.ladisCodeToPrettyString(_SourceOfIncome.class, this.name());
+//        }
     }
 }
