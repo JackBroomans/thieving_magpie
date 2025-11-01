@@ -1,5 +1,6 @@
 package com.jabrowa.backend.ladis.codes;
 
+import com.jabrowa.backend.ladis.entities.LadisCode;
 import lombok.Getter;
 
 @Getter
@@ -26,6 +27,16 @@ public enum AddictionDuration {
     }
 
     /**
+     * <strong>tranformToLadisCode<i>()</i></strong><br><br>
+     * Creates a new instances of a Ladis code record, containing te attribute values of the current constant.
+     * @return A Ladis code record for the curren constant.
+     */
+    public LadisCode tranformToLadisCode() {
+        return new LadisCode(this.getClass().getSimpleName(), this.getNumber(), this.getDisplay(),
+                this.isActive(), this.isDefault());
+    }
+
+    /**
      * <strong>toNiceString(<i>Class, String</i>)</strong><br><br>
      * Constructs a nicely formatted string representation from the attributes of the current enum constant..
      * @return Returns a nicely formatted string representation of the current enum constant.
@@ -34,7 +45,7 @@ public enum AddictionDuration {
         return "Enumerator: " + this.getClass().getSimpleName() + "\n" +
                 "\tLadis code:      " + this.getNumber() + "\n" +
                 "\tOmschrijving:    " + this.getDisplay() + "\n" +
-                "\tActief:          " + (this.isActive ? "ja" : "Nee") + "\n" +
+                "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
                 "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";
     }
 }
