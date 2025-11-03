@@ -29,6 +29,7 @@ public enum AddictionDuration {
     /**
      * <strong>createLadisCodeFromEnum<i>()</i></strong><br><br>
      * Creates a new instances of a Ladis-code-record, containing the attribute values of the current enum constant.
+     *
      * @return A Ladis-code-record created from the current enum constant.
      */
     public LadisCode createLadisCodeFromEnum() {
@@ -39,6 +40,7 @@ public enum AddictionDuration {
     /**
      * <strong>toNiceString(<i>Class, String</i>)</strong><br><br>
      * Constructs an easy readable string representation from the attributes of the current enum constant.
+     *
      * @return Returns a pretty formatted string representation of the current enum constant.
      */
     public String toNiceString() {

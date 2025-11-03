@@ -1,5 +1,6 @@
 package com.jabrowa.backend.ladis.codes;
 
+import com.jabrowa.backend.ladis.entities.LadisCode;
 import lombok.Getter;
 
 @Getter
@@ -25,8 +26,20 @@ public enum AddictionSeverity {
     }
 
     /**
+     * <strong>createLadisCodeFromEnum<i>()</i></strong><br><br>
+     * Creates a new instances of a Ladis-code-record, containing the attribute values of the current enum constant.
+     *
+     * @return A Ladis-code-record created from the current enum constant.
+     */
+    public LadisCode createLadisCodeFromEnum() {
+        return new LadisCode(this.getClass().getSimpleName(), this.getNumber(), this.getDisplay(),
+                this.isActive(), this.isDefault());
+    }
+
+    /**
      * <strong>toNiceString(<i>Class, String</i>)</strong><br><br>
      * Constructs an easy readable string representation from the attributes of the current enum constant.
+     *
      * @return Returns a pretty formatted string representation of the current enum constant.
      */
     public String toNiceString() {
