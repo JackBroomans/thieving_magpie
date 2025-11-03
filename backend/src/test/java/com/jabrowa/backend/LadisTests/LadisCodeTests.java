@@ -99,6 +99,6 @@ public class LadisCodeTests {
         /*
         Log 'Test completed'
          */
-        logger.info("Completed: ladisCodeInstantiationTests()\n");
+        logger.info("Completed: ladisCreateCodeFromEnumTests()\n");
     }
 }
