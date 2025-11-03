@@ -12,12 +12,15 @@ package com.jabrowa.backend.ladis.entities;
  * @param isActive Indicates if the Ladis-code is active. (Codes aren't removed to ensure database integrity)
  * @param isDefault Indicates if the particular Ladis-code is the default constant of the enumerated constants.
  */
-public record LadisCode(
-        String typeName,
-        int number,
-        String display,
-        boolean isActive,
-        boolean isDefault) {
+public record LadisCode(String typeName, int number, String display, boolean isActive, boolean isDefault) {
+
+    public LadisCode {
+        if ((typeName == null || typeName.isBlank()) ||
+                (display == null || display.isBlank()) ||
+                (number <= 0)) {
+            throw new IllegalArgumentException();
+        }
+    }
 
     /**
      * <strong>toNiceString(<i>Class, String</i>)</strong><br><br>
@@ -25,7 +28,7 @@ public record LadisCode(
      * @return Returns a nicely formatted string representation of the current enum constant.
      */
     public String toNiceString() {
-        return "\nLadis code -> " + this.typeName() + "\n" +
+        return "Ladis code -> " + this.typeName() + "\n" +
                 "\tCode:            " + this.number() + "\n" +
                 "\tOmschrijving:    " + this.display() + "\n" +
                 "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
