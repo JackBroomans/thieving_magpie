@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jabrowa.backend.model.codes.ladis.AddictionDuration;
+import com.jabrowa.backend.ladis.codes.AddictionDuration;
 import com.jabrowa.backend.utilities.EnumUtilities;
 
 @Testable
