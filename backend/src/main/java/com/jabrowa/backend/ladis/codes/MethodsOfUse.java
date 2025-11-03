@@ -1,34 +1,53 @@
 package com.jabrowa.backend.ladis.codes;
 
-import com.jabrowa.backend.utilities.EnumUtilities;
+import com.jabrowa.backend.ladis.entities.LadisCode;
+import lombok.Getter;
 
+@Getter
 
-public record MethodsOfUse(int number, String diplay, boolean isActivective, boolean isDefault) {
+public enum MethodsOfUse {
+    SPUITEN(1, "spuiten", true, false),
+    ROKEN(2, "roken/basen/chinezen", true, false),
+    SNUIVEN(3, "snuiven", true, false),
+    SLIKKEN(4, "slikken/eten", true, false),
+    DRINKEN(5, "drinken", true, false),
+    NVT(8, "niet van toepassing", true, false),
+    ONBEKEND(9, "onbekend", true, true);
 
-    public enum _MethodsOfUse {
-        SPUITEN(1, "spuiten", true, false),
-        ROKEN(2, "roken/basen/chinezen", true, false),
-        SNUIVEN(3, "snuiven", true, false),
-        SLIKKEN(4, "slikken/eten", true, false),
-        DRINKEN(5, "drinken", true, false),
-        NVT(8, "niet van toepassing", true, false),
-        ONBEKEND(9, "onbekend", true, true);
+    private final int number;
+    private final String display;
+    private final boolean isActive;
+    private final boolean isDefault;
 
-        private final int number;
-        private final String display;
-        private final boolean isActive;
-        private final boolean isDefault;
+    MethodsOfUse(int number, String display, boolean isActive, boolean isDefault) {
+        this.number = number;
+        this.display = display;
+        this.isActive = isActive;
+        this.isDefault = isDefault;
+    }
 
-        _MethodsOfUse(int number, String display, boolean isActive, boolean isDefault) {
-            this.number = number;
-            this.display = display;
-            this.isActive = isActive;
-            this.isDefault = isDefault;
+    /**
+     * <strong>createLadisCodeFromEnum<i>()</i></strong><br><br>
+     * Creates a new instances of a Ladis-code-record, containing the attribute values of the current enum constant.
+     *
+     * @return A Ladis-code-record created from the current enum constant.
+     */
+    public LadisCode createLadisCodeFromEnum() {
+        return new LadisCode(this.getClass().getSimpleName(), this.getNumber(), this.getDisplay(),
+                this.isActive(), this.isDefault());
+    }
 
-        }
-
-        public String toNiceString() {
-            return EnumUtilities.ladisCodeToPrettyString(_MethodsOfUse.class, this.name());
-        }
+    /**
+     * <strong>toNiceString(<i>Class, String</i>)</strong><br><br>
+     * Constructs an easy readable string representation from the attributes of the current enum constant.
+     *
+     * @return Returns a pretty formatted string representation of the current enum constant.
+     */
+    public String toNiceString() {
+        return "\nEnumerator: " + this.getClass().getSimpleName() + "\n" +
+                "\tLadis code:      " + this.getNumber() + "\n" +
+                "\tOmschrijving:    " + this.getDisplay() + "\n" +
+                "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
+                "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";
     }
 }

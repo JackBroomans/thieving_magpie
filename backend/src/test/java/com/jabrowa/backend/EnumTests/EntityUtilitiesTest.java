@@ -12,11 +12,5 @@ import com.jabrowa.backend.utilities.EnumUtilities;
 public class EntityUtilitiesTest {
  private final Logger logger = LoggerFactory.getLogger(EntityUtilitiesTest.class);
 
-    @Test
-    public void CorrectlyFormatsLadisCodeEnumToPrettyString() {
-
-        AddictionDuration duration = AddictionDuration.J1TM2;
-        System.out.println(EnumUtilities.ladisCodeToPrettyString(duration.getClass(), "Test"));
-    }
 
 }
