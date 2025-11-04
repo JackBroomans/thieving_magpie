@@ -1,7 +1,7 @@
 package com.jabrowa.backend.model.interfaces;
 
 /**
- * <strong>Selectable</strong> - interface<br><br>
+ * <strong>SelectableCode</strong> - interface<br><br>
  * An interface from which a default marked constant can be selected to use for pre-selecting that constant.
  * The interface forces the implementation of the following elements:
  * <ol>
@@ -11,14 +11,16 @@ package com.jabrowa.backend.model.interfaces;
  *     <li>The (common) method to present the current selected constant and the atrributes in a readable manner.</li>
  * </ol>
  */
-public interface Selectable {
-    Boolean isDefaultValue();
+public interface SelectableCode {
 
+    String getCode();
     String getDisplay();
+    boolean isActive();
+    boolean isDefault();
 
     Enum selectDefault();
 
-    String toPrettyString();
 
 }
+
 

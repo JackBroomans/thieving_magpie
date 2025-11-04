@@ -21,10 +21,10 @@ import java.util.UUID;
  * The properties of this class are:
  * <ul>
  *      <li>id - Unique identifier for the person (UUID)</li>
- *      <li>familyName - The family name (surname) of the person</li>
+ *      <li>familyName - The family name of the person. The might be the name of the partner</li>
  *      <li>prefixesFamilyName - Any prefixes associated with the family name (e.g., "van", "de")</li>
  *      <li>givenName - The given name (first name) of the person</li>
- *      <li>surnames - The initials of the person</li>
+ *      <li>initials - The initials of the person. The full forenames are not relevant for the abstract class.</li>
  *      <li>nickName - The nickname of the person</li>
  *      <li>namePrefixes - Any prefixes associated with the person's name (e.g., titles like "Dr.", "Mr.,Msc, Dr")</li>
  *      <li>nameSuffixes - Any suffixes associated with the person's name (e.g., "Jr.", "Sr..")</li>
@@ -42,42 +42,46 @@ import java.util.UUID;
 public abstract class Person {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
-
     @Column(name= "family_name",  nullable = false, length = 127)
     private String familyName;
     @Column(name= "prefix_family_name", length = 63)
     private String prefixesFamilyName;
     @Column(name= "given_name", nullable = false, length = 127)
     private String givenName;
-    @Column(nullable = false)
-    private String surnames;
-    @Column(name= "")
+    @Column(nullable = false, length = 31)
+    private String initials;
+    @Column(length = 31)
     private String nickName;
-    @Column(name= "")
+    @Column(name= "prefix_titles", length = 63)
     private String namePrefixes;
-    @Column(name= "")
+    @Column(name= "suffix_titles", length = 63)
     private String nameSuffixes;
-    @Column(nullable = false)
-    @Enumerated(EnumType.ORDINAL)
+    @Column(name= "preferred_name_use", nullable = false)
+    @Enumerated(EnumType.STRING)
     private PreferredNameUses preferredNameUse;
-
-    @Column(name= "")
-    private LocalDate dateOfBirth;
-    @Column(name= "")
-    private int age;
-    private String placeOfBirth;
-    @Column(name= "")
-    private String countryOfBirth;
-
     @Column(nullable = false)
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
-
     @Column(nullable = false)
     private Instant createdAt = Instant.now();
     private Instant updatedAt;
+
+
+//    @Column(name= "")
+//    private LocalDate dateOfBirth;
+//    @Column(name= "")
+//    private int age;
+//    private String placeOfBirth;
+//    @Column(name= "")
+//    private String countryOfBirth;
+//
+//    @Column(nullable = false)
+//    @Enumerated(EnumType.ORDINAL)
+//    private Gender gender;
+
 
     /**
      * <strong>toPrettyString(<i></i>)</strong> (method)<br><br>
