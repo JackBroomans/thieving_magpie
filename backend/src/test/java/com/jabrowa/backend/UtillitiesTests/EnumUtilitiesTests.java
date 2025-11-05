@@ -19,7 +19,9 @@ public class EnumUtilitiesTests {
         THEN    a 'RuntimeError' is thrown.
          */
         assertThrows(RuntimeException.class,
-                () -> { EnumUtilities.selectDefault(TestEnumNoImplementation.class); }
+                () -> {
+                    EnumUtilities.selectDefault(TestEnumNoImplementation.class);
+                }
         );
 
         /*
@@ -58,7 +60,6 @@ public class EnumUtilitiesTests {
     }
 
 
-
     /**
      * <strong>TestEnumNoDefault</strong> - enumerator<br><br>
      * Enumerator to test an enumerator class without any of its constants set as default.
@@ -87,50 +88,51 @@ public class EnumUtilitiesTests {
         }
     }
 
-        /**
-         * <strong>TestEnumNoDefault</strong> - enumerator<br><br>
-         * Enumerator to test an enumerator class with two (or more) of its constants set as default.
-         */
-        @Getter
-        protected enum TestEnumTwoDefaults implements SelectableCode {
-            DIKKERTJE("DIK", "Dikkertje Dap", true, false),
-            PET("PET", "Pet van de Petteflet", true, true),
-            POMPELOENTJE("POM", "Beertje Pompeloentje", true, false),
-            JIP("JIP", "Jip van Janneke", true, true);
+    /**
+     * <strong>TestEnumNoDefault</strong> - enumerator<br><br>
+     * Enumerator to test an enumerator class with two (or more) of its constants set as default.
+     */
+    @Getter
+    protected enum TestEnumTwoDefaults implements SelectableCode {
+        DIKKERTJE("DIK", "Dikkertje Dap", true, false),
+        PET("PET", "Pet van de Petteflet", true, true),
+        POMPELOENTJE("POM", "Beertje Pompeloentje", true, false),
+        JIP("JIP", "Jip van Janneke", true, true);
 
-            final String code;
-            final String display;
-            final boolean isActive;
-            final boolean isDefault;
+        final String code;
+        final String display;
+        final boolean isActive;
+        final boolean isDefault;
 
-            TestEnumTwoDefaults(String code, String display, boolean isActive, boolean isDefault) {
-                this.code = code;
-                this.display = display;
-                this.isActive = isActive;
-                this.isDefault = isDefault;
-            }
-
-            public TestEnumTwoDefaults selectDefault() {
-                return EnumUtilities.selectDefault(TestEnumTwoDefaults.class);
-            }
+        TestEnumTwoDefaults(String code, String display, boolean isActive, boolean isDefault) {
+            this.code = code;
+            this.display = display;
+            this.isActive = isActive;
+            this.isDefault = isDefault;
         }
 
-        /**
-         * <strong>TestEnumNoImplementation</strong> - enumerator<br><br>
-         * Enumerator to test an enumerator class with two (or more) of its constants set as default.
-         */
-        @Getter
-        protected enum TestEnumNoImplementation {
-            DIKKERTJE,
-            PET,
-            POMPELOENTJE,
-            JIP;
+        public TestEnumTwoDefaults selectDefault() {
+            return EnumUtilities.selectDefault(TestEnumTwoDefaults.class);
+        }
+    }
 
-            TestEnumNoImplementation() {}
+    /**
+     * <strong>TestEnumNoImplementation</strong> - enumerator<br><br>
+     * Enumerator to test an enumerator class with two (or more) of its constants set as default.
+     */
+    @Getter
+    protected enum TestEnumNoImplementation {
+        DIKKERTJE,
+        PET,
+        POMPELOENTJE,
+        JIP;
 
-            public TestEnumNoImplementation selectDefault() {
-                return EnumUtilities.selectDefault(TestEnumNoImplementation.class);
-            }
+        TestEnumNoImplementation() {
+        }
+
+        public TestEnumNoImplementation selectDefault() {
+            return EnumUtilities.selectDefault(TestEnumNoImplementation.class);
+        }
 
     }
 }
