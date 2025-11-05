@@ -22,8 +22,9 @@ import java.util.UUID;
  * <ul>
  *      <li>id - Unique identifier for the person (UUID)</li>
  *      <li>familyName - The family name of the person. The might be the name of the partner</li>
- *      <li>prefixesFamilyName - Any prefixes associated with the family name (e.g., "van", "de")</li>
+ *      <li>prefixesFamilyName - Any common prefixes belonging to the family name (e.g., "van", "de"</li>
  *      <li>givenName - The given name (first name) of the person</li>
+ *      <li>nickname - The given name (first name) of the person</li>
  *      <li>initials - The initials of the person. The full forenames are not relevant for the abstract class.</li>
  *      <li>nickName - The nickname of the person</li>
  *      <li>namePrefixes - Any prefixes associated with the person's name (e.g., titles like "Dr.", "Mr.,Msc, Dr")</li>
@@ -47,14 +48,14 @@ public abstract class Person {
     private UUID id;
     @Column(name= "family_name",  nullable = false, length = 127)
     private String familyName;
-    @Column(name= "prefix_family_name", length = 63)
+    @Column(name= "prefixes_family_name", length = 63)
     private String prefixesFamilyName;
     @Column(name= "given_name", nullable = false, length = 127)
     private String givenName;
     @Column(nullable = false, length = 31)
+    private String nickname;
+    @Column(nullable = false, length = 31)
     private String initials;
-    @Column(length = 31)
-    private String nickName;
     @Column(name= "prefix_titles", length = 63)
     private String namePrefixes;
     @Column(name= "suffix_titles", length = 63)

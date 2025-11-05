@@ -47,7 +47,7 @@ public enum Gender implements SelectableCode {
                 "\tNaam:           " + this.name() + "\n" +
                 "\tCode:            " + (this.getCode() == null ? ""  : this.getCode()) + "\n" +
                 "\tOmschrijving:    " + (this.getDisplay() == null ? "" : this.getDisplay()) + "\n" +
-                "\tActief:          " + (this.isActive ?  "Ja" : "Nee") + "\n" +
+                "\tActief:          " + (this.isActive() ?  "Ja" : "Nee") + "\n" +
                 "\tStandaard keuze: " + (this.isDefault() ? "Ja" : "Nee") + "\n";
     }
 }
