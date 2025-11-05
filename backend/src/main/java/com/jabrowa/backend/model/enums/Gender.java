@@ -6,19 +6,19 @@ import lombok.Getter;
 
 @Getter
 public enum Gender implements SelectableCode {
-    MALE ("MAN", "Man", true, false),
-    FEMALE ("FEM", "Vrouw", true,  false),
-    BIPOLAIRE ("BIP", "Bi-polair", true,  false),
-    INDIFFERENT ("IND", "Onverschillig", true,  false),
-    NOT_DETERMINED("NDT", "Niet vastgesteld", true,  false),
-    NOT_SPECIFIED ("NSP", "Niet gespecificeerd", true,  true);
+    MALE (1, "Man", true, false),
+    FEMALE (2, "Vrouw", true,  false),
+    BIPOLAIRE (3, "Bi-polair", true,  false),
+    INDIFFERENT (4, "Onverschillig", true,  false),
+    NOT_DETERMINED(5, "Niet vastgesteld", true,  false),
+    NOT_SPECIFIED (6, "Niet gespecificeerd", true,  true);
 
-    private final String code;
+    private final int code;
     private final String display;
     private final boolean isActive;
     private final boolean isDefault;
 
-    Gender(String code, String display, boolean isActive, boolean isDefault) {
+    Gender(int code, String display, boolean isActive, boolean isDefault) {
         this.code = code;
         this.display = display;
         this.isActive = isActive;
@@ -44,8 +44,8 @@ public enum Gender implements SelectableCode {
      */
     public String toNiceString() {
         return "\nEnumerator:       " + this.getClass().getSimpleName() + "\n" +
-                "\tNaam:           " + this.name() + "\n" +
-                "\tCode:            " + (this.getCode() == null ? ""  : this.getCode()) + "\n" +
+                "\tNaam:            " + this.name() + "\n" +
+                "\tCode:            " + this.getCode() + "\n" +
                 "\tOmschrijving:    " + (this.getDisplay() == null ? "" : this.getDisplay()) + "\n" +
                 "\tActief:          " + (this.isActive() ?  "Ja" : "Nee") + "\n" +
                 "\tStandaard keuze: " + (this.isDefault() ? "Ja" : "Nee") + "\n";
