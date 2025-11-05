@@ -9,32 +9,33 @@ import lombok.Setter;
 import java.time.Instant;
 import java.util.UUID;
 
-@Getter
-@Setter
-@Entity
-@Table(name = "person")
 /**
  * <strong>Person</strong> - abstract class<br><br>
  * The abstract description of a Person.
  * Each specific type of person entity (Client, Practitioner, ClientRelation etc.) inherits this description.
  * The properties of this class are:
  * <ul>
- *      <li>id - Unique automatic created and immutable identifier of the person (UUID)</li>
- *      <li>familyName - The family name of the person. This might be the name of the partner</li>
- *      <li>prefixesFamilyName - Any common prefixes belonging to the family name (e.g., "van", "de"</li>
- *      <li>givenName - The given name (family name given at birth aka maiden name)</li>
- *      <li>initials - The initials of the person. The fully specified forenames are not relevant
+ *      <li><strong>id</strong> - Unique automatic created and immutable identifier of the person (UUID)</li>
+ *      <li><strong>familyName</strong> - The family name of the person. This might be the name of the partner</li>
+ *      <li><strong>prefixesFamilyName</strong>- Any common prefixes belonging to the family name (e.g., "van", "de"</li>
+ *      <li><strong>givenName</strong> - The given name (family name given at birth aka maiden name)</li>
+ *      <li><strong>initials</strong> - The initials of the person. The fully specified forenames are not relevant
  *      for the abstract class.</li>
- *      <li>nickName - The nickname of the person</li>
- *      <li>prefixTitles - Applicable academic or noble titles used as prefix (e.g. "Dr.", "Mr.", "Baron")</li>
- *      <li>suffixTitles - Applicable academic or other suffixes (e.g., "Msc", "Bsc", "Jr.")</li>
- *      <li>preferredNameUse - The preferred way the person want to use the name.</li>
- *      <li>gender - The gender of the person.</li>
- *      <li>createdAt - Date and time of creation of the record.</li>
- *      <li>updatedAt - Date and time of the last update of the record.</li>
+ *      <li><strong>nickName</strong> - The nickname of the person</li>
+ *      <li><strong>prefixTitles</strong> - Applicable academic or noble titles used as prefix (e.g. "Dr.", "Mr.",
+ *      "Baron")</li>
+ *      <li><strong>suffixTitles</strong> - Applicable academic or other suffixes (e.g., "Msc", "Bsc", "Jr.")</li>
+ *      <li><strong>preferredNameUse</strong> - The preferred way the person want to use the name.</li>
+ *      <li><strong>gender</strong> - The gender of the person.</li>
+ *      <li><strong>createdAt</strong> - Date and time of creation of the record.</li>
+ *      <li><strong>updatedAt</strong> - Date and time of the last update of the record.</li>
  * </ul>
  * This class is annotated with JPA annotations to map it to a database table named "person".
  */
+@Getter
+@Setter
+@Entity
+@Table(name = "person")
 public abstract class Person {
 
     @Id
@@ -45,7 +46,7 @@ public abstract class Person {
     private String familyName;
     @Column(name= "prefixes_family_name", length = 63)
     private String prefixesFamilyName;
-    @Column(name= "given_name", nullable = false, length = 127)
+    @Column(name= "givenname", nullable = false, length = 127)
     private String givenName;
     @Column(nullable = false, length = 31)
     private String nickname;
@@ -101,7 +102,7 @@ public abstract class Person {
                 "\tTitel(s) achtervoegsels:  " + (this.suffixTitles != null ? this.getSuffixTitles() : "-") + "\n" +
                 "\tNaam gebruikt:            " +
                     (this.preferredNameUse != null ? this.getPreferredNameUse().getDisplay() : "-") + "\n" +
-                "\tGeslacht:                " +
+                "\tGeslacht:                 " +
                 (this.gender != null ? this.getGender().getDisplay() : "-");
     }
 }

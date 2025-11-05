@@ -25,10 +25,11 @@ public enum PreferredNameUses implements SelectableCode {
     GIVEN_NAME_AND_FAMILY_NAME("GNF", "Geboortenaam gevolgd door naam partner.", true, false),
     FAMILY_NAME_ONLY("FML", "Alleen naam partner.", true, false);
 
-    private String code;
-    private String display;
-    private boolean isActive;
-    private boolean isDefault;
+    private final String code;
+    private final String display;
+    private final boolean isActive;
+    private final boolean isDefault;
+
     PreferredNameUses(String code, String display, boolean isActive,  boolean isDefault) {
         this.code = code;
         this.display = display;
@@ -47,9 +48,10 @@ public enum PreferredNameUses implements SelectableCode {
 
     /**
      * <strong>toPrettyString(<i></i>)</strong><br><br>
-     * Assembles the person's object attributes from current instance and converts them into an easy readable format.
+     * Assembles the person's object attributes from the current instance and converts them into an
+     * easy readable format.
      */
-    public String toPrettyString() {
+    public String toNiceString() {
         return "\nEnumerator: " + this.getClass().getSimpleName() + "\n" +
                 "\tNaam:            " + this.name() + "\n" +
                 "\tCode:            " + this.getCode() + "\n" +

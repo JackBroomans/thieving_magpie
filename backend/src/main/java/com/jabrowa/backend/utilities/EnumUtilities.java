@@ -1,8 +1,7 @@
 package com.jabrowa.backend.utilities;
 
-import com.jabrowa.backend.model.interfaces.Selectable;
+import com.jabrowa.backend.model.interfaces.SelectableCode;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -39,14 +38,14 @@ public class EnumUtilities {
                                 .getDeclaredMethod("isDefault")
                                 .invoke(e);
                     } catch (Exception ex) {
-                        throw new RuntimeException("Enum type must have isDefaultValue() method", ex);
+                        throw new RuntimeException("Enumerator class does not have an isDefault() method.");
                     }
                 })
                 .findFirst()
                 .orElse(null);
     }
 
-    public static <T extends Enum<T> & Selectable> T getFromDisplay(Class<T> enumClass, String display) {
+    public static <T extends Enum<T> & SelectableCode> T getFromDisplay(Class<T> enumClass, String display) {
 
         return fromDisplaySafe(enumClass, display)
                 .orElseThrow(() -> new IllegalArgumentException("No enum constant with display value: " + display));
@@ -62,7 +61,7 @@ public class EnumUtilities {
      * @return The enumerator item which contains the display-field with the given value.
      */
 
-    private static <E extends Enum<E> & Selectable>
+    private static <E extends Enum<E> & SelectableCode>
 
     Optional<E> fromDisplaySafe(Class<E> enumClass, String display) {
 
