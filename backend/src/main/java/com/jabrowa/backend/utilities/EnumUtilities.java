@@ -38,7 +38,7 @@ public class EnumUtilities {
                                 .getDeclaredMethod("isDefault")
                                 .invoke(e);
                     } catch (Exception ex) {
-                        throw new RuntimeException("Enumerator does not have an isDefault() method.");
+                        throw new RuntimeException("Enumerator class does not have an isDefault() method.");
                     }
                 })
                 .findFirst()
