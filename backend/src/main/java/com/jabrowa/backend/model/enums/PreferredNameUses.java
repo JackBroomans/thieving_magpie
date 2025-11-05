@@ -1,6 +1,6 @@
 package com.jabrowa.backend.model.enums;
 
-import com.jabrowa.backend.model.interfaces.Selectable;
+import com.jabrowa.backend.model.interfaces.SelectableCode;
 import com.jabrowa.backend.utilities.EnumUtilities;
 import lombok.Getter;
 
@@ -19,27 +19,22 @@ import lombok.Getter;
  * </ul>
  */
 @Getter
-public enum PreferredNameUses implements Selectable {
-    GIVEN_NAME_ONLY ("Alleen geboortenaam.", true),
-    FAMILY_NAME_AND_GIVEN_NAME ("Naam partner gevolgd door geboortenaam.", false),
-    GIVEN_NAME_AND_FAMILY_NAME("Geboortenaam gevolgd door naam partner.", false),
-    FAMILY_NAME_ONLY("Alleen naam partner.", false);
+public enum PreferredNameUses implements SelectableCode {
+    GIVEN_NAME_ONLY ("GIV", "Alleen geboortenaam.", true, true),
+    FAMILY_NAME_AND_GIVEN_NAME ("FNG", "Naam partner gevolgd door geboortenaam.", true, false),
+    GIVEN_NAME_AND_FAMILY_NAME("GNF", "Geboortenaam gevolgd door naam partner.", true, false),
+    FAMILY_NAME_ONLY("FML", "Alleen naam partner.", true, false);
 
+    private String code;
     private String display;
-    private boolean isDefaultValue;
-    PreferredNameUses(String display, boolean isDefault) {
+    private boolean isActive;
+    private boolean isDefault;
+    PreferredNameUses(String code, String display, boolean isActive,  boolean isDefault) {
+        this.code = code;
         this.display = display;
-        this.isDefaultValue = isDefault;
+        this.isActive = isActive;
+        this.isDefault = isDefault;
     }
-
-    @Override
-    public Boolean isDefaultValue() {
-        return isDefaultValue;
-    }
-
-    @Override
-    public String getDisplay() { return this.display; }
-
 
     /**
      * <strong>selectDefault</strong>()<br><br>
@@ -50,15 +45,16 @@ public enum PreferredNameUses implements Selectable {
         return EnumUtilities.selectDefault(PreferredNameUses.class);
     }
 
-
     /**
      * <strong>toPrettyString(<i></i>)</strong><br><br>
      * Assembles the person's object attributes from current instance and converts them into an easy readable format.
      */
     public String toPrettyString() {
         return "\nEnumerator: " + this.getClass().getSimpleName() + "\n" +
-                "\tConstant:        " + this.name() + "\n" +
-                "\tDisplay name:    " + this.display + "\n" +
-                "\tDefault setting: " + (this.isDefaultValue ? "Ja" : "Nee");
+                "\tNaam:            " + this.name() + "\n" +
+                "\tCode:            " + this.getCode() + "\n" +
+                "\tOmschrijving:    " + this.getDisplay() + "\n" +
+                "\tActief:          " + (this.isDefault() ? "Ja" : "Nee") + "\n" +
+                "\tStandaard optie: " + (this.isDefault() ? "Ja" : "Nee");
     }
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DiffGenerationConfig">
+    <option name="snapshotDb" value="false" />
+    <option name="snapshotDbValue" value="5a012cc9-9d0a-4b35-bc30-77989f23d895__postgres_thieving" />
+    <option name="snapshotModelValue" value="backend:backend" />
+  </component>
+</project>

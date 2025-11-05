@@ -6,7 +6,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
-    password: password
+    password: postgres
     driver-class-name: org.postgresql.Driver
     hikari:
       minimum-idle: 5
@@ -29,6 +29,9 @@ spring:
     validate-on-migrate: true
     clean-disabled: true  # Safety: prevents accidental schema wipe
     schemas: thieving
+    url: dbc:postgresql://localhost:5432/thieving_magpie
+    user: postgres
+    password: postgres
 
 server:
   port: 8080
