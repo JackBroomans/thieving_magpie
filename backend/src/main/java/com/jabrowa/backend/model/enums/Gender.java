@@ -6,19 +6,19 @@ import lombok.Getter;
 
 @Getter
 public enum Gender implements SelectableCode {
-    MALE (1, "Man", true, false),
-    FEMALE (2, "Vrouw", true,  false),
-    BIPOLAIRE (3, "Bi-polair", true,  false),
-    INDIFFERENT (4, "Onverschillig", true,  false),
-    NOT_DETERMINED(5, "Niet vastgesteld", true,  false),
-    NOT_SPECIFIED (6, "Niet gespecificeerd", true,  true);
+    MALE ("M", "Man", true, false),
+    FEMALE ("F", "Vrouw", true,  false),
+    BIPOLAIRE ("B", "Bi-polair", true,  false),
+    INDIFFERENT ("I", "Onverschillig", true,  false),
+    NOT_DETERMINED("N", "Niet vastgesteld", true,  false),
+    NOT_SPECIFIED ("X", "Niet gespecificeerd", true,  true);
 
-    private final int code;
+    private final String code;
     private final String display;
     private final boolean isActive;
     private final boolean isDefault;
 
-    Gender(int code, String display, boolean isActive, boolean isDefault) {
+    Gender(String code, String display, boolean isActive, boolean isDefault) {
         this.code = code;
         this.display = display;
         this.isActive = isActive;

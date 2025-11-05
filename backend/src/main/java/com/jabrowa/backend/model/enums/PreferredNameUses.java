@@ -29,6 +29,7 @@ public enum PreferredNameUses implements SelectableCode {
     private String display;
     private boolean isActive;
     private boolean isDefault;
+
     PreferredNameUses(String code, String display, boolean isActive,  boolean isDefault) {
         this.code = code;
         this.display = display;

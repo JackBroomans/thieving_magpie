@@ -14,10 +14,10 @@ class EntityPersonTests {
 
         Client client = new Client();
         client.setGivenName(null);
-        client.setNickName("Dikkertje");
+        client.setNickname("Dikkertje");
 
-        assertEquals("Dikkertje", client.getNickName());
+        assertEquals("Dikkertje", client.getNickname());
 
-        LOGGER.info(client.toPrettyString());
+        LOGGER.info(client.toNiceString());
     }
 }
