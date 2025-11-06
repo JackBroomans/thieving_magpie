@@ -45,7 +45,7 @@ public abstract class Person {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
-    @Column(name= "family_name", nullable = false, length = 127)
+    @Column(name= "family_name", length = 127)
     private String familyName;
     @Column(name= "prefixes_family_name", length = 63)
     private String prefixesFamilyName;
@@ -75,14 +75,15 @@ public abstract class Person {
         this.gender = selectDefault(Gender.class);
     }
 
-    private boolean validated() {
-
-        if (familyName == null || familyName.isEmpty() ||
-                givenName == null || givenName.isEmpty()) {
-            return false;
-        }
-
-        return true;
+    /**
+     * <strong>validated<i>()</i></strong><br><br>
+     * Checks if the mandatory fields are specified. Used to avoid unnecessary round trips to the database,
+     * by checking data in advance,
+     * @return Boolean indicating is the specified entity is valid.
+     */
+    public boolean validated() {
+        return givenName != null && !givenName.isEmpty()  &&
+                initials != null && !initials.isEmpty();
     }
 
 //            *      <li>dateOfBirth - The date of birth of the person</li>
@@ -101,7 +102,6 @@ public abstract class Person {
 //    @Enumerated(EnumType.ORDINAL)
 //    private Gender gender;
 
-
     /**
      * <strong>toPrettyString(<i></i>)</strong> (method)<br><br>
      * Constructs an easy readable formatted string from the current instance of the 'Person'.
@@ -110,11 +110,11 @@ public abstract class Person {
     public String toNiceString() {
         return "Class: " + this.getClass().getSimpleName() + "\n" +
                 "\tId:                       " + (this.id != null ? this.id.toString() : "-") + "\n" +
-                "\tFamilienaam:              " + (this.familyName == null  ? "-" : this.familyName) + "\n" +
+                "\tFamilienaam:              " + (this.familyName != null  ? this.familyName : "-") + "\n" +
                 "\tVoorvoegsels:             " +
-                    (this.prefixesFamilyName == null ? "-" : this.getPrefixesFamilyName()) + "\n" +
-                "\tGeboortenaam:             " + (this.givenName == null ? "-" : this.getGivenName()) + "\n" +
-                "\tInitialen:                " + (this.initials != null ? "-" : this.getInitials()) + "\n" +
+                    (this.prefixesFamilyName != null ? this.getPrefixesFamilyName() : "-") + "\n" +
+                "\tGeboortenaam:             " + (this.givenName != null ? this.getGivenName() : "-") + "\n" +
+                "\tInitialen:                " + (this.initials != null ? this.getInitials() : "-") + "\n" +
                 "\tRoepnaamn:                " + (this.nickname != null ? this.getNickname() : "-") + "\n" +
                 "\tTitel(s) voorvoegsels:    " + (this.prefixTitles != null ? this.getPrefixTitles() : "-") + "\n" +
                 "\tTitel(s) achtervoegsels:  " + (this.suffixTitles != null ? this.getSuffixTitles() : "-") + "\n" +
