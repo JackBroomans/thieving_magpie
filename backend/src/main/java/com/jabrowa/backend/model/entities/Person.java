@@ -2,7 +2,6 @@ package com.jabrowa.backend.model.entities;
 
 import com.jabrowa.backend.model.enums.Gender;
 import com.jabrowa.backend.model.enums.PreferredNameUses;
-import com.jabrowa.backend.utilities.EnumUtilities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,9 +18,10 @@ import static com.jabrowa.backend.utilities.EnumUtilities.selectDefault;
  * The properties of this class are:
  * <ul>
  *      <li><strong>id</strong> - Unique automatic created and immutable identifier of the person (UUID)</li>
+ *      <li><strong>givenName</strong> - The given name (family name given at birth aka maiden name)</li>
+ *      <li><strong>prefixesFamilyName</strong>- Any common prefixes belonging to the given name (e.g., "van", "de"</li>
  *      <li><strong>familyName</strong> - The family name of the person. This might be the name of the partner</li>
  *      <li><strong>prefixesFamilyName</strong>- Any common prefixes belonging to the family name (e.g., "van", "de"</li>
- *      <li><strong>givenName</strong> - The given name (family name given at birth aka maiden name)</li>
  *      <li><strong>initials</strong> - The initials of the person. The fully specified forenames are not relevant
  *      for the abstract class.</li>
  *      <li><strong>nickName</strong> - The nickname of the person</li>
@@ -45,12 +45,14 @@ public abstract class Person {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
+    @Column(name= "given_name", nullable = false, length = 127)
+    private String givenName;
+    @Column(name = "prefixes_given_name", length = 63)
+    private String prefixesGivenName;
     @Column(name= "family_name", length = 127)
     private String familyName;
     @Column(name= "prefixes_family_name", length = 63)
     private String prefixesFamilyName;
-    @Column(name= "givenname", nullable = false, length = 127)
-    private String givenName;
     @Column(nullable = false, length = 31)
     private String nickname;
     @Column(nullable = false, length = 31)
@@ -66,9 +68,9 @@ public abstract class Person {
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt = Instant.now();
+    private Instant createdAt;
     @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt;
+    private Instant updatedAt =  Instant.now();
 
     public Person() {
         this.preferredNameUse = selectDefault(PreferredNameUses.class);
@@ -83,24 +85,9 @@ public abstract class Person {
      */
     public boolean validated() {
         return givenName != null && !givenName.isEmpty()  &&
-                initials != null && !initials.isEmpty();
+                initials != null && !initials.isEmpty()  &&
+                updatedAt != null && !updatedAt.isAfter(Instant.now());
     }
-
-//            *      <li>dateOfBirth - The date of birth of the person</li>
-//            *      <li>age - The age of the person, calculated from the date of birth</li>
-//            *      <li>placeOfBirth - The place where the person was born</li>
-//            *      <li>countryOfBirth - The country where the person was born</li>
-//    @Column(name= "")
-//    private LocalDate dateOfBirth;
-//    @Column(name= "")
-//    private int age;
-//    private String placeOfBirth;
-//    @Column(name= "")
-//    private String countryOfBirth;
-//
-//    @Column(nullable = false)
-//    @Enumerated(EnumType.ORDINAL)
-//    private Gender gender;
 
     /**
      * <strong>toPrettyString(<i></i>)</strong> (method)<br><br>
@@ -109,19 +96,22 @@ public abstract class Person {
      */
     public String toNiceString() {
         return "Class: " + this.getClass().getSimpleName() + "\n" +
-                "\tId:                       " + (this.id != null ? this.id.toString() : "-") + "\n" +
-                "\tFamilienaam:              " + (this.familyName != null  ? this.familyName : "-") + "\n" +
-                "\tVoorvoegsels:             " +
+                "\tId:                         " + (this.id != null ? this.id.toString() : "-") + "\n" +
+                "\tGeboortenaam:               " + (this.givenName != null ? this.getGivenName() : "-") + "\n" +
+                "\tFamilienaam:                " + (this.familyName != null  ? this.familyName : "-") + "\n" +
+                "\tVoorvoegsels:               " +
                     (this.prefixesFamilyName != null ? this.getPrefixesFamilyName() : "-") + "\n" +
-                "\tGeboortenaam:             " + (this.givenName != null ? this.getGivenName() : "-") + "\n" +
-                "\tInitialen:                " + (this.initials != null ? this.getInitials() : "-") + "\n" +
-                "\tRoepnaamn:                " + (this.nickname != null ? this.getNickname() : "-") + "\n" +
-                "\tTitel(s) voorvoegsels:    " + (this.prefixTitles != null ? this.getPrefixTitles() : "-") + "\n" +
-                "\tTitel(s) achtervoegsels:  " + (this.suffixTitles != null ? this.getSuffixTitles() : "-") + "\n" +
-                "\tNaam gebruikt:            " +
+                "\tInitialen:                  " + (this.initials != null ? this.getInitials() : "-") + "\n" +
+                "\tRoepnaamn:                  " + (this.nickname != null ? this.getNickname() : "-") + "\n" +
+                "\tTitel(s) voorvoegsels:      " + (this.prefixTitles != null ? this.getPrefixTitles() : "-") + "\n" +
+                "\tTitel(s) achtervoegsels:    " + (this.suffixTitles != null ? this.getSuffixTitles() : "-") + "\n" +
+                "\tNaam gebruikt:              " +
                     (this.preferredNameUse != null ? this.getPreferredNameUse().getCode() + " - " +
                             this.getPreferredNameUse().getDisplay() : "-") + "\n" +
-                "\tGeslacht:                 " +
-                    (this.gender != null ? this.getGender().getCode() + " - " + this.getGender().getDisplay() : "-");
+                "\tGeslacht:                   " +
+                    (this.gender != null ? this.getGender().getCode() + " - " + this.getGender().getDisplay() : "-") +
+                    "\n" +
+                "\tTijdstip aanmaken:          " + this.getCreatedAt() + "\n" +
+                "\tTijdstip laatste wijziging: " + this.getUpdatedAt();
     }
 }
