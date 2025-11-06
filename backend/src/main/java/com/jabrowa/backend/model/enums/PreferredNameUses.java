@@ -20,10 +20,10 @@ import lombok.Getter;
  */
 @Getter
 public enum PreferredNameUses implements SelectableCode {
-    GIVEN_NAME_ONLY ("GIV", "Alleen geboortenaam.", true, true),
-    FAMILY_NAME_AND_GIVEN_NAME ("FNG", "Naam partner gevolgd door geboortenaam.", true, false),
-    GIVEN_NAME_AND_FAMILY_NAME("GNF", "Geboortenaam gevolgd door naam partner.", true, false),
-    FAMILY_NAME_ONLY("FML", "Alleen naam partner.", true, false);
+    GIVEN_NAME_ONLY ("GIV", "Alleen geboortenaam", true, true),
+    FAMILY_NAME_AND_GIVEN_NAME ("FNG", "Naam partner gevolgd door geboortenaam", true, false),
+    GIVEN_NAME_AND_FAMILY_NAME("GNF", "Geboortenaam gevolgd door naam partner", true, false),
+    FAMILY_NAME_ONLY("FML", "Alleen naam partner", true, false);
 
     private final String code;
     private final String display;
@@ -35,6 +35,10 @@ public enum PreferredNameUses implements SelectableCode {
         this.display = display;
         this.isActive = isActive;
         this.isDefault = isDefault;
+    }
+
+    private void setDefaults() {
+
     }
 
     /**

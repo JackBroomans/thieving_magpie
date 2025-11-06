@@ -2,12 +2,15 @@ package com.jabrowa.backend.model.entities;
 
 import com.jabrowa.backend.model.enums.Gender;
 import com.jabrowa.backend.model.enums.PreferredNameUses;
+import com.jabrowa.backend.utilities.EnumUtilities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
 import java.util.UUID;
+
+import static com.jabrowa.backend.utilities.EnumUtilities.selectDefault;
 
 /**
  * <strong>Person</strong> - abstract class<br><br>
@@ -67,6 +70,21 @@ public abstract class Person {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    public Person() {
+        this.preferredNameUse = selectDefault(PreferredNameUses.class);
+        this.gender = selectDefault(Gender.class);
+    }
+
+    private boolean validated() {
+
+        if (familyName == null || familyName.isEmpty() ||
+                givenName == null || givenName.isEmpty()) {
+            return false;
+        }
+
+        return true;
+    }
+
 //            *      <li>dateOfBirth - The date of birth of the person</li>
 //            *      <li>age - The age of the person, calculated from the date of birth</li>
 //            *      <li>placeOfBirth - The place where the person was born</li>
@@ -90,7 +108,7 @@ public abstract class Person {
      * @return String containing the easy readable presentation of the person.
      */
     public String toNiceString() {
-        return "Class: " + this.getClass().getName() + "\n" +
+        return "Class: " + this.getClass().getSimpleName() + "\n" +
                 "\tId:                       " + (this.id != null ? this.id.toString() : "-") + "\n" +
                 "\tFamilienaam:              " + (this.familyName == null  ? "-" : this.familyName) + "\n" +
                 "\tVoorvoegsels:             " +
@@ -101,8 +119,9 @@ public abstract class Person {
                 "\tTitel(s) voorvoegsels:    " + (this.prefixTitles != null ? this.getPrefixTitles() : "-") + "\n" +
                 "\tTitel(s) achtervoegsels:  " + (this.suffixTitles != null ? this.getSuffixTitles() : "-") + "\n" +
                 "\tNaam gebruikt:            " +
-                    (this.preferredNameUse != null ? this.getPreferredNameUse().getDisplay() : "-") + "\n" +
+                    (this.preferredNameUse != null ? this.getPreferredNameUse().getCode() + " - " +
+                            this.getPreferredNameUse().getDisplay() : "-") + "\n" +
                 "\tGeslacht:                 " +
-                (this.gender != null ? this.getGender().getDisplay() : "-");
+                    (this.gender != null ? this.getGender().getCode() + " - " + this.getGender().getDisplay() : "-");
     }
 }

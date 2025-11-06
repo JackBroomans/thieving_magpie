@@ -1,4 +1,4 @@
-package com.jabrowa.backend.EnumTests;
+package com.jabrowa.backend.EntityTests;
 
 import org.junit.platform.commons.annotation.Testable;
 import org.slf4j.Logger;
