@@ -1,3 +1,21 @@
+# Enumerators
+Most enumerators implement an interface 'SelectableCode' which prescribes implementation of mandatory fields  and methods:
+- **keyValue**: *Field - int* The key value which is used as identifier of the constant in de database.
+- **code**: *Field - String* A code for the constant in the enumerator, specially used in code-systems.
+- **display**: *Field - String* A short description of the constant, mostly used as label.
+- **isActive**: *Field - boolean* Indicates if the constant is active or not.
+- **isDefault**: *Field - boolean* Indicates if the constant is set as the default constant of a particular enumerator.
+- **selectByKey()**: *Method* Selects a constant of a particular enumerator on the provided key value.
+- **selectDefault**: *Method* Selects the default set constant of a particular enumerator.
+
+This structure empowers the use of standard generic functionality which can be applied on the both regular enumerators as enumerators for code-systems.
+## Persisting enumerators
+The standard options to persist enumerators (or their referrers) with Hibernate (JPA, Spring Boot), do have their drawbacks:
+1. Using the ordinal number makes the relational integrity of the persisted data vulnerable the adding, removing or change sequence in the enumerator.
+2. Using the name of the constant, costs a lot of (database) space and decreases the search performance, especially when the amount  of record raises.
+
+To avoid these drawback, the '*keyValue*' attribute is introduced, which is stored as a small-integer and is independent of the ordinal order of the constants.
+This practice, however, needs a method which search and select the appropriate constant based on this '*keyvalue*'. This method is a component of the '*EnumUtilities*' class.
 
 # Database
 The application is build against a PostgreSQL database.
