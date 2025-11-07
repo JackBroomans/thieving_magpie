@@ -16,13 +16,6 @@ public class RegularEnumTests {
     @Test
     public void PreferredNameUsesTests() {
         /*
-        WHEN    'PreferredNameUses' enumerator is initialized,
-        THEN    The default set value is selected
-         */
-        PreferredNameUses testNameUses = null;
-        assertTrue(testNameUses.isDefault());
-
-        /*
         WHEN    a constant from the 'PreferredNameUses' enumerator is instantiated
         AND     the 'selectDefault()' method is called
         THEN    the instantiated constant is remains the actual instance.

@@ -15,24 +15,27 @@ import lombok.Getter;
  *     <li><strong>INDIFFERENT</strong></li>
  *     <li><strong>NOT_DETERMINED</strong></li>
  *     <li><strong>NOT_SPECIFIED</strong></li>
- *
  * </ul>
+ * The enumerator contains the standard (mandatory) attributes to implement the required methods as prescribed in the
+ * SelectableCode interface.
  */
 @Getter
 public enum Gender implements SelectableCode {
-    MALE ("M", "Man", true, false),
-    FEMALE ("F", "Vrouw", true,  false),
-    BIPOLAIRE("B", "Bi-polair", true,  false),
-    INDIFFERENT ("I", "Onverschillig", true,  false),
-    NOT_DETERMINED("N", "Niet vastgesteld", true,  false),
-    NOT_SPECIFIED ("X", "Niet gespecificeerd", true,  true);
+    MALE (1, "M", "Man", true, false),
+    FEMALE (2, "F", "Vrouw", true,  false),
+    BIPOLAIRE(3, "B", "Bi-polair", true,  false),
+    INDIFFERENT (4, "I", "Onverschillig", true,  false),
+    NOT_DETERMINED(5, "N", "Niet vastgesteld", true,  false),
+    NOT_SPECIFIED (6, "X", "Niet gespecificeerd", true,  true);
 
+    private final int keyValue;
     private final String code;
     private final String display;
     private final boolean isActive;
     private final boolean isDefault;
 
-    Gender(String code, String display, boolean isActive, boolean isDefault) {
+    Gender(int keyValue, String code, String display, boolean isActive, boolean isDefault) {
+        this.keyValue = keyValue;
         this.code = code;
         this.display = display;
         this.isActive = isActive;
@@ -58,6 +61,7 @@ public enum Gender implements SelectableCode {
      */
     public String toNiceString() {
         return "\nEnumerator: " + this.getClass().getSimpleName() + "\n" +
+                "\tIdentificatie:   " + this.getKeyValue() + "\n" +
                 "\tNaam:            " + this.name() + "\n" +
                 "\tCode:            " + this.getCode() + "\n" +
                 "\tOmschrijving:    " + (this.getDisplay() == null ? "" : this.getDisplay()) + "\n" +

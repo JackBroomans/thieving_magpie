@@ -37,8 +37,7 @@ import static com.jabrowa.backend.utilities.EnumUtilities.selectDefault;
  */
 @Getter
 @Setter
-@Entity
-@Table(name = "person")
+@MappedSuperclass
 public abstract class Person {
 
     @Id
@@ -54,9 +53,9 @@ public abstract class Person {
     @Column(name= "prefixes_family_name", length = 63)
     private String prefixesFamilyName;
     @Column(nullable = false, length = 31)
-    private String nickname;
-    @Column(nullable = false, length = 31)
     private String initials;
+    @Column(nullable = false, length = 31)
+    private String nickname;
     @Column(name= "prefix_titles", length = 63)
     private String prefixTitles;
     @Column(name= "suffix_titles", length = 63)

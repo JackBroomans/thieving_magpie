@@ -66,17 +66,19 @@ public class EnumUtilitiesTests {
      */
     @Getter
     protected enum TestEnumNoDefault implements SelectableCode {
-        DIKKERTJE("DIK", "Dikkertje Dap", true, false),
-        PET("PET", "Pet van de Petteflet", true, false),
-        POMPELOENTJE("POM", "Beertje Pompeloentje", true, false),
-        JIP("JIP", "Jip van Janneke", true, false);
+        DIKKERTJE(1, "DIK", "Dikkertje Dap", true, false),
+        PET(2, "PET", "Pet van de Petteflet", true, false),
+        POMPELOENTJE(3, "POM", "Beertje Pompeloentje", true, false),
+        JIP(4, "JIP", "Jip van Janneke", true, false);
 
+        final int keyValue;
         final String code;
         final String display;
         final boolean isActive;
         final boolean isDefault;
 
-        TestEnumNoDefault(String code, String display, boolean isActive, boolean isDefault) {
+        TestEnumNoDefault(int keyValue, String code, String display, boolean isActive, boolean isDefault) {
+            this.keyValue = keyValue;
             this.code = code;
             this.display = display;
             this.isActive = isActive;
@@ -94,17 +96,19 @@ public class EnumUtilitiesTests {
      */
     @Getter
     protected enum TestEnumTwoDefaults implements SelectableCode {
-        DIKKERTJE("DIK", "Dikkertje Dap", true, false),
-        PET("PET", "Pet van de Petteflet", true, true),
-        POMPELOENTJE("POM", "Beertje Pompeloentje", true, false),
-        JIP("JIP", "Jip van Janneke", true, true);
+        DIKKERTJE(1, "DIK", "Dikkertje Dap", true, false),
+        PET(2, "PET", "Pet van de Petteflet", true, true),
+        POMPELOENTJE(3, "POM", "Beertje Pompeloentje", true, false),
+        JIP(4, "JIP", "Jip van Janneke", true, true);
 
+        final int keyValue;
         final String code;
         final String display;
         final boolean isActive;
         final boolean isDefault;
 
-        TestEnumTwoDefaults(String code, String display, boolean isActive, boolean isDefault) {
+        TestEnumTwoDefaults(int keyValue, String code, String display, boolean isActive, boolean isDefault) {
+            this.keyValue = keyValue;
             this.code = code;
             this.display = display;
             this.isActive = isActive;
