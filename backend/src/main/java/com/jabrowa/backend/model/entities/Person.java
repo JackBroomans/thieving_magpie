@@ -2,12 +2,18 @@ package com.jabrowa.backend.model.entities;
 
 import com.jabrowa.backend.model.enums.Gender;
 import com.jabrowa.backend.model.enums.PreferredNameUses;
+import com.jabrowa.backend.utilities.EnumUtilities;
 import jakarta.persistence.*;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
+
+import org.springframework.data.annotation.*;
 
 import static com.jabrowa.backend.utilities.EnumUtilities.selectDefault;
 
@@ -63,9 +69,43 @@ public abstract class Person {
     @Column(name= "preferred_name_use", nullable = false)
     @Enumerated(EnumType.STRING)
     private PreferredNameUses preferredNameUse;
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+
+
+
+    @Transient
     private Gender gender;
+    @Basic(fetch = FetchType.LAZY)
+    private int genderKeyValue;
+    /**
+     * <strong>postLoadGender<i>()</i></strong><br><br>
+     * Synchronize the gender constant form the key value received from the person which is searched for.
+     * @throws IllegalArgumentException when the parameters aren't specified, complete and/or valid, or when no
+     *         gender is found, based on the given key value.
+     */
+    @PostLoad
+    public void postLoadGender() throws IllegalArgumentException {
+//        if (genderKeyValue > 0 && gender != null) {
+            Optional<Gender> optionalReturn = EnumUtilities.getByKeyValue(Gender.class, genderKeyValue);
+            if (optionalReturn.isEmpty()) {
+                throw new IllegalArgumentException("Key value doesn't exist in table 'Gender'.");
+            }
+            else {
+                this.gender = optionalReturn.get();
+            }
+        }
+//        else {
+//            throw new IllegalArgumentException("Gender class isn't passed and/or key value must be greater than 0.");
+//        }
+//    }
+
+    /**
+     *
+     */
+    @PrePersist
+    public void prePersist() {
+
+    }
+
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
     @Column(name = "updated_at", nullable = false)

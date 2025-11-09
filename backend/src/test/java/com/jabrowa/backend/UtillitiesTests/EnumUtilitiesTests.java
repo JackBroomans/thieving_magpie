@@ -59,6 +59,36 @@ public class EnumUtilitiesTests {
         assertTrue(Gender.NOT_SPECIFIED.isDefault());
     }
 
+    @Test
+    public void EnumSelectByKeyValueTests() {
+       /*
+        WHEN    the 'selectByKey()' method from the 'EnumUtilities' class is called
+        AND     one or both the parameters equals null,
+        THEN    An IllegalArgument exception is thrown.
+         */
+        assertThrows(IllegalArgumentException.class, () -> EnumUtilities.getByKeyValue(null,0));
+        assertThrows(IllegalArgumentException.class, () -> EnumUtilities.getByKeyValue(null,6));
+        assertThrows(IllegalArgumentException.class, () -> EnumUtilities.getByKeyValue(Gender.class,0));
+
+        /*
+        WHEN    the 'selectByKey()' method from the 'EnumUtilities' class is called
+        AND     the both enumerator-class and key value are specified
+        AND     the key value doesn't exist within the given enumerator-class,
+        THEN    the associated constant which is set as default is returned.
+         */
+        assertTrue (EnumUtilities.getByKeyValue(Gender.class,401).isPresent());
+        assertTrue(EnumUtilities.getByKeyValue(Gender.class,401).get().isDefault());
+
+        /*
+        WHEN    the 'selectByKey()' method from the 'EnumUtilities' class is called
+        AND     both enumerator-class and key value are specified
+        AND     the key value is associated with a constant of the given enumerator-class,
+        THEN    that constant is fetched, including its attributes values.
+         */
+        assertTrue (EnumUtilities.getByKeyValue(Gender.class,4).isPresent());
+        assertEquals("I", EnumUtilities.getByKeyValue(Gender.class,4).get().getCode());
+
+    }
 
     /**
      * <strong>TestEnumNoDefault</strong> - enumerator<br><br>

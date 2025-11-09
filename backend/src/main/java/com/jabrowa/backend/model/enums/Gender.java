@@ -24,7 +24,7 @@ public enum Gender implements SelectableCode {
     MALE (1, "M", "Man", true, false),
     FEMALE (2, "F", "Vrouw", true,  false),
     BIPOLAIRE(3, "B", "Bi-polair", true,  false),
-    INDIFFERENT (4, "I", "Onverschillig", true,  false),
+    INDIFFERENT (4, "I", "niet aangegeven", true,  false),
     NOT_DETERMINED(5, "N", "Niet vastgesteld", true,  false),
     NOT_SPECIFIED (6, "X", "Niet gespecificeerd", true,  true);
 

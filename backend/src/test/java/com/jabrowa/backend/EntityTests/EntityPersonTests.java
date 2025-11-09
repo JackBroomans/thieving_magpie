@@ -63,4 +63,37 @@ class EntityPersonTests {
          */
         LOGGER.info(client.toNiceString());
     }
+
+    @Test
+    public void PersonPostLoadTest() {
+        Client client = new Client();
+         /*
+         WHEN    the key value of the gender is smaller than or equal to 0
+         AND/OR  the gender is not specified,
+         THEN    an IllegalArgument exception is thrown
+         */
+        client.setGender(null);
+        client.setGenderKeyValue(0);
+        assertThrows(IllegalArgumentException.class, client::postLoadGender);
+
+         /*
+         WHEN    a gender is requested, based on its key value by calling getByKeyValue()
+         AND     the method returns no result because the key value doesn't match with a gender
+         THEN    the default set gender constant is returned.
+         */
+        client.setGenderKeyValue(37);
+        client.postLoadGender();
+        assertTrue(client.getGender().isDefault());
+
+         /*
+         WHEN    by calling getByKeyValue() a gender is requested, based on its key value,
+         AND     both class and key value are validated as parameter
+         AND     the key value is attached to an existing gender,
+         THEN    the requested gender is assigned to the person property.
+         */
+        client.setGender(null);
+        client.setGenderKeyValue(3);
+        client.postLoadGender();
+        assertEquals("B", client.getGender().getCode());
+    }
 }

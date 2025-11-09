@@ -51,6 +51,7 @@ public class EnumUtilities {
                 .orElseThrow(() -> new IllegalArgumentException("No enum constant with display value: " + display));
     }
 
+
     /**
      * <strong>fromDisplaySafe(<i>Class<E>, (String)</i></strong><br><br>
      * Searches for a certain display-(description) in a given enumerator.
@@ -62,8 +63,7 @@ public class EnumUtilities {
      */
 
     private static <E extends Enum<E> & SelectableCode>
-
-    Optional<E> fromDisplaySafe(Class<E> enumClass, String display) {
+        Optional<E> fromDisplaySafe(Class<E> enumClass, String display) {
 
         String normalizedInput = normalizeString(display);
         return Arrays.stream(enumClass.getEnumConstants())
@@ -72,4 +72,25 @@ public class EnumUtilities {
 
     }
 
+
+    /**
+     * <strong>getByKeyValue(<i>Enum<E>, int</E></i>)</strong><br><br>
+     * Searches and selects a constant with the provided key value (attribute) in a given enumerator-class.
+     * @param enumClass The enumerator-class from which the constant with the provided key value must be selected.
+     * @param keyValue The key value of the constant of the given enumerator class to search and select on.
+     * @return An Optional of the type of enumerator wherein the search was performed, When not found the default set
+     * constant of the enumerator-class is returned as optional, and when that isn't found empty optional is returned.
+     * is returned.
+     */
+    public static <E extends Enum<E> & SelectableCode>
+    Optional<E> getByKeyValue(Class<E> enumClass, int keyValue) {
+        if (enumClass == null || keyValue <= 0) {
+            throw new IllegalArgumentException("No enum constant and/or key value passed.");
+        }
+
+       return Optional.ofNullable(Arrays.stream(enumClass.getEnumConstants())
+               .filter(e -> e.getKeyValue() == keyValue)
+               .findFirst()
+               .orElse(selectDefault(enumClass)));
+    }
 }
