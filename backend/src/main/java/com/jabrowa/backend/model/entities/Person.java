@@ -13,6 +13,9 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cglib.core.EmitUtils;
 import org.springframework.data.annotation.*;
 
 import static com.jabrowa.backend.utilities.EnumUtilities.selectDefault;
@@ -43,34 +46,36 @@ import static com.jabrowa.backend.utilities.EnumUtilities.selectDefault;
  */
 @Getter
 @Setter
+@Converter(autoApply = true)
 @MappedSuperclass
 public abstract class Person {
+    @Transient
+    private Logger logger = LoggerFactory.getLogger(Person.class);
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
-    @Column(name= "given_name", nullable = false, length = 127)
+    @Column(name = "given_name", nullable = false, length = 127)
     private String givenName;
     @Column(name = "prefixes_given_name", length = 63)
     private String prefixesGivenName;
-    @Column(name= "family_name", length = 127)
+    @Column(name = "family_name", length = 127)
     private String familyName;
-    @Column(name= "prefixes_family_name", length = 63)
+    @Column(name = "prefixes_family_name", length = 63)
     private String prefixesFamilyName;
     @Column(nullable = false, length = 31)
     private String initials;
     @Column(nullable = false, length = 31)
     private String nickname;
-    @Column(name= "prefix_titles", length = 63)
+    @Column(name = "prefix_titles", length = 63)
     private String prefixTitles;
-    @Column(name= "suffix_titles", length = 63)
+    @Column(name = "suffix_titles", length = 63)
     private String suffixTitles;
-    @Column(name= "preferred_name_use", nullable = false)
+    @Column(name = "preferred_name_use", nullable = false)
     @Enumerated(EnumType.STRING)
     private PreferredNameUses preferredNameUse;
-
-
 
     @Transient
     private Gender gender;
@@ -78,38 +83,65 @@ public abstract class Person {
     private int genderKeyValue;
     /**
      * <strong>postLoadGender<i>()</i></strong><br><br>
-     * Synchronize the gender constant form the key value received from the person which is searched for.
+     * Normalize the database enum persistence by using the 'KeyValue' attribute, which is a smallint and save a lot
+     * of space. The postLoad annotation runs automatically, so normalization is guaranteed.
+     * The method is tested under the abstract class 'Person' tests.
      * @throws IllegalArgumentException when the parameters aren't specified, complete and/or valid, or when no
-     *         gender is found, based on the given key value.
+     *                                  gender is found, based on the given key value.
+     * <i>Note that the original (transient) enumeration is used only in the backend business logical.</i>
      */
     @PostLoad
     public void postLoadGender() throws IllegalArgumentException {
-//        if (genderKeyValue > 0 && gender != null) {
-            Optional<Gender> optionalReturn = EnumUtilities.getByKeyValue(Gender.class, genderKeyValue);
-            if (optionalReturn.isEmpty()) {
-                throw new IllegalArgumentException("Key value doesn't exist in table 'Gender'.");
-            }
-            else {
-                this.gender = optionalReturn.get();
-            }
+        Optional<Gender> optionalReturn = EnumUtilities.getByKeyValue(Gender.class, genderKeyValue);
+        if (optionalReturn.isEmpty()) {
+            logger.warn("Unknown gender key '{}'", genderKeyValue);
+            setGender(EnumUtilities.selectDefault(Gender.class));
+        } else {
+            this.gender = optionalReturn.get();
         }
-//        else {
-//            throw new IllegalArgumentException("Gender class isn't passed and/or key value must be greater than 0.");
-//        }
-//    }
+    }
 
     /**
-     *
+     * <strong>prePersistGender()</strong><br><br>
+     * Denormalizes the (transient) enumerator to its key-value before persisting, to make the database stores the
+     * (compact_ key-value while the backend uses the enum.
+     * <i>This method runs automatically before persist or update operations.</i>
+     * @throws IllegalArgumentException if the gender attribute is null or invalid.
      */
     @PrePersist
-    public void prePersist() {
+    @PreUpdate
+    public void prePersistGender() {
+        /*
+        WHEN    a person entity is added to or updated in the database by entity projection
+        AND     the gender of the person is not specified,
+        THEN    the default set constant of the gender enumerator is assigned to that person.
+        AND     the key-value of the default gender constant is persisted along with the entity.
+         */
+        /*
+        WHEN    a person entity is added to or updated in the database by entity projection
+        AND     the gender of the person is defined by an invalid key-value,
+        THEN    the default set constant of the gender enumerator is assigned to that person
+        AND     the key-value of the default gender constant is persisted along with the entity.
+         */
+        /*
+        WHEN    a person entity is added to or updated in the database by entity projection
+        AND     the gender of the person is specified correctly,
+        THEN    the key-value of that gender is persisted along with the entity.
+         */
+        /*
 
+         */
+        if (gender == null || genderKeyValue <= 0) {
+            logger.warn("Gender not specified or wrong key-value. Default Gender is applied.");
+            this.gender = EnumUtilities.selectDefault(Gender.class);
+        }
+        this.genderKeyValue = gender.getKeyValue();
     }
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
     @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt =  Instant.now();
+    private Instant updatedAt = Instant.now();
 
     public Person() {
         this.preferredNameUse = selectDefault(PreferredNameUses.class);
@@ -117,14 +149,13 @@ public abstract class Person {
     }
 
     /**
-     * <strong>validated<i>()</i></strong><br><br>
-     * Checks if the mandatory fields are specified. Used to avoid unnecessary round trips to the database,
-     * by checking data in advance,
-     * @return Boolean indicating is the specified entity is valid.
+     * <strong>isValidated<i>()</i></strong><br><br>
+     * Checks if the mandatory fields are specified.
+     * @return a boolean indicating if all the mandatory fields are specified.
      */
-    public boolean validated() {
-        return givenName != null && !givenName.isEmpty()  &&
-                initials != null && !initials.isEmpty()  &&
+    public boolean isValidated() {
+        return givenName != null && !givenName.isEmpty() &&
+                initials != null && !initials.isEmpty() &&
                 updatedAt != null && !updatedAt.isAfter(Instant.now());
     }
 
@@ -137,19 +168,19 @@ public abstract class Person {
         return "Class: " + this.getClass().getSimpleName() + "\n" +
                 "\tId:                         " + (this.id != null ? this.id.toString() : "-") + "\n" +
                 "\tGeboortenaam:               " + (this.givenName != null ? this.getGivenName() : "-") + "\n" +
-                "\tFamilienaam:                " + (this.familyName != null  ? this.familyName : "-") + "\n" +
+                "\tFamilienaam:                " + (this.familyName != null ? this.familyName : "-") + "\n" +
                 "\tVoorvoegsels:               " +
-                    (this.prefixesFamilyName != null ? this.getPrefixesFamilyName() : "-") + "\n" +
+                (this.prefixesFamilyName != null ? this.getPrefixesFamilyName() : "-") + "\n" +
                 "\tInitialen:                  " + (this.initials != null ? this.getInitials() : "-") + "\n" +
                 "\tRoepnaamn:                  " + (this.nickname != null ? this.getNickname() : "-") + "\n" +
                 "\tTitel(s) voorvoegsels:      " + (this.prefixTitles != null ? this.getPrefixTitles() : "-") + "\n" +
                 "\tTitel(s) achtervoegsels:    " + (this.suffixTitles != null ? this.getSuffixTitles() : "-") + "\n" +
                 "\tNaam gebruikt:              " +
-                    (this.preferredNameUse != null ? this.getPreferredNameUse().getCode() + " - " +
-                            this.getPreferredNameUse().getDisplay() : "-") + "\n" +
+                (this.preferredNameUse != null ? this.getPreferredNameUse().getCode() + " - " +
+                        this.getPreferredNameUse().getDisplay() : "-") + "\n" +
                 "\tGeslacht:                   " +
-                    (this.gender != null ? this.getGender().getCode() + " - " + this.getGender().getDisplay() : "-") +
-                    "\n" +
+                (this.gender != null ? this.getGender().getCode() + " - " + this.getGender().getDisplay() : "-") +
+                "\n" +
                 "\tTijdstip aanmaken:          " + this.getCreatedAt() + "\n" +
                 "\tTijdstip laatste wijziging: " + this.getUpdatedAt();
     }

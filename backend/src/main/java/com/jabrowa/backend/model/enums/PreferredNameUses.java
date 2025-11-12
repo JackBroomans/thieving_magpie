@@ -19,19 +19,19 @@ import lombok.Getter;
  * </ul>
  */
 @Getter
-public enum PreferredNameUses implements SelectableCode {
-    GIVEN_NAME_ONLY (1, "GIV", "Alleen geboortenaam", true, true),
-    FAMILY_NAME_AND_GIVEN_NAME (2, "FNG", "Naam partner gevolgd door geboortenaam", true, false),
-    GIVEN_NAME_AND_FAMILY_NAME(3, "GNF", "Geboortenaam gevolgd door naam partner", true, false),
-    FAMILY_NAME_ONLY(4, "FML", "Alleen naam partner", true, false);
+public enum PreferredNameUses implements SelectableCode<Short> {
+    GIVEN_NAME_ONLY ((short) 1, "GIV", "Alleen geboortenaam", true, true),
+    FAMILY_NAME_AND_GIVEN_NAME ((short) 2, "FNG", "Naam partner gevolgd door geboortenaam", true, false),
+    GIVEN_NAME_AND_FAMILY_NAME((short) 3, "GNF", "Geboortenaam gevolgd door naam partner", true, false),
+    FAMILY_NAME_ONLY((short) 4, "FML", "Alleen naam partner", true, false);
 
-    private final int keyValue;
+    private final Short keyValue;
     private final String code;
     private final String display;
     private final boolean isActive;
     private final boolean isDefault;
 
-    PreferredNameUses(int keyValue, String code, String display, boolean isActive,  boolean isDefault) {
+    PreferredNameUses(Short keyValue, String code, String display, boolean isActive,  boolean isDefault) {
 
         this.keyValue = keyValue;
         this.code = code;

@@ -95,19 +95,19 @@ public class EnumUtilitiesTests {
      * Enumerator to test an enumerator class without any of its constants set as default.
      */
     @Getter
-    protected enum TestEnumNoDefault implements SelectableCode {
-        DIKKERTJE(1, "DIK", "Dikkertje Dap", true, false),
-        PET(2, "PET", "Pet van de Petteflet", true, false),
-        POMPELOENTJE(3, "POM", "Beertje Pompeloentje", true, false),
-        JIP(4, "JIP", "Jip van Janneke", true, false);
+    protected enum TestEnumNoDefault implements SelectableCode<Short> {
+        DIKKERTJE((short) 1, "DIK", "Dikkertje Dap", true, false),
+        PET((short) 2, "PET", "Pet van de Petteflet", true, false),
+        POMPELOENTJE((short) 3, "POM", "Beertje Pompeloentje", true, false),
+        JIP((short) 4, "JIP", "Jip van Janneke", true, false);
 
-        final int keyValue;
+        final Short keyValue;
         final String code;
         final String display;
         final boolean isActive;
         final boolean isDefault;
 
-        TestEnumNoDefault(int keyValue, String code, String display, boolean isActive, boolean isDefault) {
+        TestEnumNoDefault(Short keyValue, String code, String display, boolean isActive, boolean isDefault) {
             this.keyValue = keyValue;
             this.code = code;
             this.display = display;
@@ -125,19 +125,19 @@ public class EnumUtilitiesTests {
      * Enumerator to test an enumerator class with two (or more) of its constants set as default.
      */
     @Getter
-    protected enum TestEnumTwoDefaults implements SelectableCode {
-        DIKKERTJE(1, "DIK", "Dikkertje Dap", true, false),
-        PET(2, "PET", "Pet van de Petteflet", true, true),
-        POMPELOENTJE(3, "POM", "Beertje Pompeloentje", true, false),
-        JIP(4, "JIP", "Jip van Janneke", true, true);
+    protected enum TestEnumTwoDefaults implements SelectableCode<Short> {
+        DIKKERTJE((short) 1, "DIK", "Dikkertje Dap", true, false),
+        PET((short) 2, "PET", "Pet van de Petteflet", true, true),
+        POMPELOENTJE((short) 3, "POM", "Beertje Pompeloentje", true, false),
+        JIP((short) 4, "JIP", "Jip van Janneke", true, true);
 
-        final int keyValue;
+        final Short keyValue;
         final String code;
         final String display;
         final boolean isActive;
         final boolean isDefault;
 
-        TestEnumTwoDefaults(int keyValue, String code, String display, boolean isActive, boolean isDefault) {
+        TestEnumTwoDefaults(Short keyValue, String code, String display, boolean isActive, boolean isDefault) {
             this.keyValue = keyValue;
             this.code = code;
             this.display = display;

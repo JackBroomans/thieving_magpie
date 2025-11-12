@@ -31,7 +31,7 @@ class EntityPersonTests {
         AND     one or more mandatory fields aren't specified
         THEN    the method 'validate()' of the (extended) 'person' entity class, returns 'false'
          */
-        assertFalse(client.validated());
+        assertFalse(client.isValidated());
 
         /*
         WHEN    a Client entity class, which extends the Person entity class, is instantiated
@@ -56,7 +56,7 @@ class EntityPersonTests {
         AND     all mandatory fields are specified
         THEN    the method 'validate()' of the (extended) 'person' entity class, returns 'true'
          */
-        assertTrue(client.validated());
+        assertTrue(client.isValidated());
 
         /*
         Log the toNiceString() method to check the format
@@ -65,7 +65,7 @@ class EntityPersonTests {
     }
 
     @Test
-    public void PersonPostLoadTest() {
+    public void PersonGenderPostLoadTest() {
         Client client = new Client();
          /*
          WHEN    the key value of the gender is smaller than or equal to 0
@@ -73,6 +73,39 @@ class EntityPersonTests {
          THEN    an IllegalArgument exception is thrown
          */
         client.setGender(null);
+        client.setGenderKeyValue(0);
+        assertThrows(IllegalArgumentException.class, client::postLoadGender);
+
+         /*
+         WHEN    a gender is requested, based on its key value by calling getByKeyValue()
+         AND     the method returns no result because the key value doesn't match with a gender
+         THEN    the default set gender constant is returned.
+         */
+        client.setGenderKeyValue(37);
+        client.postLoadGender();
+        assertTrue(client.getGender().isDefault());
+
+         /*
+         WHEN    by calling getByKeyValue() a gender is requested, based on its key value,
+         AND     both class and key value are validated as parameter
+         AND     the key value is attached to an existing gender,
+         THEN    the requested gender is assigned to the person property.
+         */
+        client.setGender(null);
+        client.setGenderKeyValue(3);
+        client.postLoadGender();
+        assertEquals("B", client.getGender().getCode());
+    }
+
+    @Test
+    public void PersonPreferredNameUsePostLoadTest() {
+        Client client = new Client();
+         /*
+         WHEN    the key value of the gender is smaller than or equal to 0
+         AND/OR  the gender is not specified,
+         THEN    an IllegalArgument exception is thrown
+         */
+        client.setPreferredNameUse(null);
         client.setGenderKeyValue(0);
         assertThrows(IllegalArgumentException.class, client::postLoadGender);
 

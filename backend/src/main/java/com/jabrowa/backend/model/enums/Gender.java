@@ -20,26 +20,31 @@ import lombok.Getter;
  * SelectableCode interface.
  */
 @Getter
-public enum Gender implements SelectableCode {
-    MALE (1, "M", "Man", true, false),
-    FEMALE (2, "F", "Vrouw", true,  false),
-    BIPOLAIRE(3, "B", "Bi-polair", true,  false),
-    INDIFFERENT (4, "I", "niet aangegeven", true,  false),
-    NOT_DETERMINED(5, "N", "Niet vastgesteld", true,  false),
-    NOT_SPECIFIED (6, "X", "Niet gespecificeerd", true,  true);
+public enum Gender implements SelectableCode<Short> {
+    MALE ((short) 1, "M", "Man", true, false),
+    FEMALE ((short) 2, "F", "Vrouw", true,  false),
+    BIPOLAIRE((short) 3, "B", "Bi-polair", true,  false),
+    INDIFFERENT ((short) 4, "I", "niet aangegeven", true,  false),
+    NOT_DETERMINED((short) 5, "N", "Niet vastgesteld", true,  false),
+    NOT_SPECIFIED ((short) 6, "X", "Niet gespecificeerd", true,  true);
 
-    private final int keyValue;
+    private final Short keyValue;
     private final String code;
     private final String display;
     private final boolean isActive;
     private final boolean isDefault;
 
-    Gender(int keyValue, String code, String display, boolean isActive, boolean isDefault) {
+    Gender(Short keyValue, String code, String display, boolean isActive, boolean isDefault) {
         this.keyValue = keyValue;
         this.code = code;
         this.display = display;
         this.isActive = isActive;
         this.isDefault = isDefault;
+    }
+
+    @Override
+    public Short getKeyValue() {
+        return keyValue;
     }
 
     /**
