@@ -15,7 +15,6 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cglib.core.EmitUtils;
 import org.springframework.data.annotation.*;
 
 import static com.jabrowa.backend.utilities.EnumUtilities.selectDefault;
@@ -111,26 +110,6 @@ public abstract class Person {
     @PrePersist
     @PreUpdate
     public void prePersistGender() {
-        /*
-        WHEN    a person entity is added to or updated in the database by entity projection
-        AND     the gender of the person is not specified,
-        THEN    the default set constant of the gender enumerator is assigned to that person.
-        AND     the key-value of the default gender constant is persisted along with the entity.
-         */
-        /*
-        WHEN    a person entity is added to or updated in the database by entity projection
-        AND     the gender of the person is defined by an invalid key-value,
-        THEN    the default set constant of the gender enumerator is assigned to that person
-        AND     the key-value of the default gender constant is persisted along with the entity.
-         */
-        /*
-        WHEN    a person entity is added to or updated in the database by entity projection
-        AND     the gender of the person is specified correctly,
-        THEN    the key-value of that gender is persisted along with the entity.
-         */
-        /*
-
-         */
         if (gender == null || genderKeyValue <= 0) {
             logger.warn("Gender not specified or wrong key-value. Default Gender is applied.");
             this.gender = EnumUtilities.selectDefault(Gender.class);

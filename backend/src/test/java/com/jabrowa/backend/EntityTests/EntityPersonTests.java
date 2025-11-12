@@ -2,6 +2,8 @@ package com.jabrowa.backend.EntityTests;
 
 import com.jabrowa.backend.model.entities.Client;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 
 import com.jabrowa.backend.model.enums.Gender;
 import com.jabrowa.backend.model.enums.PreferredNameUses;
@@ -32,6 +34,12 @@ class EntityPersonTests {
         THEN    the method 'validate()' of the (extended) 'person' entity class, returns 'false'
          */
         assertFalse(client.isValidated());
+        assertFalse(() -> {
+            client.prePersistGender();
+            return client.isValidated();
+        });
+        assertTrue(client.getGender().isDefault());
+        assertEquals("X", client.getGender().getCode());
 
         /*
         WHEN    a Client entity class, which extends the Person entity class, is instantiated
@@ -50,6 +58,11 @@ class EntityPersonTests {
 
         assertEquals(GIVEN_NAME, client.getGivenName());
         assertEquals(NICKNAME, client.getNickname());
+        /*
+        Just an extra test to check if the gender 'M' is untouched by the 'prePersist()' method.
+         */
+        client.prePersistGender();
+        assertEquals("M", client.getGender().getCode());
 
         /*
         WHEN    a Client entity class, which extends the Person entity class, is instantiated,
@@ -62,6 +75,37 @@ class EntityPersonTests {
         Log the toNiceString() method to check the format
          */
         LOGGER.info(client.toNiceString());
+    }
+
+    @Test
+    public void PersonGenderPrePersistTest() {
+        /*
+        Note that these test doesn't test any CRUDE operation, but the results of the operations are mocked.
+         */
+        Client client = new Client();
+
+         /*
+        WHEN    a person entity is checked before added to or updated in the database by entity projection
+        AND     the gender of the person is not specified,
+        THEN    the default set constant of the gender enumerator is assigned to that person.
+        AND     the key value of the 'default gender constant' is the value to be persisted along with the entity.
+         */
+        client.setGender(null);
+        assertNull(client.getGender());
+        client.prePersistGender();
+        assertNotNull(client.getGender());
+        assertTrue(client.getGender().isDefault());
+
+        /*
+        WHEN    a person entity is checked before is added to or updated in the database by entity projection
+        AND     the gender of the person is specified correctly,
+        THEN    the key-value of that gender will be persisted along with the entity.
+         */
+        client.setGender(Gender.MALE);
+        assertTrue(() -> {
+            client.prePersistGender();
+            return(client.getGender().name().equals("MALE"));
+        } );
     }
 
     @Test
@@ -96,6 +140,7 @@ class EntityPersonTests {
         client.postLoadGender();
         assertEquals("B", client.getGender().getCode());
     }
+
 
     @Test
     public void PersonPreferredNameUsePostLoadTest() {
