@@ -1,26 +1,29 @@
 package com.jabrowa.backend.ladis.codes;
 
 import com.jabrowa.backend.ladis.entities.LadisCode;
+import com.jabrowa.backend.utilities.EnumUtilities;
 import lombok.Getter;
 
 
 @Getter
 
 public enum GamblingLocation {
-    ONBEKEND(9, "onbekend", true, false),
-    HOLLAND_CASINO(10, "Holland Casino", true, false),
-    AMUSEMENTSHAL(11, "Amusementshal", true, false),
-    INTERNET(12, "Internet", true, false),
-    THUIS(13, "Thuis en bij vrienden werk etc.", true, false),
-    HORECA(14, "Horeca gelegenheid", true, true);
+    ONBEKEND((short) 9, "ONB", "onbekend", true, true),
+    HOLLAND_CASINO((short) 10, "HCS", "Holland Casino", true, false),
+    AMUSEMENTSHAL((short) 11, "AMH", "Amusementshal", true, false),
+    INTERNET((short) 12, "INT", "Internet", true, false),
+    THUIS((short) 13, "THS", "Thuis en bij vrienden werk etc.", true, false),
+    HORECA((short) 14, "HRC", "Horeca gelegenheid", true, false);
 
-    private final int number;
+    private final Short number;
+    private final String code;
     private final String display;
     private final boolean isActive;
     private final boolean isDefault;
 
-    GamblingLocation(int number, String display, boolean isActive, boolean isDefault) {
+    GamblingLocation(Short number, String code, String display, boolean isActive, boolean isDefault) {
         this.number = number;
+        this.code = code;
         this.display = display;
         this.isActive = isActive;
         this.isDefault = isDefault;
@@ -38,6 +41,19 @@ public enum GamblingLocation {
     }
 
     /**
+     * <strong>SelectDefault</strong>()<br><br>
+     * Selects the default marked GamblingLocation constant.
+     * @return The default marked GamblingLocation constant.
+     * If there's no constant is marked as default, <i>null</i> is returned, and when several constants are marked
+     * as default, the first marked constant is returned.
+     * @throws RuntimeException When the generic selection of the default marked constant fails due to the missing
+     *                          isDefault() argument.
+     */
+    public GamblingLocation selectDefault() throws RuntimeException {
+        return EnumUtilities.selectDefault(GamblingLocation.class);
+    }
+
+    /**
      * <strong>toNiceString(<i>Class, String</i>)</strong><br><br>
      * Constructs an easy readable string representation from the attributes of the current enum constant.
      *
@@ -45,7 +61,8 @@ public enum GamblingLocation {
      */
     public String toNiceString() {
         return "\nEnumerator: " + this.getClass().getSimpleName() + "\n" +
-                "\tLadis code:      " + this.getNumber() + "\n" +
+                "\tLapis-nummer:    " + this.getNumber() + "\n" +
+                "\tCode:            " + this.getCode() + "\n" +
                 "\tOmschrijving:    " + this.getDisplay() + "\n" +
                 "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
                 "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";

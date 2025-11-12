@@ -1,33 +1,36 @@
 package com.jabrowa.backend.ladis.codes;
 
 import com.jabrowa.backend.ladis.entities.LadisCode;
+import com.jabrowa.backend.utilities.EnumUtilities;
 import lombok.Getter;
 
 @Getter
 
 public enum Education {
-    KLEUTER(10, "Onderwijs aan kleuters", true, false),
-    GEEN(11, "Geen", true, false),
-    BASIS(20, "Basis onderwijs", true, false),
-    SPECIAAL_BASIS(21, "Speciaal Basis onderwijs", true, false),
-    SPECIAAL_VOORTGEZET(31, "Voortgezet Speciaal onderwijs", true, false),
-    VMBO_PRAKTIJK(32, "VMBO praktijk", true, false),
-    VMBO_T_MAVO(33, "LBO:VMBO-t: MAVO", true, true),
-    MBO12(42, "MBO 1 en 2", true, true),
-    MBO34_HAVO_VWO(43, "HAVO: VWO: MBO 3 en 4", true, true),
-    HBO_BACHELOR(52, "HBO Bachelor", true, true),
-    WO_BACHCHELOR(53, " WO bachelor", true, true),
-    HBO_WO_MASTER(60, "HBO master: WO Master", true, true),
-    POST_DOC(70, "Post doctoraal", true, true),
-    ONBEKEND(99, "Onbekend", true, true);
+    KLEUTER((short) 10, "KLT", "Onderwijs aan kleuters", true, false),
+    GEEN((short) 11, "GN", "Geen", true, false),
+    BASIS((short) 20, "BAS", "Basis onderwijs", true, false),
+    SPECIAAL_BASIS((short) 21, "SPB", "Speciaal Basis onderwijs", true, false),
+    SPECIAAL_VOORTGEZET((short) 31, "SPV", "Voortgezet Speciaal onderwijs", true, false),
+    VMBO_PRAKTIJK((short) 32, "VMBOP", "VMBO praktijk", true, false),
+    VMBO_T_MAVO((short) 33, "VMBOT", "LBO:VMBO-t: MAVO", true, false),
+    MBO12((short) 42, "MBO2", "MBO 1 en 2", true, false),
+    MBO34_HAVO_VWO((short) 43, "MBO4", "HAVO: VWO: MBO 3 en 4", true, false),
+    HBO_BACHELOR((short) 52, "HBOB", "HBO Bachelor", true, false),
+    WO_BACHCHELOR((short) 53, "WOB", "WO bachelor", true, false),
+    HBO_WO_MASTER((short) 60, "MST", "HBO master: WO Master", true, false),
+    POST_DOC((short) 70, "POST", "Post doctoraal", true, false),
+    ONBEKEND((short) 99, "ONB", "Onbekend", true, true);
 
-    private final int number;
+    private final Short number;
+    private final String code;
     private final String display;
     private final boolean isActive;
     private final boolean isDefault;
 
-    Education(int number, String display, boolean isActive, boolean isDefault) {
+    Education(Short number, String code, String display, boolean isActive, boolean isDefault) {
         this.number = number;
+        this.code = code;
         this.display = display;
         this.isActive = isActive;
         this.isDefault = isDefault;
@@ -45,6 +48,19 @@ public enum Education {
     }
 
     /**
+     * <strong>SelectDefault</strong>()<br><br>
+     * Selects the default marked Education constant.
+     * @return The default marked Education constant.
+     * If there's no constant is marked as default, <i>null</i> is returned, and when several constants are marked
+     * as default, the first marked constant is returned.
+     * @throws RuntimeException When the generic selection of the default marked constant fails due to the missing
+     *                          isDefault() argument.
+     */
+    public Education selectDefault() throws RuntimeException {
+        return EnumUtilities.selectDefault(Education.class);
+    }
+
+    /**
      * <strong>toNiceString(<i>Class, String</i>)</strong><br><br>
      * Constructs an easy readable string representation from the attributes of the current enum constant.
      *
@@ -52,7 +68,8 @@ public enum Education {
      */
     public String toNiceString() {
         return "\nEnumerator: " + this.getClass().getSimpleName() + "\n" +
-                "\tLadis code:      " + this.getNumber() + "\n" +
+                "\tLapis-nummer:    " + this.getNumber() + "\n" +
+                "\tCode:            " + this.getCode() + "\n" +
                 "\tOmschrijving:    " + this.getDisplay() + "\n" +
                 "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
                 "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";

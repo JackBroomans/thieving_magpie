@@ -7,15 +7,18 @@ package com.jabrowa.backend.ladis.entities;
  * fit for a DTO-projection.
  *
  * @param typeName  The name of the specific type of the Ladis code (SourceOfIncome, ClientType, AddictionDuration etc.)
- * @param number The numeric code identifier
- * @param display The shor description of the Ladis-code
+ * @param number The numeric code identifier.
+ * @param code The unique code. This code is only use within the system and doesn't belong to the 'Ladis code system'.
+ * @param display The short description of the Ladis-code.
  * @param isActive Indicates if the Ladis-code is active. (Codes aren't removed to ensure database integrity)
  * @param isDefault Indicates if the particular Ladis-code is the default constant of the enumerated constants.
  */
-public record LadisCode(String typeName, int number, String display, boolean isActive, boolean isDefault) {
+public record
+    LadisCode(String typeName, Short number, String code, String display, boolean isActive, boolean isDefault) {
 
     public LadisCode {
         if ((typeName == null || typeName.isBlank()) ||
+                (code == null || code.isBlank()) ||
                 (display == null || display.isBlank()) ||
                 (number <= 0)) {
             throw new IllegalArgumentException();
@@ -29,7 +32,8 @@ public record LadisCode(String typeName, int number, String display, boolean isA
      */
     public String toNiceString() {
         return "Ladis code -> " + this.typeName() + "\n" +
-                "\tCode:            " + this.number() + "\n" +
+                "\tLapis-nummer:    " + this.number() + "\n" +
+                "\tCode:            " + this.code() + "\n" +
                 "\tOmschrijving:    " + this.display() + "\n" +
                 "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
                 "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";

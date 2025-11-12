@@ -26,8 +26,8 @@ public class EnumUtilities {
      * constant of the enumerator-class is returned as optional, and when that isn't found empty optional is returned.
      * is returned.
      */
-    public static <E extends Enum<E> & SelectableCode>
-    Optional<E> getByKeyValue(Class<E> enumClass, int keyValue) {
+    public static <E extends Enum<E> & SelectableCode<?>>
+            Optional<E> getByKeyValue(Class<E> enumClass, int keyValue) {
         if (enumClass == null || keyValue <= 0) {
             throw new IllegalArgumentException("No enum constant and/or key value passed.");
         }
@@ -67,7 +67,7 @@ public class EnumUtilities {
                 .orElse(null);
     }
 
-    public static <T extends Enum<T> & SelectableCode> T getFromDisplay(Class<T> enumClass, String display) {
+    public static <T extends Enum<T> & SelectableCode<?>> T getFromDisplay(Class<T> enumClass, String display) {
 
         return fromDisplaySafe(enumClass, display)
                 .orElseThrow(() -> new IllegalArgumentException("No enum constant with display value: " + display));
@@ -84,7 +84,7 @@ public class EnumUtilities {
      * @return The enumerator item which contains the display-field with the given value.
      */
 
-    private static <E extends Enum<E> & SelectableCode>
+    private static <E extends Enum<E> & SelectableCode<?>>
         Optional<E> fromDisplaySafe(Class<E> enumClass, String display) {
 
         String normalizedInput = normalizeString(display);

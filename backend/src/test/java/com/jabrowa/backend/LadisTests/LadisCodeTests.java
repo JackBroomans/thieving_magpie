@@ -1,11 +1,14 @@
 package com.jabrowa.backend.LadisTests;
 
-import com.jabrowa.backend.ladis.codes.AddictionDuration;
-import com.jabrowa.backend.ladis.codes.LivingSituation;
+import com.jabrowa.backend.ladis.codes.*;
 import com.jabrowa.backend.ladis.entities.LadisCode;
+import com.jabrowa.backend.model.enums.Gender;
+import com.jabrowa.backend.utilities.EnumUtilities;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.annotation.Testable;
+import org.springframework.data.relational.core.sql.When;
 
+import javax.swing.text.Utilities;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,7 +25,7 @@ public class LadisCodeTests {
         THEN    an IllegalArgumentException is thrown.
          */
         assertThrows(IllegalArgumentException.class, () -> {
-                    LadisCode ladisCode = new LadisCode(null, 0, null, false, false);
+            LadisCode ladisCode = new LadisCode(null, 0, null, false, false);
         });
 
         /*
@@ -100,5 +103,39 @@ public class LadisCodeTests {
         Log 'Test completed'
          */
         logger.info("Completed: ladisCreateCodeFromEnumTests()\n");
+    }
+
+    @Test
+    public void ladisSelectDefaultConstantTests() {
+        /*
+        WHEN    a Ladis code enumerator isn't defined (null)
+        AND     the default marked enumeration constant is requested by 'selectDefault',
+        OR      an enumeration constant is requested based on its key value,
+        THEN    the default enumeration constant is selected.
+         */
+        AddictionDuration addictionDuration = null;
+        assertNull(addictionDuration);
+        assertEquals(9, EnumUtilities.selectDefault(AddictionDuration.class).getNumber());
+        addictionDuration = AddictionDuration.J5TM10;
+        assertNotNull(addictionDuration);
+        assertNotEquals(addictionDuration.getNumber(),
+                EnumUtilities.getByKeyValue(AddictionDuration.class, 5).getNumber());
+
+        GamblingLocation gamblingLocation = null;
+        assertNull(gamblingLocation);
+        assertEquals(9, EnumUtilities.selectDefault(GamblingLocation.class).getNumber());
+        gamblingLocation = GamblingLocation.AMUSEMENTSHAL;
+        assertNotNull(gamblingLocation);
+        assertNotEquals(gamblingLocation.getNumber(),
+                EnumUtilities.selectDefault(GamblingLocation.class).getNumber());
+
+        Education education = null;
+        assertNull(education);
+        assertEquals(99, EnumUtilities.selectDefault(Education.class).getNumber());
+        education = Education.MBO34_HAVO_VWO;
+        assertNotNull(education);
+        assertNotEquals(addictionDuration.getNumber(),
+                EnumUtilities.selectDefault(Education.class).getNumber());
+
     }
 }

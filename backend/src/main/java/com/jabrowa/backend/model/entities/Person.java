@@ -75,6 +75,8 @@ public abstract class Person {
     @Column(name = "preferred_name_use", nullable = false)
     @Enumerated(EnumType.STRING)
     private PreferredNameUses preferredNameUse;
+    // Todo: Add ticket for prePersist() method including unit tests
+    // Todo: Add ticket for postLoad() method including unit tests
 
     @Transient
     private Gender gender;
@@ -99,7 +101,6 @@ public abstract class Person {
             this.gender = optionalReturn.get();
         }
     }
-
     /**
      * <strong>prePersistGender()</strong><br><br>
      * Denormalizes the (transient) enumerator to its key-value before persisting, to make the database stores the
