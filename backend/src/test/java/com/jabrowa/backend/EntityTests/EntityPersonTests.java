@@ -148,11 +148,14 @@ class EntityPersonTests {
          /*
          WHEN    the key value of the gender is smaller than or equal to 0
          AND/OR  the gender is not specified,
-         THEN    an IllegalArgument exception is thrown
+         THEN    the default set constant of the gender ('X') is returned.
          */
         client.setGender(null);
         client.setGenderKeyValue(0);
-        assertThrows(IllegalArgumentException.class, client::postLoadGender);
+        assertTrue(() -> {
+            client.postLoadGender();
+            return client.getGender().isDefault();});
+        assertEquals("X", client.getGender().getCode());
 
          /*
          WHEN    a gender is requested, based on its key value by calling getByKeyValue()

@@ -6,22 +6,21 @@ import lombok.Getter;
 
 
 @Getter
-
 public enum GamblingLocation {
-    ONBEKEND((short) 9, "ONB", "onbekend", true, true),
-    HOLLAND_CASINO((short) 10, "HCS", "Holland Casino", true, false),
-    AMUSEMENTSHAL((short) 11, "AMH", "Amusementshal", true, false),
-    INTERNET((short) 12, "INT", "Internet", true, false),
-    THUIS((short) 13, "THS", "Thuis en bij vrienden werk etc.", true, false),
-    HORECA((short) 14, "HRC", "Horeca gelegenheid", true, false);
+    ONBEKEND((short) 9, "GL-9999", "onbekend", true, true),
+    HOLLAND_CASINO((short) 10, "GL-0010", "Holland Casino", true, false),
+    AMUSEMENTSHAL((short) 11, "GL-0011", "Amusementshal", true, false),
+    INTERNET((short) 12, "GL-0012", "Internet", true, false),
+    THUIS((short) 13, "GL-0013", "Thuis en bij vrienden werk etc.", true, false),
+    HORECA((short) 14, "GL-0014", "Horeca gelegenheid", true, false);
 
-    private final Short number;
+    private final short number;
     private final String code;
     private final String display;
     private final boolean isActive;
     private final boolean isDefault;
 
-    GamblingLocation(Short number, String code, String display, boolean isActive, boolean isDefault) {
+    GamblingLocation(short number, String code, String display, boolean isActive, boolean isDefault) {
         this.number = number;
         this.code = code;
         this.display = display;
@@ -32,11 +31,10 @@ public enum GamblingLocation {
     /**
      * <strong>createLadisCodeFromEnum<i>()</i></strong><br><br>
      * Creates a new instances of a Ladis-code-record, containing the attribute values of the current enum constant.
-     *
      * @return A Ladis-code-record created from the current enum constant.
      */
     public LadisCode createLadisCodeFromEnum() {
-        return new LadisCode(this.getClass().getSimpleName(), this.getNumber(), this.getDisplay(),
+        return new LadisCode(this.getClass().getSimpleName(), this.getNumber(), this.getCode(), this.getDisplay(),
                 this.isActive(), this.isDefault());
     }
 
@@ -56,7 +54,6 @@ public enum GamblingLocation {
     /**
      * <strong>toNiceString(<i>Class, String</i>)</strong><br><br>
      * Constructs an easy readable string representation from the attributes of the current enum constant.
-     *
      * @return Returns a pretty formatted string representation of the current enum constant.
      */
     public String toNiceString() {

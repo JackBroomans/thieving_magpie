@@ -100,7 +100,6 @@ public abstract class Person {
             LOGGER.warn("Unknown gender key '{}'", genderKeyValue);
             setGender(EnumUtilities.selectDefault(Gender.class));
         }
-
     }
 
     /**

@@ -50,10 +50,5 @@ public class StringUtilitiesTests {
          */
         assertEquals("Gosibucuk Alaeror Eadne zici fosutortok", StringUtilities.normalizeString(
                 "Ğöşibuçük Ålærør Ěádně žiči fősütörtök"));
-
-        /*
-        Log 'Test completed'
-         */
-        logger.info("Completed: testNormalize()\n");
     }
 }

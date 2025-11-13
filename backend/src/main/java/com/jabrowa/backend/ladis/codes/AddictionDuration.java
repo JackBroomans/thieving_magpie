@@ -8,22 +8,22 @@ import lombok.Getter;
 
 @Getter
 public enum AddictionDuration implements SelectableCode<Short> {
-    M1TM3((short) 1, "M13", "1 tot 3 maanden", true, false),
-    M3TM6((short) 2, "M36", "3 tot 6 maanden", true, false),
-    M6TM12((short) 3, "M612", "6 tot 12 maanden", true, false),
-    J1TM2((short) 4, "J12", "1 tot 2 jaar", true, false),
-    J2TM5((short) 5, "J25", "2 tot 5 jaar", true, false),
-    J5TM10((short) 6, "J510", "5 tot 10 jaar", true, false),
-    J10PLUS((short) 7, "J10P", "meer dan 10 jaar", true, false),
-    ONBEKEND((short) 9, "ONB", "onbekend", true, true);
+    M1TM3((short) 1, "AD-0001", "1 tot 3 maanden", true, false),
+    M3TM6((short) 2, "AD-0002", "3 tot 6 maanden", true, false),
+    M6TM12((short) 3, "AD-0003", "6 tot 12 maanden", true, false),
+    J1TM2((short) 4, "AD-0004", "1 tot 2 jaar", true, false),
+    J2TM5((short) 5, "AD-0005", "2 tot 5 jaar", true, false),
+    J5TM10((short) 6, "AD-0006", "5 tot 10 jaar", true, false),
+    J10PLUS((short) 7, "AD-0007", "meer dan 10 jaar", true, false),
+    ONBEKEND((short) 9, "AD-9999", "onbekend", true, true);
 
-    private final Short number;
+    private final short number;
     private final String code;
     private final String display;
     private final boolean isActive;
     private final boolean isDefault;
 
-    AddictionDuration(Short number, String code, String display, boolean isActive, boolean isDefault) {
+    AddictionDuration(short number, String code, String display, boolean isActive, boolean isDefault) {
         this.number = number;
         this.code = code;
         this.display = display;
@@ -38,13 +38,8 @@ public enum AddictionDuration implements SelectableCode<Short> {
      * @return A Ladis-code-record created from the current enum constant.
      */
     public LadisCode createLadisCodeFromEnum() {
-        return new LadisCode(this.getClass().getSimpleName(), this.getNumber(), this.getDisplay(),
+        return new LadisCode(this.getClass().getSimpleName(), this.getNumber(), this.getCode(), this.getDisplay(),
                 this.isActive(), this.isDefault());
-    }
-
-    @Override
-    public Short getKeyValue() {
-        return 0;
     }
 
     /**
@@ -63,7 +58,6 @@ public enum AddictionDuration implements SelectableCode<Short> {
     /**
      * <strong>toNiceString(<i>Class, String</i>)</strong><br><br>
      * Constructs an easy readable string representation from the attributes of the current enum constant.
-     *
      * @return Returns a pretty formatted string representation of the current enum constant.
      */
     public String toNiceString() {

@@ -5,30 +5,29 @@ import com.jabrowa.backend.utilities.EnumUtilities;
 import lombok.Getter;
 
 @Getter
-
 public enum Education {
-    KLEUTER((short) 10, "KLT", "Onderwijs aan kleuters", true, false),
-    GEEN((short) 11, "GN", "Geen", true, false),
-    BASIS((short) 20, "BAS", "Basis onderwijs", true, false),
-    SPECIAAL_BASIS((short) 21, "SPB", "Speciaal Basis onderwijs", true, false),
-    SPECIAAL_VOORTGEZET((short) 31, "SPV", "Voortgezet Speciaal onderwijs", true, false),
-    VMBO_PRAKTIJK((short) 32, "VMBOP", "VMBO praktijk", true, false),
-    VMBO_T_MAVO((short) 33, "VMBOT", "LBO:VMBO-t: MAVO", true, false),
-    MBO12((short) 42, "MBO2", "MBO 1 en 2", true, false),
-    MBO34_HAVO_VWO((short) 43, "MBO4", "HAVO: VWO: MBO 3 en 4", true, false),
-    HBO_BACHELOR((short) 52, "HBOB", "HBO Bachelor", true, false),
-    WO_BACHCHELOR((short) 53, "WOB", "WO bachelor", true, false),
-    HBO_WO_MASTER((short) 60, "MST", "HBO master: WO Master", true, false),
-    POST_DOC((short) 70, "POST", "Post doctoraal", true, false),
-    ONBEKEND((short) 99, "ONB", "Onbekend", true, true);
+    KLEUTER((short) 10, "ED-0010", "Onderwijs aan kleuters", true, false),
+    GEEN((short) 11, "ED-0011", "Geen", true, false),
+    BASIS((short) 20, "ED-0020", "Basis onderwijs", true, false),
+    SPECIAAL_BASIS((short) 21, "ED-0021", "Speciaal Basis onderwijs", true, false),
+    SPECIAAL_VOORTGEZET((short) 31, "ED-0031", "Voortgezet Speciaal onderwijs", true, false),
+    VMBO_PRAKTIJK((short) 32, "ED-0032", "VMBO praktijk", true, false),
+    VMBO_T_MAVO((short) 33, "ED-0033", "LBO:VMBO-t: MAVO", true, false),
+    MBO12((short) 42, "ED-0042", "MBO 1 en 2", true, false),
+    MBO34_HAVO_VWO((short) 43, "ED-0043", "HAVO: VWO: MBO 3 en 4", true, false),
+    HBO_BACHELOR((short) 52, "ED-0052", "HBO Bachelor", true, false),
+    WO_BACHCHELOR((short) 53, "ED-0053", "WO bachelor", true, false),
+    HBO_WO_MASTER((short) 60, "ED-0060", "HBO master: WO Master", true, false),
+    POST_DOC((short) 70, "ED-0070", "Post doctoraal", true, false),
+    ONBEKEND((short) 99, "ED-9999", "Onbekend", true, true);
 
-    private final Short number;
+    private final short number;
     private final String code;
     private final String display;
     private final boolean isActive;
     private final boolean isDefault;
 
-    Education(Short number, String code, String display, boolean isActive, boolean isDefault) {
+    Education(short number, String code, String display, boolean isActive, boolean isDefault) {
         this.number = number;
         this.code = code;
         this.display = display;
@@ -38,12 +37,10 @@ public enum Education {
 
     /**
      * <strong>createLadisCodeFromEnum<i>()</i></strong><br><br>
-     * Creates a new instances of a Ladis-code-record, containing the attribute values of the current enum constant.
-     *
      * @return A Ladis-code-record created from the current enum constant.
      */
     public LadisCode createLadisCodeFromEnum() {
-        return new LadisCode(this.getClass().getSimpleName(), this.getNumber(), this.getDisplay(),
+        return new LadisCode(this.getClass().getSimpleName(), this.getNumber(), this.getCode(), this.getDisplay(),
                 this.isActive(), this.isDefault());
     }
 
@@ -63,7 +60,6 @@ public enum Education {
     /**
      * <strong>toNiceString(<i>Class, String</i>)</strong><br><br>
      * Constructs an easy readable string representation from the attributes of the current enum constant.
-     *
      * @return Returns a pretty formatted string representation of the current enum constant.
      */
     public String toNiceString() {
