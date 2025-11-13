@@ -8,13 +8,13 @@ package com.jabrowa.backend.ladis.entities;
  *
  * @param typeName  The name of the specific type of the Ladis code (SourceOfIncome, ClientType, AddictionDuration etc.)
  * @param number The numeric code identifier.
- * @param code The unique code. This code is only use within the system and doesn't belong to the 'Ladis code system'.
+ * @param code A unique code mainly used for interoperability between different code systems.
  * @param display The short description of the Ladis-code.
  * @param isActive Indicates if the Ladis-code is active. (Codes aren't removed to ensure database integrity)
  * @param isDefault Indicates if the particular Ladis-code is the default constant of the enumerated constants.
  */
 public record
-    LadisCode(String typeName, Short number, String code, String display, boolean isActive, boolean isDefault) {
+    LadisCode(String typeName, short number, String code, String display, boolean isActive, boolean isDefault) {
 
     public LadisCode {
         if ((typeName == null || typeName.isBlank()) ||

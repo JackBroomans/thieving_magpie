@@ -71,20 +71,14 @@ public class LadisCodeTests {
             LadisCode ladisCode = new LadisCode(
                     LivingSituation.KIND_MEEROUDER.name(),
                     LivingSituation.KIND_MEEROUDER.getNumber(),
-                    LivingSituation.KIND_MEEROUDER.getDisplay(),
                     LivingSituation.KIND_MEEROUDER.getCode(),
+                    LivingSituation.KIND_MEEROUDER.getDisplay(),
                     LivingSituation.KIND_MEEROUDER.isActive(),
                     LivingSituation.KIND_MEEROUDER.isDefault());
 
         assertEquals(LivingSituation.KIND_MEEROUDER.getNumber(), ladisCode.number());
         assertEquals(LivingSituation.KIND_MEEROUDER.getDisplay(), ladisCode.display());
         assertEquals(LivingSituation.KIND_MEEROUDER.isActive(), ladisCode.isActive());
-
-        /*
-        Check toNiceFormat by logging and log 'Test completed'
-         */
-        logger.info(ladisCode.toNiceString());
-        logger.info("Completed: ladisCodeInstantiationTests()\n");
     }
 
     @Test
@@ -101,11 +95,6 @@ public class LadisCodeTests {
         assertEquals(addictionDuration.getDisplay(), ladisCode.display());
         assertEquals(addictionDuration.isActive(), ladisCode.isActive());
         assertEquals(addictionDuration.isDefault(), ladisCode.isDefault());
-
-        /*
-        Log 'Test completed'
-         */
-        logger.info("Completed: ladisCreateCodeFromEnumTests()\n");
     }
 
     /*
@@ -144,9 +133,9 @@ public class LadisCodeTests {
         assertNotEquals(gamblingLocation.getNumber(),
                 EnumUtilities.selectDefault(GamblingLocation.class).getNumber());
 
-        assertTrue(EnumUtilities.getByInterCode(AddictionDuration.class, "GL-0011").isPresent());
-        assertEquals((short) 5,
-                EnumUtilities.getByInterCode(AddictionDuration.class, "GL-0011").get().getNumber());
+        assertTrue(EnumUtilities.getByInterCode(GamblingLocation.class, "GL-0011").isPresent());
+        assertEquals((short) 11,
+                EnumUtilities.getByInterCode(GamblingLocation.class, "GL-0011").get().getNumber());
 
 
         /* Educational Level */
@@ -159,9 +148,9 @@ public class LadisCodeTests {
         assertNotEquals(addictionDuration.getNumber(),
                 EnumUtilities.selectDefault(Education.class).getNumber());
 
-        assertTrue(EnumUtilities.getByInterCode(AddictionDuration.class, "ED-0043").isPresent());
-        assertEquals((short) 5,
-                EnumUtilities.getByInterCode(AddictionDuration.class, "ED-0043").get().getNumber());
+        assertTrue(EnumUtilities.getByInterCode(Education.class, "ED-0043").isPresent());
+        assertEquals((short) 43,
+                EnumUtilities.getByInterCode(Education.class, "ED-0043").get().getNumber());
 
     }
 }

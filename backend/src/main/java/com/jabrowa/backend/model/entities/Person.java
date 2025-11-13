@@ -84,14 +84,11 @@ public abstract class Person {
     /**
      * <strong>postLoadGender<i>()</i></strong><br><br>
      * Normalize the database enum persistence by using the 'KeyValue' attribute, which is a smallint and save a lot
-     * of space. The postLoad annotation runs automatically, so normalization is guaranteed.
-     * The method is tested under the abstract class 'Person' tests.
-     * @throws IllegalArgumentException when the parameters aren't specified, complete and/or valid, or when no
-     *                                  gender is found, based on the given key value.
+     * of space. The postLoad annotation runs automatically, which guarantees normalization.
      * <i>Note that the original (transient) enumeration is used only in the backend business logical.</i>
      */
     @PostLoad
-    public void postLoadGender() throws IllegalArgumentException {
+    public void postLoadGender() {
         Optional<Gender> returnValue = EnumUtilities.getByKeyValue(Gender.class, (short) genderKeyValue);
         if (returnValue.isPresent()) {
             this.gender = returnValue.get();
@@ -107,7 +104,6 @@ public abstract class Person {
      * Denormalizes the (transient) enumerator to its key-value before persisting, to make the database stores the
      * (compact_ key-value while the backend uses the enum.
      * <i>This method runs automatically before persist or update operations.</i>
-     * @throws IllegalArgumentException if the gender attribute is null or invalid.
      */
     @PrePersist
     @PreUpdate
