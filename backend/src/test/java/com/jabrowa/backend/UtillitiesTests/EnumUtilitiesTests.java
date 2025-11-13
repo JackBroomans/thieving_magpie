@@ -64,20 +64,20 @@ public class EnumUtilitiesTests {
        /*
         WHEN    the 'selectByKey()' method from the 'EnumUtilities' class is called
         AND     one or both the parameters equals null,
-        THEN    An IllegalArgument exception is thrown.
+        THEN    an empty Optional<> is returned
          */
-        assertThrows(IllegalArgumentException.class, () -> EnumUtilities.getByKeyValue(null,0));
-        assertThrows(IllegalArgumentException.class, () -> EnumUtilities.getByKeyValue(null,6));
-        assertThrows(IllegalArgumentException.class, () -> EnumUtilities.getByKeyValue(Gender.class,0));
+        assertTrue(EnumUtilities.getByKeyValue(null, (short) 0).isEmpty());
+        assertTrue(EnumUtilities.getByKeyValue(null, (short) 6).isEmpty());
+        assertTrue(EnumUtilities.getByKeyValue(Gender.class, (short) 0).isEmpty());
 
         /*
         WHEN    the 'selectByKey()' method from the 'EnumUtilities' class is called
         AND     the both enumerator-class and key value are specified
         AND     the key value doesn't exist within the given enumerator-class,
-        THEN    the associated constant which is set as default is returned.
+        THEN    an empty Optional<> is returned
          */
-        assertTrue (EnumUtilities.getByKeyValue(Gender.class,401).isPresent());
-        assertTrue(EnumUtilities.getByKeyValue(Gender.class,401).get().isDefault());
+        assertTrue(EnumUtilities.getByKeyValue(Gender.class, (short) 401).isEmpty());
+
 
         /*
         WHEN    the 'selectByKey()' method from the 'EnumUtilities' class is called
@@ -85,8 +85,8 @@ public class EnumUtilitiesTests {
         AND     the key value is associated with a constant of the given enumerator-class,
         THEN    that constant is fetched, including its attributes values.
          */
-        assertTrue (EnumUtilities.getByKeyValue(Gender.class,4).isPresent());
-        assertEquals("I", EnumUtilities.getByKeyValue(Gender.class,4).get().getCode());
+        assertTrue(EnumUtilities.getByKeyValue(Gender.class, (short) 4).isPresent());
+        assertEquals("I", EnumUtilities.getByKeyValue(Gender.class, (short) 4).get().getCode());
 
     }
 
@@ -101,14 +101,14 @@ public class EnumUtilitiesTests {
         POMPELOENTJE((short) 3, "POM", "Beertje Pompeloentje", true, false),
         JIP((short) 4, "JIP", "Jip van Janneke", true, false);
 
-        final Short keyValue;
+        final short number;
         final String code;
         final String display;
         final boolean isActive;
         final boolean isDefault;
 
-        TestEnumNoDefault(Short keyValue, String code, String display, boolean isActive, boolean isDefault) {
-            this.keyValue = keyValue;
+        TestEnumNoDefault(short number, String code, String display, boolean isActive, boolean isDefault) {
+            this.number = number;
             this.code = code;
             this.display = display;
             this.isActive = isActive;
@@ -131,14 +131,14 @@ public class EnumUtilitiesTests {
         POMPELOENTJE((short) 3, "POM", "Beertje Pompeloentje", true, false),
         JIP((short) 4, "JIP", "Jip van Janneke", true, true);
 
-        final Short keyValue;
+        final short number;
         final String code;
         final String display;
         final boolean isActive;
         final boolean isDefault;
 
-        TestEnumTwoDefaults(Short keyValue, String code, String display, boolean isActive, boolean isDefault) {
-            this.keyValue = keyValue;
+        TestEnumTwoDefaults(short number, String code, String display, boolean isActive, boolean isDefault) {
+            this.number = number;
             this.code = code;
             this.display = display;
             this.isActive = isActive;
