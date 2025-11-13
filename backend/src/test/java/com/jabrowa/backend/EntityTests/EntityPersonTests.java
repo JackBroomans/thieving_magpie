@@ -143,14 +143,14 @@ class EntityPersonTests {
 
 
     @Test
-    public void PersonPreferredNameUsePostLoadTest() {
+    public void PersonPostLoadTest() {
         Client client = new Client();
          /*
          WHEN    the key value of the gender is smaller than or equal to 0
          AND/OR  the gender is not specified,
          THEN    an IllegalArgument exception is thrown
          */
-        client.setPreferredNameUse(null);
+        client.setGender(null);
         client.setGenderKeyValue(0);
         assertThrows(IllegalArgumentException.class, client::postLoadGender);
 

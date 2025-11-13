@@ -15,7 +15,6 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.annotation.*;
 
 import static com.jabrowa.backend.utilities.EnumUtilities.selectDefault;
 
@@ -49,7 +48,7 @@ import static com.jabrowa.backend.utilities.EnumUtilities.selectDefault;
 @MappedSuperclass
 public abstract class Person {
     @Transient
-    private Logger logger = LoggerFactory.getLogger(Person.class);
+    private Logger LOGGER = LoggerFactory.getLogger(Person.class);
 
 
     @Id
@@ -93,14 +92,17 @@ public abstract class Person {
      */
     @PostLoad
     public void postLoadGender() throws IllegalArgumentException {
-        Optional<Gender> optionalReturn = EnumUtilities.getByKeyValue(Gender.class, genderKeyValue);
-        if (optionalReturn.isEmpty()) {
-            logger.warn("Unknown gender key '{}'", genderKeyValue);
-            setGender(EnumUtilities.selectDefault(Gender.class));
-        } else {
-            this.gender = optionalReturn.get();
+        Optional<Gender> returnValue = EnumUtilities.getByKeyValue(Gender.class, (short) genderKeyValue);
+        if (returnValue.isPresent()) {
+            this.gender = returnValue.get();
         }
+        else {
+            LOGGER.warn("Unknown gender key '{}'", genderKeyValue);
+            setGender(EnumUtilities.selectDefault(Gender.class));
+        }
+
     }
+
     /**
      * <strong>prePersistGender()</strong><br><br>
      * Denormalizes the (transient) enumerator to its key-value before persisting, to make the database stores the
@@ -112,10 +114,10 @@ public abstract class Person {
     @PreUpdate
     public void prePersistGender() {
         if (gender == null || genderKeyValue <= 0) {
-            logger.warn("Gender not specified or wrong key-value. Default Gender is applied.");
+            LOGGER.warn("Gender not specified or wrong key-value. Default Gender is applied.");
             this.gender = EnumUtilities.selectDefault(Gender.class);
         }
-        this.genderKeyValue = gender.getKeyValue();
+        this.genderKeyValue = this.getGender().getNumber();
     }
 
     @Column(name = "created_at", nullable = false)

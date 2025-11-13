@@ -2,13 +2,10 @@ package com.jabrowa.backend.LadisTests;
 
 import com.jabrowa.backend.ladis.codes.*;
 import com.jabrowa.backend.ladis.entities.LadisCode;
-import com.jabrowa.backend.model.enums.Gender;
 import com.jabrowa.backend.utilities.EnumUtilities;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.annotation.Testable;
-import org.springframework.data.relational.core.sql.When;
 
-import javax.swing.text.Utilities;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +22,8 @@ public class LadisCodeTests {
         THEN    an IllegalArgumentException is thrown.
          */
         assertThrows(IllegalArgumentException.class, () -> {
-            LadisCode ladisCode = new LadisCode(null, 0, null, false, false);
+            LadisCode ladisCode = new LadisCode(null, (short) 0, null, null,
+                    false, false);
         });
 
         /*
@@ -40,6 +38,7 @@ public class LadisCodeTests {
                     LivingSituation.KIND_MEEROUDER.name(),
                     LivingSituation.KIND_MEEROUDER.getNumber(),
                     null,
+                    LivingSituation.KIND_MEEROUDER.getDisplay(),
                     LivingSituation.KIND_MEEROUDER.isActive(),
                     LivingSituation.KIND_MEEROUDER.isDefault());
             });
@@ -48,6 +47,7 @@ public class LadisCodeTests {
             LadisCode ladisCode = new LadisCode(
                     LivingSituation.KIND_MEEROUDER.name(),
                     LivingSituation.KIND_MEEROUDER.getNumber(),
+                    LivingSituation.KIND_MEEROUDER.getCode(),
                     "",
                     LivingSituation.KIND_MEEROUDER.isActive(),
                     LivingSituation.KIND_MEEROUDER.isDefault());
@@ -58,6 +58,7 @@ public class LadisCodeTests {
                     "   ",
                     LivingSituation.KIND_MEEROUDER.getNumber(),
                     LivingSituation.KIND_MEEROUDER.getDisplay(),
+                    LivingSituation.KIND_MEEROUDER.getCode(),
                     LivingSituation.KIND_MEEROUDER.isActive(),
                     LivingSituation.KIND_MEEROUDER.isDefault());
             });
@@ -71,6 +72,7 @@ public class LadisCodeTests {
                     LivingSituation.KIND_MEEROUDER.name(),
                     LivingSituation.KIND_MEEROUDER.getNumber(),
                     LivingSituation.KIND_MEEROUDER.getDisplay(),
+                    LivingSituation.KIND_MEEROUDER.getCode(),
                     LivingSituation.KIND_MEEROUDER.isActive(),
                     LivingSituation.KIND_MEEROUDER.isDefault());
 
@@ -95,6 +97,7 @@ public class LadisCodeTests {
         LadisCode ladisCode = addictionDuration.createLadisCodeFromEnum();
 
         assertEquals(addictionDuration.getNumber(), ladisCode.number());
+        assertEquals(addictionDuration.getCode(), ladisCode.code());
         assertEquals(addictionDuration.getDisplay(), ladisCode.display());
         assertEquals(addictionDuration.isActive(), ladisCode.isActive());
         assertEquals(addictionDuration.isDefault(), ladisCode.isDefault());
@@ -115,15 +118,16 @@ public class LadisCodeTests {
          */
         AddictionDuration addictionDuration = null;
         assertNull(addictionDuration);
-        assertEquals(9, EnumUtilities.selectDefault(AddictionDuration.class).getNumber());
+        assertEquals((short) 9, EnumUtilities.selectDefault(AddictionDuration.class).getNumber());
         addictionDuration = AddictionDuration.J5TM10;
         assertNotNull(addictionDuration);
+        assertTrue(EnumUtilities.getByKeyValue(AddictionDuration.class, (short) 5).isPresent());
         assertNotEquals(addictionDuration.getNumber(),
-                EnumUtilities.getByKeyValue(AddictionDuration.class, 5).getNumber());
+                EnumUtilities.getByKeyValue(AddictionDuration.class, (short) 5).get().getNumber());
 
         GamblingLocation gamblingLocation = null;
         assertNull(gamblingLocation);
-        assertEquals(9, EnumUtilities.selectDefault(GamblingLocation.class).getNumber());
+        assertEquals((short) 9, EnumUtilities.selectDefault(GamblingLocation.class).getNumber());
         gamblingLocation = GamblingLocation.AMUSEMENTSHAL;
         assertNotNull(gamblingLocation);
         assertNotEquals(gamblingLocation.getNumber(),
@@ -131,7 +135,7 @@ public class LadisCodeTests {
 
         Education education = null;
         assertNull(education);
-        assertEquals(99, EnumUtilities.selectDefault(Education.class).getNumber());
+        assertEquals((short) 99, EnumUtilities.selectDefault(Education.class).getNumber());
         education = Education.MBO34_HAVO_VWO;
         assertNotNull(education);
         assertNotEquals(addictionDuration.getNumber(),

@@ -28,14 +28,14 @@ public enum Gender implements SelectableCode<Short> {
     NOT_DETERMINED((short) 5, "N", "Niet vastgesteld", true,  false),
     NOT_SPECIFIED ((short) 6, "X", "Niet gespecificeerd", true,  true);
 
-    private final Short keyValue;
+    private final Short number;
     private final String code;
     private final String display;
     private final boolean isActive;
     private final boolean isDefault;
 
-    Gender(Short keyValue, String code, String display, boolean isActive, boolean isDefault) {
-        this.keyValue = keyValue;
+    Gender(short number, String code, String display, boolean isActive, boolean isDefault) {
+        this.number = number;
         this.code = code;
         this.display = display;
         this.isActive = isActive;
@@ -43,8 +43,8 @@ public enum Gender implements SelectableCode<Short> {
     }
 
     @Override
-    public Short getKeyValue() {
-        return keyValue;
+    public short getNumber() {
+        return number;
     }
 
     /**
@@ -66,7 +66,7 @@ public enum Gender implements SelectableCode<Short> {
      */
     public String toNiceString() {
         return "\nEnumerator: " + this.getClass().getSimpleName() + "\n" +
-                "\tIdentificatie:   " + this.getKeyValue() + "\n" +
+                "\tIdentificatie:   " + this.getNumber() + "\n" +
                 "\tNaam:            " + this.name() + "\n" +
                 "\tCode:            " + this.getCode() + "\n" +
                 "\tOmschrijving:    " + (this.getDisplay() == null ? "" : this.getDisplay()) + "\n" +
