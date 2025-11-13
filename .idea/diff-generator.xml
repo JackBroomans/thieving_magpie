@@ -4,5 +4,7 @@
     <option name="snapshotDb" value="false" />
     <option name="snapshotDbValue" value="5a012cc9-9d0a-4b35-bc30-77989f23d895__postgres_thieving" />
     <option name="snapshotModelValue" value="backend:backend" />
+    <option name="sourceModelValue" value="backend:entityManagerFactory" />
+    <option name="targetDbValue" value="16247ecf-df90-42fc-b74a-5bb798c3d74a__postgres_annoying_raven" />
   </component>
 </project>

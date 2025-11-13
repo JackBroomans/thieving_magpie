@@ -41,7 +41,7 @@ public class StringUtilitiesTests {
         AND     the parameter doesn't contain any diacritics,
         THEN    the original string (parameter) is returned.
          */
-        assertEquals("P", StringUtilities.normalizeString("Donald Duck"));
+        assertEquals("Donald Duck", StringUtilities.normalizeString("Donald Duck"));
 
         /*
         WHEN    the 'Normalize String' utility method is called
@@ -50,10 +50,5 @@ public class StringUtilitiesTests {
          */
         assertEquals("Gosibucuk Alaeror Eadne zici fosutortok", StringUtilities.normalizeString(
                 "Ğöşibuçük Ålærør Ěádně žiči fősütörtök"));
-
-        /*
-        Log 'Test completed'
-         */
-        logger.info("Completed: testNormalize()\n");
     }
 }

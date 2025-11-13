@@ -19,26 +19,25 @@ import lombok.Getter;
  * </ul>
  */
 @Getter
-public enum PreferredNameUses implements SelectableCode {
-    GIVEN_NAME_ONLY ("GIV", "Alleen geboortenaam", true, true),
-    FAMILY_NAME_AND_GIVEN_NAME ("FNG", "Naam partner gevolgd door geboortenaam", true, false),
-    GIVEN_NAME_AND_FAMILY_NAME("GNF", "Geboortenaam gevolgd door naam partner", true, false),
-    FAMILY_NAME_ONLY("FML", "Alleen naam partner", true, false);
+public enum PreferredNameUses implements SelectableCode<Short> {
+    GIVEN_NAME_ONLY ((short) 1, "GIV", "Alleen geboortenaam", true, true),
+    FAMILY_NAME_AND_GIVEN_NAME ((short) 2, "FNG", "Naam partner gevolgd door geboortenaam", true, false),
+    GIVEN_NAME_AND_FAMILY_NAME((short) 3, "GNF", "Geboortenaam gevolgd door naam partner", true, false),
+    FAMILY_NAME_ONLY((short) 4, "FML", "Alleen naam partner", true, false);
 
+    private final short number;
     private final String code;
     private final String display;
     private final boolean isActive;
     private final boolean isDefault;
 
-    PreferredNameUses(String code, String display, boolean isActive,  boolean isDefault) {
+    PreferredNameUses(Short number, String code, String display, boolean isActive,  boolean isDefault) {
+
+        this.number = number;
         this.code = code;
         this.display = display;
         this.isActive = isActive;
         this.isDefault = isDefault;
-    }
-
-    private void setDefaults() {
-
     }
 
     /**
@@ -57,6 +56,7 @@ public enum PreferredNameUses implements SelectableCode {
      */
     public String toNiceString() {
         return "\nEnumerator: " + this.getClass().getSimpleName() + "\n" +
+                "\tIdentificatie:   " + this.getNumber() + "\n" +
                 "\tNaam:            " + this.name() + "\n" +
                 "\tCode:            " + this.getCode() + "\n" +
                 "\tOmschrijving:    " + this.getDisplay() + "\n" +

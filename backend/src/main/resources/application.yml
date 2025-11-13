@@ -28,8 +28,8 @@ spring:
     baseline-on-migrate: true
     validate-on-migrate: true
     clean-disabled: true  # Safety: prevents accidental schema wipe
-    schemas: thieving
-    url: dbc:postgresql://localhost:5432/thieving_magpie
+    schemas: annoying_raven
+    url: jdbc:postgresql://localhost:5432/postgres
     user: postgres
     password: postgres
 

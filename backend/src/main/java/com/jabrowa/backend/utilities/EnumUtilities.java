@@ -2,8 +2,12 @@ package com.jabrowa.backend.utilities;
 
 import com.jabrowa.backend.model.interfaces.SelectableCode;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import static com.jabrowa.backend.utilities.StringUtilities.normalizeString;
 
@@ -16,6 +20,82 @@ import static com.jabrowa.backend.utilities.StringUtilities.normalizeString;
  * </ol>
  */
 public class EnumUtilities {
+    private final static Logger LOGGER = Logger.getLogger(EnumUtilities.class.getName());
+
+    /**
+     * <strong>getByKeyValue(<i>Enum<E>, int</E></i>)</strong><br><br>
+     * Searches and selects a constant based on the provided key value (attribute) in a given enumeration.
+     * @param enumClass The enumerator-class from which the constant with the provided key value must be selected.
+     * @param keyValue The key value of the constant in the enumeration to search for and select on.
+     * @return An Optional of the enumeration constant which is identified by the given key value.
+     * If no such constant, with the given key value is found, an empty Optional is returned.
+     */
+    public static <T extends Enum<T>> Optional<T> getByKeyValue(Class<T> enumClass, int keyValue) {
+        if (enumClass == null) {
+            return Optional.empty();
+        }
+        try {
+            Method getNumberMethod = enumClass.getDeclaredMethod("getNumber");
+            getNumberMethod.setAccessible(true);
+            return Arrays.stream(enumClass.getEnumConstants())
+                    .filter(e -> {
+                        try {
+                            Object value = getNumberMethod.invoke(e);
+                            if (value instanceof Number) {
+                                return ((Number) value).intValue() == keyValue;
+                            }
+                            return false;
+                        } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException ex) {
+                            LOGGER.warning(String.format
+                                    ("Key value %d not found in %s", keyValue, enumClass.getSimpleName()));
+                            return false;
+                        }
+                    })
+                    .findFirst();
+        } catch (NoSuchMethodException ex) {
+            LOGGER.severe(String.format
+                    ("Error on fetching %s with key value %d", enumClass.getSimpleName(), keyValue));
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * <strong>getByInterCode(<i>Enum<E>, String</E></i>)</strong><br><br>
+     * Searches and selects a constant based on the provided key value (attribute) in a given enumeration.
+     * @param enumClass The enumerator-class from which the constant with the provided key value must be selected.
+     * @param interCode The code of the constant in the enumeration to search for and select on.
+     * @return An Optional of the enumeration constant which is identified by the given code.
+     * If no such constant, with the given code is found, an empty Optional is returned.
+     */
+    public static <T extends Enum<T>> Optional<T> getByInterCode(Class<T> enumClass, String interCode) {
+        if (enumClass == null) {
+            return Optional.empty();
+        }
+        try {
+            Method getCodeMethod = enumClass.getDeclaredMethod("getCode");
+            getCodeMethod.setAccessible(true);
+            return Arrays.stream(enumClass.getEnumConstants())
+                    .filter(e -> {
+                        try {
+                            Object value = getCodeMethod.invoke(e);
+                            if (value instanceof String) {
+                                return value == interCode;
+                            }
+                            return false;
+                        } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException ex) {
+                            LOGGER.warning(String.format
+                                    ("Key value %s not found in %s", interCode, enumClass.getSimpleName()));
+                            return false;
+                        }
+                    })
+                    .findFirst();
+        } catch (NoSuchMethodException ex) {
+            LOGGER.severe(String.format
+                    ("Error on fetching %s with key value %s", enumClass.getSimpleName(), interCode));
+            return Optional.empty();
+        }
+    }
+
 
     /**
      * <strong>selectDefault(<i>Class</i>)</strong><br><br>
@@ -45,11 +125,12 @@ public class EnumUtilities {
                 .orElse(null);
     }
 
-    public static <T extends Enum<T> & SelectableCode> T getFromDisplay(Class<T> enumClass, String display) {
+    public static <T extends Enum<T> & SelectableCode<?>> T getFromDisplay(Class<T> enumClass, String display) {
 
         return fromDisplaySafe(enumClass, display)
                 .orElseThrow(() -> new IllegalArgumentException("No enum constant with display value: " + display));
     }
+
 
     /**
      * <strong>fromDisplaySafe(<i>Class<E>, (String)</i></strong><br><br>
@@ -61,9 +142,8 @@ public class EnumUtilities {
      * @return The enumerator item which contains the display-field with the given value.
      */
 
-    private static <E extends Enum<E> & SelectableCode>
-
-    Optional<E> fromDisplaySafe(Class<E> enumClass, String display) {
+    private static <E extends Enum<E> & SelectableCode<?>>
+        Optional<E> fromDisplaySafe(Class<E> enumClass, String display) {
 
         String normalizedInput = normalizeString(display);
         return Arrays.stream(enumClass.getEnumConstants())
@@ -71,5 +151,4 @@ public class EnumUtilities {
                 .findFirst();
 
     }
-
 }

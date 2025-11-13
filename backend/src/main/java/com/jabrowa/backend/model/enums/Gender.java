@@ -15,28 +15,36 @@ import lombok.Getter;
  *     <li><strong>INDIFFERENT</strong></li>
  *     <li><strong>NOT_DETERMINED</strong></li>
  *     <li><strong>NOT_SPECIFIED</strong></li>
- *
  * </ul>
+ * The enumerator contains the standard (mandatory) attributes to implement the required methods as prescribed in the
+ * SelectableCode interface.
  */
 @Getter
-public enum Gender implements SelectableCode {
-    MALE ("M", "Man", true, false),
-    FEMALE ("F", "Vrouw", true,  false),
-    BIPOLAIRE("B", "Bi-polair", true,  false),
-    INDIFFERENT ("I", "Onverschillig", true,  false),
-    NOT_DETERMINED("N", "Niet vastgesteld", true,  false),
-    NOT_SPECIFIED ("X", "Niet gespecificeerd", true,  true);
+public enum Gender implements SelectableCode<Short> {
+    MALE ((short) 1, "M", "Man", true, false),
+    FEMALE ((short) 2, "F", "Vrouw", true,  false),
+    BIPOLAIRE((short) 3, "B", "Bi-polair", true,  false),
+    INDIFFERENT ((short) 4, "I", "niet aangegeven", true,  false),
+    NOT_DETERMINED((short) 5, "N", "Niet vastgesteld", true,  false),
+    NOT_SPECIFIED ((short) 6, "X", "Niet gespecificeerd", true,  true);
 
+    private final Short number;
     private final String code;
     private final String display;
     private final boolean isActive;
     private final boolean isDefault;
 
-    Gender(String code, String display, boolean isActive, boolean isDefault) {
+    Gender(short number, String code, String display, boolean isActive, boolean isDefault) {
+        this.number = number;
         this.code = code;
         this.display = display;
         this.isActive = isActive;
         this.isDefault = isDefault;
+    }
+
+    @Override
+    public short getNumber() {
+        return number;
     }
 
     /**
@@ -58,6 +66,7 @@ public enum Gender implements SelectableCode {
      */
     public String toNiceString() {
         return "\nEnumerator: " + this.getClass().getSimpleName() + "\n" +
+                "\tIdentificatie:   " + this.getNumber() + "\n" +
                 "\tNaam:            " + this.name() + "\n" +
                 "\tCode:            " + this.getCode() + "\n" +
                 "\tOmschrijving:    " + (this.getDisplay() == null ? "" : this.getDisplay()) + "\n" +

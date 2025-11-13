@@ -1,26 +1,28 @@
 package com.jabrowa.backend.ladis.codes;
 
 import com.jabrowa.backend.ladis.entities.LadisCode;
+import com.jabrowa.backend.utilities.EnumUtilities;
 import lombok.Getter;
 
 
 @Getter
-
 public enum GamblingLocation {
-    ONBEKEND(9, "onbekend", true, false),
-    HOLLAND_CASINO(10, "Holland Casino", true, false),
-    AMUSEMENTSHAL(11, "Amusementshal", true, false),
-    INTERNET(12, "Internet", true, false),
-    THUIS(13, "Thuis en bij vrienden werk etc.", true, false),
-    HORECA(14, "Horeca gelegenheid", true, true);
+    ONBEKEND((short) 9, "GL-9999", "onbekend", true, true),
+    HOLLAND_CASINO((short) 10, "GL-0010", "Holland Casino", true, false),
+    AMUSEMENTSHAL((short) 11, "GL-0011", "Amusementshal", true, false),
+    INTERNET((short) 12, "GL-0012", "Internet", true, false),
+    THUIS((short) 13, "GL-0013", "Thuis en bij vrienden werk etc.", true, false),
+    HORECA((short) 14, "GL-0014", "Horeca gelegenheid", true, false);
 
-    private final int number;
+    private final short number;
+    private final String code;
     private final String display;
     private final boolean isActive;
     private final boolean isDefault;
 
-    GamblingLocation(int number, String display, boolean isActive, boolean isDefault) {
+    GamblingLocation(short number, String code, String display, boolean isActive, boolean isDefault) {
         this.number = number;
+        this.code = code;
         this.display = display;
         this.isActive = isActive;
         this.isDefault = isDefault;
@@ -29,23 +31,35 @@ public enum GamblingLocation {
     /**
      * <strong>createLadisCodeFromEnum<i>()</i></strong><br><br>
      * Creates a new instances of a Ladis-code-record, containing the attribute values of the current enum constant.
-     *
      * @return A Ladis-code-record created from the current enum constant.
      */
     public LadisCode createLadisCodeFromEnum() {
-        return new LadisCode(this.getClass().getSimpleName(), this.getNumber(), this.getDisplay(),
+        return new LadisCode(this.getClass().getSimpleName(), this.getNumber(), this.getCode(), this.getDisplay(),
                 this.isActive(), this.isDefault());
+    }
+
+    /**
+     * <strong>SelectDefault</strong>()<br><br>
+     * Selects the default marked GamblingLocation constant.
+     * @return The default marked GamblingLocation constant.
+     * If there's no constant is marked as default, <i>null</i> is returned, and when several constants are marked
+     * as default, the first marked constant is returned.
+     * @throws RuntimeException When the generic selection of the default marked constant fails due to the missing
+     *                          isDefault() argument.
+     */
+    public GamblingLocation selectDefault() throws RuntimeException {
+        return EnumUtilities.selectDefault(GamblingLocation.class);
     }
 
     /**
      * <strong>toNiceString(<i>Class, String</i>)</strong><br><br>
      * Constructs an easy readable string representation from the attributes of the current enum constant.
-     *
      * @return Returns a pretty formatted string representation of the current enum constant.
      */
     public String toNiceString() {
         return "\nEnumerator: " + this.getClass().getSimpleName() + "\n" +
-                "\tLadis code:      " + this.getNumber() + "\n" +
+                "\tLapis-nummer:    " + this.getNumber() + "\n" +
+                "\tCode:            " + this.getCode() + "\n" +
                 "\tOmschrijving:    " + this.getDisplay() + "\n" +
                 "\tActief:          " + (this.isActive() ? "ja" : "Nee") + "\n" +
                 "\tStandaard keuze: " + (this.isDefault() ? "ja" : "Nee") + "\n";

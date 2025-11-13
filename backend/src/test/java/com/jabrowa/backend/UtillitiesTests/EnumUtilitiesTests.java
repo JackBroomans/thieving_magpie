@@ -59,24 +59,56 @@ public class EnumUtilitiesTests {
         assertTrue(Gender.NOT_SPECIFIED.isDefault());
     }
 
+    @Test
+    public void EnumSelectByKeyValueTests() {
+       /*
+        WHEN    the 'selectByKey()' method from the 'EnumUtilities' class is called
+        AND     one or both the parameters equals null,
+        THEN    an empty Optional<> is returned
+         */
+        assertTrue(EnumUtilities.getByKeyValue(null, (short) 0).isEmpty());
+        assertTrue(EnumUtilities.getByKeyValue(null, (short) 6).isEmpty());
+        assertTrue(EnumUtilities.getByKeyValue(Gender.class, (short) 0).isEmpty());
+
+        /*
+        WHEN    the 'selectByKey()' method from the 'EnumUtilities' class is called
+        AND     the both enumerator-class and key value are specified
+        AND     the key value doesn't exist within the given enumerator-class,
+        THEN    an empty Optional<> is returned
+         */
+        assertTrue(EnumUtilities.getByKeyValue(Gender.class, (short) 401).isEmpty());
+
+
+        /*
+        WHEN    the 'selectByKey()' method from the 'EnumUtilities' class is called
+        AND     both enumerator-class and key value are specified
+        AND     the key value is associated with a constant of the given enumerator-class,
+        THEN    that constant is fetched, including its attributes values.
+         */
+        assertTrue(EnumUtilities.getByKeyValue(Gender.class, (short) 4).isPresent());
+        assertEquals("I", EnumUtilities.getByKeyValue(Gender.class, (short) 4).get().getCode());
+
+    }
 
     /**
      * <strong>TestEnumNoDefault</strong> - enumerator<br><br>
      * Enumerator to test an enumerator class without any of its constants set as default.
      */
     @Getter
-    protected enum TestEnumNoDefault implements SelectableCode {
-        DIKKERTJE("DIK", "Dikkertje Dap", true, false),
-        PET("PET", "Pet van de Petteflet", true, false),
-        POMPELOENTJE("POM", "Beertje Pompeloentje", true, false),
-        JIP("JIP", "Jip van Janneke", true, false);
+    protected enum TestEnumNoDefault implements SelectableCode<Short> {
+        DIKKERTJE((short) 1, "DIK", "Dikkertje Dap", true, false),
+        PET((short) 2, "PET", "Pet van de Petteflet", true, false),
+        POMPELOENTJE((short) 3, "POM", "Beertje Pompeloentje", true, false),
+        JIP((short) 4, "JIP", "Jip van Janneke", true, false);
 
+        final short number;
         final String code;
         final String display;
         final boolean isActive;
         final boolean isDefault;
 
-        TestEnumNoDefault(String code, String display, boolean isActive, boolean isDefault) {
+        TestEnumNoDefault(short number, String code, String display, boolean isActive, boolean isDefault) {
+            this.number = number;
             this.code = code;
             this.display = display;
             this.isActive = isActive;
@@ -93,18 +125,20 @@ public class EnumUtilitiesTests {
      * Enumerator to test an enumerator class with two (or more) of its constants set as default.
      */
     @Getter
-    protected enum TestEnumTwoDefaults implements SelectableCode {
-        DIKKERTJE("DIK", "Dikkertje Dap", true, false),
-        PET("PET", "Pet van de Petteflet", true, true),
-        POMPELOENTJE("POM", "Beertje Pompeloentje", true, false),
-        JIP("JIP", "Jip van Janneke", true, true);
+    protected enum TestEnumTwoDefaults implements SelectableCode<Short> {
+        DIKKERTJE((short) 1, "DIK", "Dikkertje Dap", true, false),
+        PET((short) 2, "PET", "Pet van de Petteflet", true, true),
+        POMPELOENTJE((short) 3, "POM", "Beertje Pompeloentje", true, false),
+        JIP((short) 4, "JIP", "Jip van Janneke", true, true);
 
+        final short number;
         final String code;
         final String display;
         final boolean isActive;
         final boolean isDefault;
 
-        TestEnumTwoDefaults(String code, String display, boolean isActive, boolean isDefault) {
+        TestEnumTwoDefaults(short number, String code, String display, boolean isActive, boolean isDefault) {
+            this.number = number;
             this.code = code;
             this.display = display;
             this.isActive = isActive;
