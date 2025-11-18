@@ -34,7 +34,7 @@ class EntityPersonTests {
          */
         assertFalse(client.isValidated());
         assertFalse(() -> {
-            client.prePersistGender();
+            client.prePersist();
             return client.isValidated();
         });
         assertTrue(client.getGender().isDefault());
@@ -60,7 +60,7 @@ class EntityPersonTests {
         /*
         Just an extra test to check if the gender 'M' is untouched by the 'prePersist()' method.
          */
-        client.prePersistGender();
+        client.prePersist();
         assertEquals("M", client.getGender().getCode());
 
         /*
@@ -91,7 +91,7 @@ class EntityPersonTests {
          */
         client.setGender(null);
         assertNull(client.getGender());
-        client.prePersistGender();
+        client.prePersist();
         assertNotNull(client.getGender());
         assertTrue(client.getGender().isDefault());
 
@@ -102,7 +102,7 @@ class EntityPersonTests {
          */
         client.setGender(Gender.MALE);
         assertTrue(() -> {
-            client.prePersistGender();
+            client.prePersist();
             return(client.getGender().name().equals("MALE"));
         } );
     }
@@ -117,7 +117,7 @@ class EntityPersonTests {
          */
         client.setGender(null);
         client.setGenderKeyValue((short) 0);
-        client.prePersistGender();
+        client.prePersist();
         assertTrue(client.getGender().isDefault());
         assertEquals("X", client.getGender().getCode());
 

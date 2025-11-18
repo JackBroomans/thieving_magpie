@@ -11,10 +11,7 @@ import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,8 +48,6 @@ import static com.jabrowa.backend.utilities.EnumUtilities.selectDefault;
 public abstract class Person {
     @Transient
     private Logger LOGGER = LoggerFactory.getLogger(Person.class);
-    @Transient
-    private final static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormats.DATE_TIME_WITH_SECONDS.getFormatter();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,7 +71,6 @@ public abstract class Person {
     private String suffixTitles;
     @Column(name = "preferred_name_use", nullable = false)
 
-
     @Transient
     private PreferredNameUses preferredNameUse;
     @Basic(fetch = FetchType.LAZY)
@@ -86,6 +80,28 @@ public abstract class Person {
     private Gender gender;
     @Basic(fetch = FetchType.LAZY)
     private short genderKeyValue;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
+    /* Default 'No Arguments' constructor */
+    public Person() {
+        this.preferredNameUse = selectDefault(PreferredNameUses.class);
+        this.gender = selectDefault(Gender.class);
+    }
+
+    /**
+     * <strong>isValidated<i>()</i></strong><br><br>
+     * Checks if the mandatory fields are specified.
+     * @return a boolean indicating if all the mandatory fields are specified.
+     */
+    public boolean isValidated() {
+        return givenName != null && !givenName.isEmpty() &&
+                initials != null && !initials.isEmpty() &&
+                updatedAt != null && !updatedAt.isAfter(LocalDateTime.now());
+    }
 
     /**
      * <strong>postLoad<i>()</i></strong><br><br>
@@ -100,6 +116,33 @@ public abstract class Person {
 
         this.preferredNameUse = handleEnumGeneric(PreferredNameUses.class, preferredNameUseKeyValue, "preferredNameUse");
         this.preferredNameUseKeyValue = this.preferredNameUse.getNumber();
+    }
+
+    /**
+     * <strong>prePersistGender()</strong><br><br>
+     * Mirrors the functionality of the postLoad() method, ensuring that the key value always is synchronized with
+     * the used and selected enumerator, before persisting the client.
+     * Because both enumeration constants are mandatory, a null-check on both enumerators also is performed.
+     * Because changes to the database will (or at least might) be made, the date and time is accordingly changed
+     * (and persisted).
+     * <i>This method runs automatically before a persist or update operation is initialized and carried out.</i>
+     */
+    @PrePersist
+    @PreUpdate
+    public void prePersist() {
+        // Ensure enum fields are never null
+        this.gender = ensureEnumNotNull(Gender.class, gender, "gender");
+        this.preferredNameUse = ensureEnumNotNull(PreferredNameUses.class, preferredNameUse, "preferredNameUse");
+
+        // Write the keyValue fields back to the DB fields
+        this.genderKeyValue = this.gender.getNumber();
+        this.preferredNameUseKeyValue = this.preferredNameUse.getNumber();
+
+        // Timestamps
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+        updatedAt = LocalDateTime.now();
     }
 
     /**
@@ -124,40 +167,24 @@ public abstract class Person {
     }
 
     /**
-     * <strong>prePersistGender()</strong><br><br>
-     * Denormalizes the (transient) enumerator to its key-value before persisting, to make the database stores the
-     * (compact_ key-value while the backend uses the enum.
-     * <i>This method runs automatically before persist or update operations.</i>
+     * <strong>ensureEnumNotNull(<i>Enum, keyValue, fieldName/i>)</strong><br><br>
+     * @param enumClass The enumerator class for which the key value and the (backend) used enumerator must be
+     *                  synced right after the key value is loaded from the database.
+     * @param fieldName The name of the entity property (field) that is applied by the load operation.
+     * @return An instances of the synchronized enumerator, with the fetched key value.
      */
-    @PrePersist
-    @PreUpdate
-    public void prePersistGender() {
-        if (gender == null || genderKeyValue <= 0) {
-            LOGGER.warn("Gender not specified or wrong key-value. Default Gender is applied.");
-            this.gender = EnumUtilities.selectDefault(Gender.class);
+    private <E extends Enum<E> & HasKeyValue> E ensureEnumNotNull(
+            Class<E> enumClass,
+            E value,
+            String fieldName
+    ) {
+        if (value != null) {
+            return value;
         }
-        this.genderKeyValue = this.getGender().getNumber();
-    }
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt = LocalDateTime.now();
-
-    public Person() {
-        this.preferredNameUse = selectDefault(PreferredNameUses.class);
-        this.gender = selectDefault(Gender.class);
-    }
-
-    /**
-     * <strong>isValidated<i>()</i></strong><br><br>
-     * Checks if the mandatory fields are specified.
-     * @return a boolean indicating if all the mandatory fields are specified.
-     */
-    public boolean isValidated() {
-        return givenName != null && !givenName.isEmpty() &&
-                initials != null && !initials.isEmpty() &&
-                updatedAt != null && !updatedAt.isAfter(LocalDateTime.now());
+        E defaultConstant = EnumUtilities.selectDefault(enumClass);
+        LOGGER.warn("{} was null before persist — applying default '{}'", fieldName, defaultConstant);
+        return defaultConstant;
     }
 
     /**

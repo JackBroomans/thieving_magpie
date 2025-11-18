@@ -82,10 +82,20 @@ change sequence in the enumerator.
 2. Using the name of the constant, costs a lot of (database) space and decreases the search performance, especially
 when the amount  of record raises.
 
-To avoid these drawback, the '*keyValue*' attribute is introduced, which is stored as a small-integer and is 
-independent of the ordinal order of the constants.
+To avoid these drawbacks, the '*keyValue*' (named Number) attribute is introduced, which is stored as a small-integer
+in the database and is independent of the ordinal order of the constants.
 This practice, however, needs a method which search and select the appropriate constant based on this '*keyvalue*'.
-This method is a component of the '*EnumUtilities*' class.
+This method 'getByKeyValue()' is a component of the '*EnumUtilities*' class.
+### Post load and pre-persist methodology
+The enumerators ar stored by reference with their '*key value*' (number) attributes, to realize a compact storage, 
+while the enumerators and their constants ae  used in the backend code for clarity.
+This means that both have to be synchronized always:
+1. Before persisting to the database, to avoid selecting a constant from an enumerator while the (seperated)
+   '*key values*'-field contains a previous one that will be persisted.
+2. When fetching the persisted '*key value*' from the database.
+   Synchronization is forced in both situations by the '*@PostLoad*' and '*@PrePersist*' annotations.
+> Note that these mechanisms only work when '***Entity Projection***' is applied. See
+
 # Database
 The application is build against a PostgreSQL database.
 ## Local test and development databases
