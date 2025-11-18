@@ -12,8 +12,7 @@ CREATE TABLE annoying_raven.client
     preferred_name_use   SMALLINT                    NOT NULL,
     gender_key_value     SMALLINT                    NOT NULL,
     created_at           TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    updated_at           TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    CONSTRAINT pk_client PRIMARY KEY (id)
+    updated_at           TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_client_given_name ON annoying_raven.client(family_name);

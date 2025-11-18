@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
@@ -139,9 +140,9 @@ public abstract class Person {
     }
 
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
     @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt = Instant.now();
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     public Person() {
         this.preferredNameUse = selectDefault(PreferredNameUses.class);
@@ -156,7 +157,7 @@ public abstract class Person {
     public boolean isValidated() {
         return givenName != null && !givenName.isEmpty() &&
                 initials != null && !initials.isEmpty() &&
-                updatedAt != null && !updatedAt.isAfter(Instant.now());
+                updatedAt != null && !updatedAt.isAfter(LocalDateTime.now());
     }
 
     /**
