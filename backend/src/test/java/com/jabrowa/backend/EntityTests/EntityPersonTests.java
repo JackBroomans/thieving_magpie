@@ -3,7 +3,6 @@ package com.jabrowa.backend.EntityTests;
 import com.jabrowa.backend.model.entities.Client;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 
 import com.jabrowa.backend.model.enums.Gender;
 import com.jabrowa.backend.model.enums.PreferredNameUses;
@@ -117,7 +116,7 @@ class EntityPersonTests {
          THEN    an empty Optional<> is returned
          */
         client.setGender(null);
-        client.setGenderKeyValue(0);
+        client.setGenderKeyValue((short) 0);
         client.prePersistGender();
         assertTrue(client.getGender().isDefault());
         assertEquals("X", client.getGender().getCode());
@@ -127,8 +126,8 @@ class EntityPersonTests {
          AND     the method returns no result because the key value doesn't match with a gender
          THEN    the default set gender constant is returned.
          */
-        client.setGenderKeyValue(37);
-        client.postLoadGender();
+        client.setGenderKeyValue((short) 37);
+        client.postLoad();
         assertTrue(client.getGender().isDefault());
 
          /*
@@ -138,8 +137,8 @@ class EntityPersonTests {
          THEN    the requested gender is assigned to the person property.
          */
         client.setGender(null);
-        client.setGenderKeyValue(3);
-        client.postLoadGender();
+        client.setGenderKeyValue((short) 3);
+        client.postLoad();
         assertEquals("B", client.getGender().getCode());
     }
 
@@ -153,9 +152,9 @@ class EntityPersonTests {
          THEN    the default set constant of the gender ('X') is returned.
          */
         client.setGender(null);
-        client.setGenderKeyValue(0);
+        client.setGenderKeyValue((short) 0);
         assertTrue(() -> {
-            client.postLoadGender();
+            client.postLoad();
             return client.getGender().isDefault();});
         assertEquals("X", client.getGender().getCode());
 
@@ -164,8 +163,8 @@ class EntityPersonTests {
          AND     the method returns no result because the key value doesn't match with a gender
          THEN    the default set gender constant is returned.
          */
-        client.setGenderKeyValue(37);
-        client.postLoadGender();
+        client.setGenderKeyValue((short) 37);
+        client.postLoad();
         assertTrue(client.getGender().isDefault());
 
          /*
@@ -175,8 +174,8 @@ class EntityPersonTests {
          THEN    the requested gender is assigned to the person property.
          */
         client.setGender(null);
-        client.setGenderKeyValue(3);
-        client.postLoadGender();
+        client.setGenderKeyValue((short) 3);
+        client.postLoad();
         assertEquals("B", client.getGender().getCode());
     }
 }

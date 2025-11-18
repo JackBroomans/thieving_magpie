@@ -5,7 +5,6 @@ import com.jabrowa.backend.model.interfaces.SelectableCode;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -96,7 +95,6 @@ public class EnumUtilities {
         }
     }
 
-
     /**
      * <strong>selectDefault(<i>Class</i>)</strong><br><br>
      * Returns the enum constant marked as default (isDefaultValue = true). This isDefaultValue() is part of the
@@ -125,13 +123,6 @@ public class EnumUtilities {
                 .orElse(null);
     }
 
-    public static <T extends Enum<T> & SelectableCode<?>> T getFromDisplay(Class<T> enumClass, String display) {
-
-        return fromDisplaySafe(enumClass, display)
-                .orElseThrow(() -> new IllegalArgumentException("No enum constant with display value: " + display));
-    }
-
-
     /**
      * <strong>fromDisplaySafe(<i>Class<E>, (String)</i></strong><br><br>
      * Searches for a certain display-(description) in a given enumerator.
@@ -141,7 +132,6 @@ public class EnumUtilities {
      * @param display The value of the 'display field' in the enumerator to search for.
      * @return The enumerator item which contains the display-field with the given value.
      */
-
     private static <E extends Enum<E> & SelectableCode<?>>
         Optional<E> fromDisplaySafe(Class<E> enumClass, String display) {
 
@@ -149,6 +139,5 @@ public class EnumUtilities {
         return Arrays.stream(enumClass.getEnumConstants())
                 .filter(e -> normalizeString(e.getDisplay()).equalsIgnoreCase(normalizedInput))
                 .findFirst();
-
     }
 }

@@ -1,7 +1,9 @@
 package com.jabrowa.backend.model.entities;
 
+import com.jabrowa.backend.model.enums.DateTimeFormats;
 import com.jabrowa.backend.model.enums.Gender;
 import com.jabrowa.backend.model.enums.PreferredNameUses;
+import com.jabrowa.backend.model.interfaces.HasKeyValue;
 import com.jabrowa.backend.utilities.EnumUtilities;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
@@ -10,8 +12,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,17 +46,17 @@ import static com.jabrowa.backend.utilities.EnumUtilities.selectDefault;
  */
 @Getter
 @Setter
-@Converter(autoApply = true)
 @MappedSuperclass
 public abstract class Person {
     @Transient
     private Logger LOGGER = LoggerFactory.getLogger(Person.class);
-
+    @Transient
+    private final static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormats.DATE_TIME_WITH_SECONDS.getFormatter();
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "uuid", updatable = false, nullable = false)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false, nullable = false)
+    private Long id;
     @Column(name = "given_name", nullable = false, length = 127)
     private String givenName;
     @Column(name = "prefixes_given_name", length = 63)
@@ -72,31 +74,52 @@ public abstract class Person {
     @Column(name = "suffix_titles", length = 63)
     private String suffixTitles;
     @Column(name = "preferred_name_use", nullable = false)
-    @Enumerated(EnumType.STRING)
+
+
+    @Transient
     private PreferredNameUses preferredNameUse;
-    // Todo: Add ticket for prePersist() method including unit tests
-    // Todo: Add ticket for postLoad() method including unit tests
+    @Basic(fetch = FetchType.LAZY)
+    private short preferredNameUseKeyValue;
 
     @Transient
     private Gender gender;
     @Basic(fetch = FetchType.LAZY)
-    private int genderKeyValue;
+    private short genderKeyValue;
+
     /**
-     * <strong>postLoadGender<i>()</i></strong><br><br>
-     * Normalize the database enum persistence by using the 'KeyValue' attribute, which is a smallint and save a lot
-     * of space. The postLoad annotation runs automatically, which guarantees normalization.
-     * <i>Note that the original (transient) enumeration is used only in the backend business logical.</i>
+     * <strong>postLoad<i>()</i></strong><br><br>
+     * Synchronizes the instance of the applicable enumerator, based on its key value which is fetched from
+     * the database. This synchronization is automatically performed after a database round-trip where the enumerator's
+     * key value is fetched.
      */
     @PostLoad
-    public void postLoadGender() {
-        Optional<Gender> returnValue = EnumUtilities.getByKeyValue(Gender.class, (short) genderKeyValue);
-        if (returnValue.isPresent()) {
-            this.gender = returnValue.get();
-        }
-        else {
-            LOGGER.warn("Unknown gender key '{}'", genderKeyValue);
-            setGender(EnumUtilities.selectDefault(Gender.class));
-        }
+    public void postLoad() {
+        this.gender = handleEnumGeneric(Gender.class, genderKeyValue, "gender");
+        this.genderKeyValue = this.gender.getNumber();
+
+        this.preferredNameUse = handleEnumGeneric(PreferredNameUses.class, preferredNameUseKeyValue, "preferredNameUse");
+        this.preferredNameUseKeyValue = this.preferredNameUse.getNumber();
+    }
+
+    /**
+     * <strong>handleEnumGeneric(<i>Enum, keyValue, fieldName/i>)</strong><br><br>
+     * @param enumClass The enumerator class for which the key value and the (backend) used enumerator must be
+     *                  synced right after the key value is loaded from the database.
+     * @param keyValue  The fetched (from the database) key value of the enumerator to which it applies.
+     * @param fieldName The name of the entity property (field) that is applied by the load operation.
+     * @return An instances of the synchronized enumerator, with the fetched key value.
+     */
+    private <E extends Enum<E> & HasKeyValue> E handleEnumGeneric(
+            Class<E> enumClass,
+            int keyValue,
+            String fieldName
+    ) {
+        return EnumUtilities.getByKeyValue(enumClass, (short) keyValue)
+                .orElseGet(() -> {
+                    E def = EnumUtilities.selectDefault(enumClass);
+                    LOGGER.warn("Unknown {} key '{}' — using default '{}'", fieldName, keyValue, def);
+                    return def;
+                });
     }
 
     /**
@@ -158,7 +181,9 @@ public abstract class Person {
                 "\tGeslacht:                   " +
                 (this.gender != null ? this.getGender().getCode() + " - " + this.getGender().getDisplay() : "-") +
                 "\n" +
-                "\tTijdstip aanmaken:          " + this.getCreatedAt() + "\n" +
-                "\tTijdstip laatste wijziging: " + this.getUpdatedAt();
+                "\tTijdstip aanmaken:          " + (this.getCreatedAt() != null ?
+                    DateTimeFormats.DATE_TIME_WITH_SECONDS.format(this.getCreatedAt()) : "-") + "\n" +
+                "\tTijdstip laatste wijziging: " + (this.getUpdatedAt() != null ?
+                    DateTimeFormats.DATE_TIME_WITH_SECONDS.format(this.getUpdatedAt()) : "-");
     }
 }

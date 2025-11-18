@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpbDataSourceConfig">
+    <data-source-infos>
+      <data-source-info id="16247ecf-df90-42fc-b74a-5bb798c3d74a__postgres_annoying_raven" persistence-unit-name="backend:entityManagerFactory" />
+    </data-source-infos>
+  </component>
+</project>

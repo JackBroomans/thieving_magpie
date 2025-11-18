@@ -1,5 +1,6 @@
 package com.jabrowa.backend.model.enums;
 
+import com.jabrowa.backend.model.interfaces.HasKeyValue;
 import com.jabrowa.backend.model.interfaces.SelectableCode;
 import com.jabrowa.backend.utilities.EnumUtilities;
 import lombok.Getter;
@@ -19,7 +20,7 @@ import lombok.Getter;
  * </ul>
  */
 @Getter
-public enum PreferredNameUses implements SelectableCode<Short> {
+public enum PreferredNameUses implements SelectableCode<Short>, HasKeyValue {
     GIVEN_NAME_ONLY ((short) 1, "GIV", "Alleen geboortenaam", true, true),
     FAMILY_NAME_AND_GIVEN_NAME ((short) 2, "FNG", "Naam partner gevolgd door geboortenaam", true, false),
     GIVEN_NAME_AND_FAMILY_NAME((short) 3, "GNF", "Geboortenaam gevolgd door naam partner", true, false),

@@ -1,5 +1,6 @@
 package com.jabrowa.backend.model.enums;
 
+import com.jabrowa.backend.model.interfaces.HasKeyValue;
 import com.jabrowa.backend.model.interfaces.SelectableCode;
 import com.jabrowa.backend.utilities.EnumUtilities;
 import lombok.Getter;
@@ -20,7 +21,7 @@ import lombok.Getter;
  * SelectableCode interface.
  */
 @Getter
-public enum Gender implements SelectableCode<Short> {
+public enum Gender implements SelectableCode<Short>, HasKeyValue {
     MALE ((short) 1, "M", "Man", true, false),
     FEMALE ((short) 2, "F", "Vrouw", true,  false),
     BIPOLAIRE((short) 3, "B", "Bi-polair", true,  false),
@@ -51,18 +52,15 @@ public enum Gender implements SelectableCode<Short> {
      * <strong>SelectDefault</strong>()<br><br>
      * Selects the default marked Gender constant.
      * @return The default marked Gender constant. When there's no constant is marked as default, <i>null</i> is
-     * returned, and when several constants are marked as default, the ordinal first is returned.
-     * @throws RuntimeException When the generic selection of the default marked constant fails due to the missing
-     *                          isDefault() argument.
+     * returned, and when several constants are marked as default, the first (ordinal) constant is returned.
      */
-    public Gender selectDefault() throws RuntimeException {
+    public Gender selectDefault() {
         return EnumUtilities.selectDefault(Gender.class);
     }
 
     /**
-     * <strong>toPrettyString(<i></i>)</strong><br><br>
-     *  Assembles the gender's object attributes from the current instance, and transfers them into
-     *  an easy readable format.
+     * <strong>toNiceString(<i></i>)</strong><br><br>
+     *  Assembles the gender's object attributes, and transfers them into an easy readable presentation.
      */
     public String toNiceString() {
         return "\nEnumerator: " + this.getClass().getSimpleName() + "\n" +
