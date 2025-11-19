@@ -50,12 +50,12 @@ class EntityPersonTests {
         final String INITIALS = "D.";
 
         client.setPreferredNameUse(EnumUtilities.selectDefault(PreferredNameUses.class));
-        client.setGivenName(GIVEN_NAME);
+        client.setMaidenName(GIVEN_NAME);
         client.setInitials(INITIALS);
         client.setNickname(NICKNAME);
         client.setGender(Gender.MALE);
 
-        assertEquals(GIVEN_NAME, client.getGivenName());
+        assertEquals(GIVEN_NAME, client.getMaidenName());
         assertEquals(NICKNAME, client.getNickname());
         /*
         Just an extra test to check if the gender 'M' is untouched by the 'prePersist()' method.

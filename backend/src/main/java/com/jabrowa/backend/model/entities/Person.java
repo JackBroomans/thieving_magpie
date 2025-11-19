@@ -2,6 +2,7 @@ package com.jabrowa.backend.model.entities;
 
 import com.jabrowa.backend.model.enums.DateTimeFormats;
 import com.jabrowa.backend.model.enums.Gender;
+import com.jabrowa.backend.model.enums.NameFormats;
 import com.jabrowa.backend.model.enums.PreferredNameUses;
 import com.jabrowa.backend.model.interfaces.HasKeyValue;
 import com.jabrowa.backend.utilities.EnumUtilities;
@@ -25,8 +26,8 @@ import static com.jabrowa.backend.utilities.EnumUtilities.selectDefault;
  * The properties of this class are:
  * <ul>
  *      <li><strong>id</strong> - Unique automatic created and immutable identifier of the person (UUID)</li>
- *      <li><strong>givenName</strong> - The given name (family name given at birth aka maiden name)</li>
- *      <li><strong>prefixesFamilyName</strong>- Any common prefixes belonging to the given name (e.g., "van", "de"</li>
+ *      <li><strong>maidenName</strong> - The maiden name (family name maiden at birth aka maiden name)</li>
+ *      <li><strong>prefixesFamilyName</strong>- Any common prefixes belonging to the maiden name (e.g., "van", "de"</li>
  *      <li><strong>familyName</strong> - The family name of the person. This might be the name of the partner</li>
  *      <li><strong>prefixesFamilyName</strong>- Any common prefixes belonging to the family name (e.g., "van", "de"</li>
  *      <li><strong>initials</strong> - The initials of the person. The fully specified forenames are not relevant
@@ -53,10 +54,10 @@ public abstract class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
     private Long id;
-    @Column(name = "given_name", nullable = false, length = 127)
-    private String givenName;
-    @Column(name = "prefixes_given_name", length = 63)
-    private String prefixesGivenName;
+    @Column(name = "maiden_name", nullable = false, length = 127)
+    private String maidenName;
+    @Column(name = "prefixes_maiden_name", length = 63)
+    private String prefixesMaidenName;
     @Column(name = "family_name", length = 127)
     private String familyName;
     @Column(name = "prefixes_family_name", length = 63)
@@ -98,9 +99,25 @@ public abstract class Person {
      * @return a boolean indicating if all the mandatory fields are specified.
      */
     public boolean isValidated() {
-        return givenName != null && !givenName.isEmpty() &&
+        return maidenName != null && !maidenName.isEmpty() &&
                 initials != null && !initials.isEmpty() &&
                 updatedAt != null && !updatedAt.isAfter(LocalDateTime.now());
+    }
+
+
+
+    public String format(NameFormats nameFormat) {
+        return nameFormat.format(this, true);
+    }
+
+
+    /**
+     * <strong>(<i></i>)</strong><br><br>
+     * @param nameFormat
+     * @return
+     */
+    public String format(NameFormats nameFormat, boolean includeTitles) {
+        return nameFormat.format(this, includeTitles);
     }
 
     /**
@@ -124,7 +141,9 @@ public abstract class Person {
      * the used and selected enumerator, before persisting the client.
      * Because both enumeration constants are mandatory, a null-check on both enumerators also is performed.
      * Because changes to the database will (or at least might) be made, the date and time is accordingly changed
-     * (and persisted).
+     * (and persisted).<br> <br>
+     * In a following section the check if either the family name or maiden is specified (applying both is also OK).
+     * If the check fails, then an IllegalStateException is thrown.
      * <i>This method runs automatically before a persist or update operation is initialized and carried out.</i>
      */
     @PrePersist
@@ -138,11 +157,19 @@ public abstract class Person {
         this.genderKeyValue = this.gender.getNumber();
         this.preferredNameUseKeyValue = this.preferredNameUse.getNumber();
 
-        // Timestamps
+        /* Timestamps */
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
         }
         updatedAt = LocalDateTime.now();
+
+        /* Check if either the family name or maiden is specified */
+        boolean familyValid = familyName != null && !familyName.trim().isEmpty();
+        boolean maidenValid = maidenName != null && !maidenName.trim().isEmpty();
+
+        if (!familyValid && !maidenValid) {
+            throw new IllegalStateException("Either familyName or maidenName must be provided.");
+        }
     }
 
     /**
@@ -195,7 +222,7 @@ public abstract class Person {
     public String toNiceString() {
         return "Class: " + this.getClass().getSimpleName() + "\n" +
                 "\tId:                         " + (this.id != null ? this.id.toString() : "-") + "\n" +
-                "\tGeboortenaam:               " + (this.givenName != null ? this.getGivenName() : "-") + "\n" +
+                "\tGeboortenaam:               " + (this.maidenName != null ? this.getMaidenName() : "-") + "\n" +
                 "\tFamilienaam:                " + (this.familyName != null ? this.familyName : "-") + "\n" +
                 "\tVoorvoegsels:               " +
                 (this.prefixesFamilyName != null ? this.getPrefixesFamilyName() : "-") + "\n" +

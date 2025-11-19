@@ -1,7 +1,9 @@
 package com.jabrowa.backend.EnumTests;
 
+import com.jabrowa.backend.model.entities.Client;
 import com.jabrowa.backend.model.enums.DateTimeFormats;
 import com.jabrowa.backend.model.enums.Gender;
+import com.jabrowa.backend.model.enums.NameFormats;
 import com.jabrowa.backend.model.enums.PreferredNameUses;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -15,9 +17,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RegularEnumTests {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass().getName());
 
-    // PreferredNameUses
+    /* PreferredNameUses */
     @Test
     public void PreferredNameUsesTests() {
         /*
@@ -39,10 +41,10 @@ public class RegularEnumTests {
         /*
         Log the toNiceString() method to check the format
          */
-        logger.info(preferredNameUses.toNiceString());
+        LOGGER.info(preferredNameUses.toNiceString());
     }
 
-    // Gender
+    /* Gender */
     @Test
     public void GenderTests() {
         /*
@@ -69,7 +71,7 @@ public class RegularEnumTests {
         /*
         Log the toNiceString() method to check the format
          */
-        logger.info(gender.toNiceString());
+        LOGGER.info(gender.toNiceString());
     }
 
     // DateTimeFormatters
@@ -117,5 +119,155 @@ public class RegularEnumTests {
         assertEquals(5, formatted.length());
     }
 
+    /* NameFormats */
+    @Test
+    public void  NameFormatsFormalTests() {
+
+        /*
+         FORMAL_FAMILY format with just the family name
+         */
+        Client clientPluk = new Client();
+
+        /*
+        WHEN    the family name isn't specified
+        AND     the given name isn't specified,
+        AND     the 'FORMAL_FAMILY' format is applied,
+        THEN    An empty string is returned on all formal presentations
+         */
+        assertTrue(clientPluk.format(NameFormats.FORMAL_FAMILY, false).isBlank());
+
+        /*
+        WHEN    the family name is specified, including the prefixes
+        AND     initials aren't specified
+        AND     the 'FORMAL_FAMILY' format is applied,
+        THEN    the presentation will match <prefixes> <family name>
+         */
+        clientPluk.setPrefixesFamilyName("van de");
+        clientPluk.setFamilyName("Petteflet");
+        assertEquals("van de Petteflet", clientPluk.format(NameFormats.FORMAL_FAMILY));
+        LOGGER.info("Format FORMAL_FAMILY -> '{}' <- expected.", clientPluk.format(NameFormats.FORMAL_FAMILY));
+
+        /*
+        WHEN    the family name isn't specified
+        AND     prefixes belonging to the family name are specified
+        AND     initials are specified
+        AND     the 'FORMAL_FAMILY' format is applied,
+        THEN    the presentation is an empty sting, initials and prefixes are ignored
+         */
+        clientPluk.setFamilyName(null);
+        assertTrue(clientPluk.format(NameFormats.FORMAL_FAMILY).isBlank());
+        clientPluk.setInitials("P.");
+        assertEquals("P.van de", clientPluk.getInitials() + clientPluk.getPrefixesFamilyName());
+        assertTrue(clientPluk.format(NameFormats.FORMAL_FAMILY).isBlank());
+
+        /*
+        WHEN    the family name is specified
+        AND     prefixes belonging to the family name are specified
+        AND     initials are specified,
+        AND     the 'FORMAL_FAMILY' format is applied,
+        THEN    the name is presented as '<initials> <prefixes> <family name>'
+         */
+        clientPluk.setFamilyName("Petteflet");
+        assertEquals("P. van de Petteflet", clientPluk.format(NameFormats.FORMAL_FAMILY));
+        LOGGER.info("Format FORMAL_FAMILY -> '{}' <- expected.", clientPluk.format(NameFormats.FORMAL_FAMILY));
+
+         /*
+        WHEN    the family name is specified
+        AND     prefixes belonging to the family name are specified
+        AND     initials are specified,
+        AND     the prefix titles are specified
+        AND     the 'FORMAL_FAMILY' format is applied,
+        AND     the 'include titles parameter' is not present (true by default),
+        THEN    the name is presented as '<titles> <initials> <prefixes> <family name>'
+         */
+        clientPluk.setPrefixTitles("dhr.");
+        assertEquals("dhr. P. van de Petteflet", clientPluk.format(NameFormats.FORMAL_FAMILY));
+
+         /*
+        WHEN    the family name is specified
+        AND     prefixes belonging to the family name are specified
+        AND     initials are specified,
+        AND     the prefix titles are specified
+        AND     the 'FORMAL_FAMILY' format is applied,
+        AND     the 'include titles parameter' is set to false,
+        THEN    the name is presented as '<initials> <prefixes> <family name>'
+         */
+        clientPluk.setPrefixTitles("dhr.");
+        assertEquals("P. van de Petteflet", clientPluk.format(NameFormats.FORMAL_FAMILY, false));
+
+        /*
+        FORMAL_MAIDEN format with just the maiden name
+        */
+        Client clientJanneke = new Client();
+        /*
+        WHEN    both names, family and maiden, are specified
+        AND     the 'include titles parameter' is set to true
+        AND     no titles are specified
+        AND     the 'FORMAL_MAIDEN' format is applied,
+        THEN    the family name is ignored
+        AND     <initials> <prefixes> <maiden name> is presented
+         */
+        clientJanneke.setInitials("J.");
+        clientJanneke.setFamilyName("Buurmeisje");
+        clientJanneke.setMaidenName("Jip");
+        clientJanneke.setPrefixesMaidenName("van");
+        assertEquals("J. van Jip", clientJanneke.format(NameFormats.FORMAL_MAIDEN, true));
+
+        /*
+        WHEN    both names, family and maiden, are specified
+        AND     the 'include titles parameter' is set to true
+        AND     titles are specified
+        AND     the 'FORMAL_MAIDEN' format is applied,
+        THEN    the family name is ignored
+        AND     <titles> <initials> <prefixes> <maiden name> is presented
+         */
+        clientJanneke.setPrefixTitles("mej.");
+        assertEquals("mej. J. van Jip", clientJanneke.format(NameFormats.FORMAL_MAIDEN, true));
+
+        /*
+        Formal format with first family name followed by the maiden name separated with a hyphen
+        */
+        Client clientAbel = new Client();
+        /*
+        WHEN    only the family name is specified
+        AND     the initials are specified
+        AND     titles are specified
+        AND     the 'include titles parameter' parameter not applied
+        AND     the 'FORMAL_FAMILY_MAIDEN' format is applied,
+        THEN    the family name is presented
+        AND     the titles and initials are placed before the name
+         */
+        clientAbel.setInitials("A.");
+        clientAbel.setFamilyName("Roef");
+        clientAbel.setPrefixTitles("dhr.");
+        assertEquals("dhr. A. Roef", clientAbel.format(NameFormats.FORMAL_FAMILY_MAIDEN));
+
+        /*
+        WHEN    only the maiden name is specified
+        AND     the initials are specified
+        AND     titles are specified
+        AND     the 'include titles parameter' parameter is set to false,
+        THEN    only the maiden name is applied
+        AND     the titles are ignored
+         */
+        clientAbel.setInitials("A.");
+        clientAbel.setFamilyName(null);
+        clientAbel.setMaidenName("Schmidt");
+        assertEquals("dhr. A. Schmidt", clientAbel.format(NameFormats.FORMAL_FAMILY_MAIDEN, true));
+
+        /*
+        WHEN    both names are specified
+        AND     initials are specified
+        AND     the titles are specified
+        AND     the 'include titles parameter' parameter is set to false,
+        THEN    both names are applied in the right order of; family name - maiden name
+        AND     a hyphen between the two names is added
+        AND     the initials are placed before the name while the titles are ignored
+         */
+        clientAbel.setFamilyName("Roef");
+        assertEquals("A. Roef - Schmidt",
+                clientAbel.format(NameFormats.FORMAL_FAMILY_MAIDEN, false));
+
+    }
 
 }
