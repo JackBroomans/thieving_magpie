@@ -2,8 +2,8 @@
 ## Persistence
 ### Projections
 Both common techniques of projection in the Spring Boot Framework are applied:
--. Entity projection by Hibernate JPA2 implementation, mailnly used for Inserts, Updates and Deletions
--. DTO projection by Spring Boot Data lkibrary implemenmtation, mainly used for Querying
+- Entity projection by Hibernate JPA2 implementation, mailnly used for Inserts, Updates and Deletions
+- DTO projection by Spring Boot Data lkibrary implemenmtation, mainly used for Querying
 ### Database
 During development a Dockerized Postgres database (container) is used. This means that the Docker engine must be running before the application can use this container.
 ### Database updates
