@@ -19,31 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class RegularEnumTests {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass().getName());
 
-    /* PreferredNameUses */
-    @Test
-    public void PreferredNameUsesTests() {
-        /*
-        WHEN    a constant from the 'PreferredNameUses' enumerator is instantiated
-        AND     the 'selectDefault()' method is called
-        THEN    the instantiated constant is remains the actual instance.
-        */
-        PreferredNameUses preferredNameUses = PreferredNameUses.GIVEN_NAME_AND_FAMILY_NAME;
-        assertEquals("GIVEN_NAME_ONLY", preferredNameUses.selectDefault().name());
-
-        /*
-        WHEN    a constant from the 'PreferredNameUses' enumerator is instantiated
-        AND     the default set constant is gained ad explicit assigned to that instantiated constant,
-        Then    the default set constant becomes the value of the instantiated constant. (mutable class)
-         */
-        preferredNameUses = preferredNameUses.selectDefault();
-        assertTrue(preferredNameUses.isDefault());
-
-        /*
-        Log the toNiceString() method to check the format
-         */
-        LOGGER.info(preferredNameUses.toNiceString());
-    }
-
     /* Gender */
     @Test
     public void GenderTests() {
@@ -119,10 +94,39 @@ public class RegularEnumTests {
         assertEquals(5, formatted.length());
     }
 
+    /* PreferredNameUses */
+    @Test
+    public void PreferredNameUsesTests() {
+        /*
+        WHEN    a constant from the 'PreferredNameUses' enumerator is instantiated
+        AND     the 'selectDefault()' method is called
+        THEN    the instantiated constant is remains the actual instance.
+        */
+        PreferredNameUses preferredNameUses = PreferredNameUses.GIVEN_NAME_AND_FAMILY_NAME;
+        assertEquals("GIVEN_NAME_ONLY", preferredNameUses.selectDefault().name());
+
+        /*
+        WHEN    a constant from the 'PreferredNameUses' enumerator is instantiated
+        AND     the default set constant is gained ad explicit assigned to that instantiated constant,
+        Then    the default set constant becomes the value of the instantiated constant. (mutable class)
+         */
+        preferredNameUses = preferredNameUses.selectDefault();
+        assertTrue(preferredNameUses.isDefault());
+
+        /*
+        Log the toNiceString() method to check the format
+         */
+        LOGGER.info(preferredNameUses.toNiceString());
+    }
+
     /* NameFormats */
     @Test
-    public void  NameFormatsFormalTests() {
+    public void NameFormatsInformalTests() {
 
+    }
+
+    @Test
+    public void  NameFormatsFormalTests() {
         /*
          FORMAL_FAMILY format with just the family name
          */
@@ -145,7 +149,6 @@ public class RegularEnumTests {
         clientPluk.setPrefixesFamilyName("van de");
         clientPluk.setFamilyName("Petteflet");
         assertEquals("van de Petteflet", clientPluk.format(NameFormats.FORMAL_FAMILY));
-        LOGGER.info("Format FORMAL_FAMILY -> '{}' <- expected.", clientPluk.format(NameFormats.FORMAL_FAMILY));
 
         /*
         WHEN    the family name isn't specified
@@ -169,9 +172,20 @@ public class RegularEnumTests {
          */
         clientPluk.setFamilyName("Petteflet");
         assertEquals("P. van de Petteflet", clientPluk.format(NameFormats.FORMAL_FAMILY));
-        LOGGER.info("Format FORMAL_FAMILY -> '{}' <- expected.", clientPluk.format(NameFormats.FORMAL_FAMILY));
 
-         /*
+        /*
+        WHEN    the family name is specified
+        AND     prefixes belonging to the family name are specified
+        AND     initials are specified,
+        AND     the prefix titles are specified
+        AND     the 'FORMAL_FAMILY' format is applied,
+        AND     the 'include titles parameter' is set to false,
+        THEN    the name is presented as '<initials> <prefixes> <family name>'
+         */
+        clientPluk.setPrefixTitles("dhr.");
+        assertEquals("P. van de Petteflet", clientPluk.format(NameFormats.FORMAL_FAMILY, false));
+
+        /*
         WHEN    the family name is specified
         AND     prefixes belonging to the family name are specified
         AND     initials are specified,
@@ -183,17 +197,7 @@ public class RegularEnumTests {
         clientPluk.setPrefixTitles("dhr.");
         assertEquals("dhr. P. van de Petteflet", clientPluk.format(NameFormats.FORMAL_FAMILY));
 
-         /*
-        WHEN    the family name is specified
-        AND     prefixes belonging to the family name are specified
-        AND     initials are specified,
-        AND     the prefix titles are specified
-        AND     the 'FORMAL_FAMILY' format is applied,
-        AND     the 'include titles parameter' is set to false,
-        THEN    the name is presented as '<initials> <prefixes> <family name>'
-         */
-        clientPluk.setPrefixTitles("dhr.");
-        assertEquals("P. van de Petteflet", clientPluk.format(NameFormats.FORMAL_FAMILY, false));
+        LOGGER.info("Format FORMAL_FAMILY -> '{}' <- expected.", clientPluk.format(NameFormats.FORMAL_FAMILY));
 
         /*
         FORMAL_MAIDEN format with just the maiden name
@@ -224,8 +228,10 @@ public class RegularEnumTests {
         clientJanneke.setPrefixTitles("mej.");
         assertEquals("mej. J. van Jip", clientJanneke.format(NameFormats.FORMAL_MAIDEN, true));
 
+        LOGGER.info("Format FORMAL_MAIDEN -> '{}' <- expected.", clientJanneke.format(NameFormats.FORMAL_MAIDEN));
+
         /*
-        Formal format with first family name followed by the maiden name separated with a hyphen
+        FORMAL_FAMILY_MAIDEN format with first family name followed by the maiden name separated with a hyphen
         */
         Client clientAbel = new Client();
         /*
@@ -267,6 +273,59 @@ public class RegularEnumTests {
         clientAbel.setFamilyName("Roef");
         assertEquals("A. Roef - Schmidt",
                 clientAbel.format(NameFormats.FORMAL_FAMILY_MAIDEN, false));
+
+        LOGGER.info("Format FORMAL_FAMILY_MAIDEN -> '{}' <- expected.",
+                clientAbel.format(NameFormats.FORMAL_FAMILY_MAIDEN));
+
+        /*
+        Formal format with first family name followed by the maiden name separated with a hyphen
+        */
+        Client clientBerend = new Client();
+         /*
+        WHEN    an empty client instance is tried to be formatted according the FORMAL_MAIDEN_FAMILY constant
+        THEN    the result is an empty string
+         */
+        assertTrue(clientBerend.format(NameFormats.FORMAL_MAIDEN_FAMILY).isBlank());
+        assertEquals("",  clientBerend.format(NameFormats.FORMAL_MAIDEN_FAMILY));
+
+        /*
+        WHEN    neither maiden- nor family name are specified
+        AND     the initial is specified
+        AND     the prefix of the maiden name is specified
+        AND     the format according the FORMAL_MAIDEN_FAMILY constant is requested,
+        THEN    an empty string is the result of the formatting process
+         */
+        clientBerend.setInitials("B.");
+        clientBerend.setPrefixesMaidenName("van");
+        assertTrue(clientBerend.format(NameFormats.FORMAL_MAIDEN_FAMILY).isBlank());
+        assertEquals("",  clientBerend.format(NameFormats.FORMAL_MAIDEN_FAMILY));
+
+        /*
+        WHEN    the family name is specified, but the maiden name isn't
+        AND     the initial is specified
+        AND     the prefix of the maiden name is specified
+        AND     the format according the FORMAL_MAIDEN_FAMILY constant is requested,
+        THEN    the family name is presented including the initial
+        AND     the prefix of the maiden name is ignored
+         */
+        clientBerend.setFamilyName("Botje");
+        assertEquals("B. Botje",  clientBerend.format(NameFormats.FORMAL_MAIDEN_FAMILY));
+
+        /*
+        WHEN    both maiden- and family names are specified
+        AND     the initial is specified
+        AND     the prefix of the maiden name is specified
+        AND     the title is specified,
+        THEN    the result is the presentation of both names seperated by a hyphen in the correct order
+                including prefix
+        AND      both title and initial are placed previous to the names.
+         */
+        clientBerend.setMaidenName("Zuidlaren");
+        clientBerend.setPrefixTitles("dhr.");
+        assertEquals("dhr. B. van Zuidlaren - Botje", clientBerend.format(NameFormats.FORMAL_MAIDEN_FAMILY));
+
+        LOGGER.info("Format FORMAL_MAIDEN_FAMILY -> '{}' <- expected.",
+                clientPluk.format(NameFormats.FORMAL_MAIDEN_FAMILY));
 
     }
 

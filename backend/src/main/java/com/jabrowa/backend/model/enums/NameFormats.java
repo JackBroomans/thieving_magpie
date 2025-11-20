@@ -9,30 +9,21 @@ import java.util.stream.Collectors;
 public enum NameFormats {
 
     /* Nickname, prefixes and family name */
-    INFORMAL {
-        @Override
-        public String format(Person person, boolean includeTitles) {
-            return NameFormats.join(
-                    person.getNickname()
-            );
-        }
-    },
-
     INFORMAL_FAMILY {
         @Override
-        public String format(Person person, boolean includeTitles) {
-            return NameFormats.join(
-                    person.getNickname()
+        public String formatName(Person person, boolean includeTitles) {
+            return NameFormats.joinNameComponents(
+                    person.getNickname(), person.getPrefixesFamilyName(), person.getFamilyName()
             );
         }
     },
 
-    INFORMAL_WITH_GIVEN {
+    INFORMAL_GIVEN {
         @Override
-        public String format(Person person, boolean includeTitles) {
-            return join(
+        public String formatName(Person person, boolean includeTitles) {
+            return joinNameComponents(
                     person.getNickname(),
-                    "(" + join(person.getPrefixesMaidenName(), person.getMaidenName()) + ")"
+                    "(" + joinNameComponents(person.getPrefixesMaidenName(), person.getMaidenName()) + ")"
             );
         }
     },
@@ -40,39 +31,52 @@ public enum NameFormats {
     /* Titles, Initials, Prefixes family name, Family Name */
     FORMAL_FAMILY {
         @Override
-        public String format(Person person, boolean includeTitles) {
-            return join(
+        public String formatName(Person person, boolean includeTitles) {
+            return joinNameComponents(
                     includeTitles && (person.getFamilyName() != null || person.getMaidenName() != null) ?
                             person.getPrefixTitles() : null,
-                    person.getFamilyName() != null ? person.getInitials() : null,
-                    person.getFamilyName() != null ? person.getPrefixesFamilyName() : null, person.getFamilyName()
+
+                    joinNameComponents(
+                            person.getFamilyName() != null ? person.getInitials() : null,
+                            person.getFamilyName() != null ?
+                                    person.getPrefixesFamilyName() : null, person.getFamilyName()
+                    )
             );
         }
     },
     /* Titles, Initials, Prefixes maiden name, Maiden name */
     FORMAL_MAIDEN {
         @Override
-        public String format(Person person, boolean includeTitles) {
-            return join(
+        public String formatName(Person person, boolean includeTitles) {
+            return joinNameComponents(
                     includeTitles && (person.getFamilyName() != null || person.getMaidenName() != null) ?
                             person.getPrefixTitles() : null,
-                    person.getMaidenName() != null ? person.getInitials() : null,
-                    person.getMaidenName() != null ? person.getPrefixesMaidenName() : null, person.getMaidenName()
+
+                    joinNameComponents(
+                            person.getMaidenName() != null ? person.getInitials() : null,
+
+                            person.getMaidenName() != null ? person.getPrefixesMaidenName() : null,
+                            person.getMaidenName())
             );
         }
     },
     /* Titles, Initials, Prefixes family name, Family Name, Hyphen, Prefixes maiden name, Maiden name */
     FORMAL_FAMILY_MAIDEN {
         @Override
-        public String format(Person person, boolean includeTitles) {
-            return join(
+        public String formatName(Person person, boolean includeTitles) {
+            return joinNameComponents(
                     includeTitles && (person.getFamilyName() != null || person.getMaidenName() != null) ?
                             person.getPrefixTitles() : null,
 
-                    (person.getFamilyName() != null || person.getMaidenName() != null) ? person.getInitials() : null,
+                    joinNameComponents(
+                            person.getFamilyName() != null || person.getMaidenName() != null ?
+                                    person.getInitials() : null,
 
-                    join(person.getFamilyName() != null ? person.getPrefixesFamilyName() : null, person.getFamilyName(),
-                            (person.getFamilyName() != null && person.getMaidenName() != null) ? " - " : null,
+                            person.getFamilyName() != null ? person.getPrefixesFamilyName() : null,
+                            person.getFamilyName(),
+
+                            person.getFamilyName() != null && person.getMaidenName() != null ? " - " : null,
+
                             person.getMaidenName() != null ?
                                     person.getPrefixesMaidenName() : null, person.getMaidenName())
             );
@@ -81,15 +85,20 @@ public enum NameFormats {
     /* Titles, Initials, Prefixes maiden name, Maiden name, Hyphen, Prefixes family name, Family Name */
     FORMAL_MAIDEN_FAMILY {
         @Override
-        public String format(Person person, boolean includeTitles) {
-            return join(
+        public String formatName(Person person, boolean includeTitles) {
+            return joinNameComponents(
                     includeTitles && (person.getFamilyName() != null || person.getMaidenName() != null) ?
                             person.getPrefixTitles() : null,
 
-                    (person.getFamilyName() != null || person.getMaidenName() != null) ? person.getInitials() : null,
+                    joinNameComponents(
+                            person.getFamilyName() != null || person.getMaidenName() != null ?
+                                    person.getInitials() : null,
 
-                    join(person.getMaidenName() != null ? person.getPrefixesMaidenName() : null, person.getMaidenName(),
-                            (person.getFamilyName() != null && person.getMaidenName() != null) ? " - " : null,
+                            person.getMaidenName() != null ?
+                                    person.getPrefixesMaidenName() : null, person.getMaidenName(),
+
+                            person.getFamilyName() != null && person.getMaidenName() != null ? " - " : null,
+
                             person.getFamilyName() != null ?
                                     person.getPrefixesFamilyName() : null, person.getFamilyName())
             );
@@ -99,25 +108,39 @@ public enum NameFormats {
 
     TECHNICAL_INFORMAL {
         @Override
-        public String format(Person person, boolean includeTitles) {
-            return join(person.getInitials(), person.getFamilyName());
+        public String formatName(Person person, boolean includeTitles) {
+            return joinNameComponents(person.getInitials(), person.getFamilyName());
         }
     },
 
     TECHNICAL_INFORMAL_WITH_GIVEN {
         @Override
-        public String format(Person person, boolean includeTitles) {
-            return join(
-                    join(person.getPrefixesMaidenName(), person.getMaidenName()),
-                    "(" + join(person.getInitials(), person.getFamilyName()) + ")"
+        public String formatName(Person person, boolean includeTitles) {
+            return joinNameComponents(
+                    joinNameComponents(person.getPrefixesMaidenName(), person.getMaidenName()),
+                    "(" + joinNameComponents(person.getInitials(), person.getFamilyName()) + ")"
             );
         }
     };
 
-    public abstract String format(Person person, boolean includeTitles);
+    /**
+     * <strong>formatName(<i>Person, boolean</i>)</strong><br><br>
+     * @param person An instance of any class which has extended the Person class (e.g. client)
+     * @param includeTitles A boolean which indicates if the titles (prefixes and suffixes) are included in the
+     *                      formatted name.
+     * @return The formated string according to the given enumerator constant and the specified name components of
+     * the given class which extended Person.
+     */
+    public abstract String formatName(Person person, boolean includeTitles);
 
-    /** Helper for clean space-separated concatenation */
-    protected static String join(String... nameComponents) {
+    /**
+     * <strong>join(<i>String...</i>)</strong><br><br>
+     * Converts strings to clean space-separated concatenated ones. Removes double spaces and add single spaces between
+     * the individual name components.
+     * @param nameComponents The comma seperated components of string to compose.
+     * @return A string of all components seperated by a single space in the order where they are passed.
+     * */
+    protected static String joinNameComponents(String... nameComponents) {
         return Arrays.stream(nameComponents)
                 .filter(Objects::nonNull)
                 .map(String::trim)

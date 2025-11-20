@@ -107,7 +107,7 @@ public abstract class Person {
 
 
     public String format(NameFormats nameFormat) {
-        return nameFormat.format(this, true);
+        return nameFormat.formatName(this, true);
     }
 
 
@@ -117,7 +117,7 @@ public abstract class Person {
      * @return
      */
     public String format(NameFormats nameFormat, boolean includeTitles) {
-        return nameFormat.format(this, includeTitles);
+        return nameFormat.formatName(this, includeTitles);
     }
 
     /**
