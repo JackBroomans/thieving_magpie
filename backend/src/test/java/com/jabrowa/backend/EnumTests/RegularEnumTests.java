@@ -13,8 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RegularEnumTests {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass().getName());
@@ -121,8 +120,134 @@ public class RegularEnumTests {
 
     /* NameFormats */
     @Test
-    public void NameFormatsInformalTests() {
+    public void NameFormatsComposeNameTests() {
+        Client clientDik = new Client();
 
+        assertTrue(clientDik.format(NameFormats.INFORMAL_FAMILY_MAIDEN).isBlank());
+
+        clientDik.setNickname("Dikkertje");
+        clientDik.setPrefixTitles("dhr.");
+        clientDik.setInitials("D.");
+        clientDik.setFamilyName("Dap");
+        clientDik.setPrefixesMaidenName("van de");
+        clientDik.setMaidenName("Giraffe");
+        clientDik.setSuffixTitles("Msc");
+
+        assertNotNull(clientDik.getFamilyName());
+
+        assertEquals("Dikkertje Dap - van de Giraffe",
+                clientDik.format(NameFormats.INFORMAL_FAMILY_MAIDEN,false));
+        assertEquals("dhr. Dikkertje Dap - van de Giraffe Msc",
+                clientDik.format(NameFormats.INFORMAL_FAMILY_MAIDEN,true));
+        assertEquals("Dap, van de Giraffe D. (Dikkertje)",
+                clientDik.format(NameFormats.TECHNICAL,false));
+    }
+
+    @Test
+    public void NameFormatsInformalTests() {
+        /*
+         INFORMAL_FAMILY: [Nickname] [Prefixes family name] [Family name]
+         */
+        Client clientAbel = new Client();
+        /*
+        WHEN    nothing is specified, thus the instance itself is null
+        AND     the INFORMAL_FAMILY format of the name components is requested,
+        THEN    the result is an empty string
+         */
+        assertTrue(clientAbel.format(NameFormats.INFORMAL_FAMILY).isEmpty());
+        /*
+        WHEN    only the nickname of the family name are specified
+        AND     the INFORMAL_FAMILY format of the name components is requested,
+        THEN    the nickname is the result of the formatting
+         */
+        clientAbel.setNickname("Abeltje");
+        assertEquals("Abeltje", clientAbel.getNickname());
+        assertEquals(clientAbel.getNickname(), clientAbel.format(NameFormats.INFORMAL_FAMILY));
+        /*
+        WHEN    the nickname of the client is specified
+        AND     the maiden name of the client is specified, but not the family name
+        AND     the INFORMAL_FAMILY format of the name components is requested,
+        THEN    the result is just the nickname of the client
+        AND     the maiden name is ignored
+         */
+        clientAbel.setMaidenName("Schmidt");
+        assertEquals(clientAbel.getNickname(), clientAbel.format(NameFormats.INFORMAL_FAMILY));
+        /*
+        WHEN    the family name of the client is specified
+        AND     the maiden name is specified
+        AND     the nickname is specified
+        AND     the INFORMAL_FAMILY format of the name components is requested,
+        THEN    the result is the nickname followed by the family name
+        AND     the maiden name is ignored
+         */
+        clientAbel.setFamilyName("Roef");
+        assertEquals("Abeltje Roef", clientAbel.format(NameFormats.INFORMAL_FAMILY));
+        /*
+        WHEN    the family name of the client is specified
+        AND     the nickname is specified
+        AND     the prefix title is specified
+        AND     the 'include titles' parameter is true
+        OR      the 'include titles' parameter is not present
+        AND     the INFORMAL_FAMILY format of the name components is requested,
+        THEN    the nickname and the family name of the client will be preceded by the title
+         */
+        clientAbel.setPrefixTitles("dhr.");
+        assertEquals("dhr. Abeltje Roef", clientAbel.format(NameFormats.INFORMAL_FAMILY));
+        assertEquals("dhr. Abeltje Roef", clientAbel.format(NameFormats.INFORMAL_FAMILY, true));
+        /*
+        WHEN    the family name of the client is specified
+        AND     the nickname is specified
+        AND     the prefix title is specified
+        AND     the 'include titles' parameter is false
+        AND     the INFORMAL_FAMILY format of the name components is requested,
+        THEN    the result is the nickname followed by the family name of the client
+        AND     the titles are ignored
+         */
+        assertEquals("Abeltje Roef", clientAbel.format(NameFormats.INFORMAL_FAMILY, false));
+
+        LOGGER.info("Format INFORMAL_FAMILY -> '{}'", clientAbel.format(NameFormats.INFORMAL_FAMILY));
+
+        /*
+         INFORMAL_Maiden: [Nickname] [Prefixes maiden name] [Maiden name]
+         */
+        Client clientSebas = new Client();
+        /*
+        WHEN    the family name is specified
+        AND     the maiden name isn't specified (null)
+        AND     the nickname isn't specified (null)
+        AND     the INFORMAL_MAIDEN format of the name components is requested,
+        THEN    the result is an empty string
+         */
+        clientSebas.setFamilyName("Spin");
+        clientSebas.setPrefixesFamilyName("de");
+        assertTrue(clientSebas.format(NameFormats.INFORMAL_MAIDEN).isBlank());
+        assertEquals("", clientSebas.format(NameFormats.INFORMAL_MAIDEN));
+        /*
+        WHEN    both family- and maiden name are specified
+        AND     the initials are specified
+        AND     the nickname isn't specified
+        AND     the INFORMAL_MAIDEN format of the name components is requested,
+        THEN    the result is only the maiden name preceded by the prefixes
+        AND     both the family name and initials are ignored
+         */
+        clientSebas.setMaidenName("Web");
+        clientSebas.setPrefixesMaidenName("in 't");
+        clientSebas.setInitials("S.");
+        assertEquals("in 't Web", clientSebas.format(NameFormats.INFORMAL_MAIDEN));
+        /*
+        WHEN    both family- and maiden name are specified
+        AND     both initials and nickname are specified
+        AND     a prefix title is specified but the 'include titles' parameter is set to 'false'
+        AND     the INFORMAL_MAIDEN format of the name components is requested,
+        THEN    the result string will be the nickname, prefixes of the maiden name and maiden name itself
+        AND     al other name components (family name with prefix, initials and prefix title) are ignored
+         */
+        clientSebas.setNickname("Sebastiaan");
+        clientSebas.setPrefixTitles("dhr.");
+        assertEquals("Sebastiaan in 't Web",
+                clientSebas.format(NameFormats.INFORMAL_MAIDEN, false));
+
+        LOGGER.info("Format INFORMAL_MAIDEN -> '{}'", clientSebas.format(NameFormats.INFORMAL_MAIDEN, false));
     }
 
     @Test
@@ -131,7 +256,6 @@ public class RegularEnumTests {
          FORMAL_FAMILY format with just the family name
          */
         Client clientPluk = new Client();
-
         /*
         WHEN    the family name isn't specified
         AND     the given name isn't specified,
@@ -139,7 +263,6 @@ public class RegularEnumTests {
         THEN    An empty string is returned on all formal presentations
          */
         assertTrue(clientPluk.format(NameFormats.FORMAL_FAMILY, false).isBlank());
-
         /*
         WHEN    the family name is specified, including the prefixes
         AND     initials aren't specified
@@ -149,7 +272,6 @@ public class RegularEnumTests {
         clientPluk.setPrefixesFamilyName("van de");
         clientPluk.setFamilyName("Petteflet");
         assertEquals("van de Petteflet", clientPluk.format(NameFormats.FORMAL_FAMILY));
-
         /*
         WHEN    the family name isn't specified
         AND     prefixes belonging to the family name are specified
@@ -162,7 +284,6 @@ public class RegularEnumTests {
         clientPluk.setInitials("P.");
         assertEquals("P.van de", clientPluk.getInitials() + clientPluk.getPrefixesFamilyName());
         assertTrue(clientPluk.format(NameFormats.FORMAL_FAMILY).isBlank());
-
         /*
         WHEN    the family name is specified
         AND     prefixes belonging to the family name are specified
@@ -172,7 +293,6 @@ public class RegularEnumTests {
          */
         clientPluk.setFamilyName("Petteflet");
         assertEquals("P. van de Petteflet", clientPluk.format(NameFormats.FORMAL_FAMILY));
-
         /*
         WHEN    the family name is specified
         AND     prefixes belonging to the family name are specified
@@ -184,7 +304,6 @@ public class RegularEnumTests {
          */
         clientPluk.setPrefixTitles("dhr.");
         assertEquals("P. van de Petteflet", clientPluk.format(NameFormats.FORMAL_FAMILY, false));
-
         /*
         WHEN    the family name is specified
         AND     prefixes belonging to the family name are specified
@@ -197,7 +316,7 @@ public class RegularEnumTests {
         clientPluk.setPrefixTitles("dhr.");
         assertEquals("dhr. P. van de Petteflet", clientPluk.format(NameFormats.FORMAL_FAMILY));
 
-        LOGGER.info("Format FORMAL_FAMILY -> '{}' <- expected.", clientPluk.format(NameFormats.FORMAL_FAMILY));
+        LOGGER.info("Format FORMAL_FAMILY -> '{}'", clientPluk.format(NameFormats.FORMAL_FAMILY));
 
         /*
         FORMAL_MAIDEN format with just the maiden name
@@ -216,7 +335,6 @@ public class RegularEnumTests {
         clientJanneke.setMaidenName("Jip");
         clientJanneke.setPrefixesMaidenName("van");
         assertEquals("J. van Jip", clientJanneke.format(NameFormats.FORMAL_MAIDEN, true));
-
         /*
         WHEN    both names, family and maiden, are specified
         AND     the 'include titles parameter' is set to true
@@ -226,9 +344,10 @@ public class RegularEnumTests {
         AND     <titles> <initials> <prefixes> <maiden name> is presented
          */
         clientJanneke.setPrefixTitles("mej.");
-        assertEquals("mej. J. van Jip", clientJanneke.format(NameFormats.FORMAL_MAIDEN, true));
+        clientJanneke.setSuffixTitles("Bsc");
+        assertEquals("mej. J. van Jip Bsc", clientJanneke.format(NameFormats.FORMAL_MAIDEN, true));
 
-        LOGGER.info("Format FORMAL_MAIDEN -> '{}' <- expected.", clientJanneke.format(NameFormats.FORMAL_MAIDEN));
+        LOGGER.info("Format FORMAL_MAIDEN -> '{}'", clientJanneke.format(NameFormats.FORMAL_MAIDEN));
 
         /*
         FORMAL_FAMILY_MAIDEN format with first family name followed by the maiden name separated with a hyphen
@@ -247,7 +366,6 @@ public class RegularEnumTests {
         clientAbel.setFamilyName("Roef");
         clientAbel.setPrefixTitles("dhr.");
         assertEquals("dhr. A. Roef", clientAbel.format(NameFormats.FORMAL_FAMILY_MAIDEN));
-
         /*
         WHEN    only the maiden name is specified
         AND     the initials are specified
@@ -260,7 +378,6 @@ public class RegularEnumTests {
         clientAbel.setFamilyName(null);
         clientAbel.setMaidenName("Schmidt");
         assertEquals("dhr. A. Schmidt", clientAbel.format(NameFormats.FORMAL_FAMILY_MAIDEN, true));
-
         /*
         WHEN    both names are specified
         AND     initials are specified
@@ -274,8 +391,7 @@ public class RegularEnumTests {
         assertEquals("A. Roef - Schmidt",
                 clientAbel.format(NameFormats.FORMAL_FAMILY_MAIDEN, false));
 
-        LOGGER.info("Format FORMAL_FAMILY_MAIDEN -> '{}' <- expected.",
-                clientAbel.format(NameFormats.FORMAL_FAMILY_MAIDEN));
+        LOGGER.info("Format FORMAL_FAMILY_MAIDEN -> '{}'", clientAbel.format(NameFormats.FORMAL_FAMILY_MAIDEN));
 
         /*
         Formal format with first family name followed by the maiden name separated with a hyphen
@@ -287,7 +403,6 @@ public class RegularEnumTests {
          */
         assertTrue(clientBerend.format(NameFormats.FORMAL_MAIDEN_FAMILY).isBlank());
         assertEquals("",  clientBerend.format(NameFormats.FORMAL_MAIDEN_FAMILY));
-
         /*
         WHEN    neither maiden- nor family name are specified
         AND     the initial is specified
@@ -299,7 +414,6 @@ public class RegularEnumTests {
         clientBerend.setPrefixesMaidenName("van");
         assertTrue(clientBerend.format(NameFormats.FORMAL_MAIDEN_FAMILY).isBlank());
         assertEquals("",  clientBerend.format(NameFormats.FORMAL_MAIDEN_FAMILY));
-
         /*
         WHEN    the family name is specified, but the maiden name isn't
         AND     the initial is specified
@@ -310,7 +424,6 @@ public class RegularEnumTests {
          */
         clientBerend.setFamilyName("Botje");
         assertEquals("B. Botje",  clientBerend.format(NameFormats.FORMAL_MAIDEN_FAMILY));
-
         /*
         WHEN    both maiden- and family names are specified
         AND     the initial is specified
@@ -318,14 +431,13 @@ public class RegularEnumTests {
         AND     the title is specified,
         THEN    the result is the presentation of both names seperated by a hyphen in the correct order
                 including prefix
-        AND      both title and initial are placed previous to the names.
+        AND     both title and initial are placed previous to the names.
          */
         clientBerend.setMaidenName("Zuidlaren");
         clientBerend.setPrefixTitles("dhr.");
         assertEquals("dhr. B. van Zuidlaren - Botje", clientBerend.format(NameFormats.FORMAL_MAIDEN_FAMILY));
 
-        LOGGER.info("Format FORMAL_MAIDEN_FAMILY -> '{}' <- expected.",
-                clientPluk.format(NameFormats.FORMAL_MAIDEN_FAMILY));
+        LOGGER.info("Format FORMAL_MAIDEN_FAMILY -> '{}'", clientPluk.format(NameFormats.FORMAL_MAIDEN_FAMILY));
 
     }
 
