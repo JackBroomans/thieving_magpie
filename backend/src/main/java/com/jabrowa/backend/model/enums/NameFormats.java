@@ -22,34 +22,62 @@ import java.util.stream.Collectors;
  *     <i>[Nickname] [Prefixes family name] [Family name] [ - ] [Prefixes maiden name] [Maiden name]</i>
  *     <li><strong>INFORMAL_MAIDEN_FAMILY</strong></li>
  *     <i>[Nickname] [Prefixes maiden name] [Maiden name] [ - ] [Prefixes family name] [Family name]</i>
- *     <br>
- *     <li></li>
- *     <li></li>
- *     <li></li>
- *     <li></li>
- *     <br>
- *     <li></li>
- *     <li></li>
+ *     <li><strong>FORMAL_FAMILY</strong></li>
+ *     <i>[Titles prefix] [Initials] [Prefixes family name] [Family Name] [Titles suffix]</i>
+ *     <li><strong>FORMAL_MAIDEN</strong></li>
+ *     <i>[Titles prefix] [Initials] [Prefixes maiden name] [Maiden Name] [Titles suffix]</i>
+ *     <li>><strong>FORMAL_FAMILY_MAIDEN</strong></li>
+ *     <i>[Titles prefix] [Initials] [Prefixes family name] [Family Name] [ - ]
+ *     [Prefixes maiden name] [Maiden Name] [Titles suffix]</i>
+ *     <li>><strong>INFORMAL_MAIDEN_FAMILY</strong></li>
+ *     <i>[Titles prefix] [Initials] [Prefixes maiden name] [Maiden Name] [ - ]
+ *     [Prefixes family name] [Family Name] [Titles suffix]</i>
+ *     <li><strong>TECHNICAL</strong></li>
+ *     <i>[Family name / Maiden name] [, ] [Initials] [Prefixes family name / Prefixes maiden name] [ - ]
+ *     [Prefixes maiden name] [maiden name] [(] [Nickname] [)]</i>
  * </ol>
  * <br>
- * To construct the name presentation according to the abovementioned options (and included business rules),
- * the following (helper) methods are included in this enumerator:
+ * To construct the name presentation according to the abovementioned options (and included business rules).
+ * they are introduced to make it possible to specify and maintain the formatters (enumerated option) with just
+ * simple pre-formatted name parts. The following (helper) methods are included in this enumerator:
  * <ul>
  *     <li><strong>formatName(<i>Person, boolean</i>)</strong></li>
+ *     <i>Initiate the method 'formatName()' as integrated part of enumerator options. (like attributes)</li>
  *     <li><strong>hasFamilyName(<i>Person</i>)</strong></li>
+ *     <i>Checks if the family name property of the person is specified.</i>
  *     <li><strong>hasMaidenName(<i>Person</i>)</strong></li>
+ *     <i>Checks if the maiden name property of the person is specified.</i>
  *     <li><strong>hasSurname(<i>Person</i>)</strong></li>
+ *     <i>Checks if either the family name property  or the maiden name property of the person or both
+ *     is/are specified.</i>
  *     <li><strong>composeSurname(<i>Person</i>)</strong></li>
- *     <li><strong>primarySurname(<i>Person</i>)</strong></li>
- *     <li><strong>secondarySurname(<i>Person</i>)</strong></li>
- *     <li><strong>prefixTitlesIfAllowed(<i>Person, boolean</i>)</strong></li>
- *     <li><strong>suffixTitlesIfAllowed(<i>Person, boolean</i>)</strong></li>
+ *     <i>Composes the family name and maiden name to one in a requested order seperated by a hyphen if necessary.</i>
  *     <li><strong>familyPrefix(<i>Person</i>)</strong></li>
+ *     <i>Provides the prefixes of the family name after checking if they are applicable and specified.</i>
  *     <li><strong>maidenPrefix(<i>Person</i>)</strong></li>
- *     <li><strong>primaryPrefix(<i>Person</i>)</strong></li>
+ *     <i>Provides the prefixes of the maiden name after checking if they are applicable and specified.</i>
+ *     <li><strong>prefixTitlesIfAllowed(<i>Person, boolean</i>)</strong></li>
+ *     <i>Provides the prefixed titles if requested and specified.</i>
+ *     <li><strong>suffixTitlesIfAllowed(<i>Person, boolean</i>)</strong></li>
+ *     <i>Provides the suffixed titles if requested and specified.</i>
  *     <li><strong>initialsIfAllowed(<i>Person</i>)</strong></li>
- *     <li><strong>nicknameInParens(<i>Person</i>)</strong></strong></li>
+ *     <i>Provides the initials if required for the presentation and applicable.</i>
+ *     <li><strong>nicknameInParentheses(<i>Person</i>)</strong></strong></li>
+ *     <i>Provides if specified the nickname between parentheses.</i>
+ * </ul>
+ * <br>
+ *  The following methods are use in the technical presentation(s) only:
+ * <ul>
+ *     <li><strong>primarySurname(<i>Person</i>)</strong></li>
+ *     <i>Determines and provides the first name without the prefixes in the technical presentation.</i>
+ *     <li><strong>secondarySurname(<i>Person</i>)</strong></li>
+ *     <i>Determines and provides the second name part in the technical presentation, including the prefixes.</i>
+ *     <li><strong>primaryPrefix(<i>Person</i>)</strong></li>
+ *     <i>Provides the prefixes associated with the name which is used as first part of the technical format,
+ *     if specified.</i>
  *     <li><strong>joinNameComponents(<i>String...</i>)</strong></li>
+ *     <i>Determines and provides the prefixes associated with the name which is used as second part of the technical
+ *     format, if specified.</i>
  * </ul>
  */
 
@@ -104,7 +132,7 @@ public enum NameFormats {
             );
         }
     },
-    /* Titles, Initials, Prefixes family name, Family Name */
+    /* [Titles prefix] [Initials] [Prefixes family name] [Family Name] [Titles suffix] */
     FORMAL_FAMILY {
         @Override
         public String formatName(Person person, boolean includeTitles) {
@@ -156,7 +184,8 @@ public enum NameFormats {
     },
 
     /*
-    [Family name] [, ] [Initials] [Prefixes family name] [ - ] [Prefixes maiden name] [maiden name] [(] [Nickname] [)]
+    [Family name / Maiden name] [, ] [Initials] [Prefixes family name / Prefixes maiden name] [ - ]
+    [Prefixes maiden name] [maiden name] [(] [Nickname] [)]
     */
     TECHNICAL {
         @Override
@@ -166,13 +195,14 @@ public enum NameFormats {
                     secondarySurname(person),
                     initialsIfAllowed(person),
                     primaryPrefix(person),
-                    nicknameInParens(person)
+                    nicknameInParenthesis(person)
             );
         }
     };
 
     /**
      * <strong>formatName(<i>Person, boolean</i>)</strong><br><br>
+     * Defines the method 'formatName()' as integrated part of enumerator options. (Pretty much like attributes)
      * @param person An instance of any class which has extended the Person class (e.g. client)
      * @param includeTitles A boolean which indicates if the titles (prefixes and suffixes) are included in the
      *                      formatted name.
@@ -255,6 +285,78 @@ public enum NameFormats {
     }
 
     /**
+     * <strong>familyPrefix(<i>Person</i>)</strong><br><br>
+     * Checks if the prefixes associated with the family name are applicable and specified.
+     * Applicable means that the family name component of the given Person's instance is specified.
+     * @param person An instance of any class which has extended the Person class (e.g. client)
+     * @return The prefixes associated with the family name when specified in the given instance of the person.
+     * Returns <i>null</i> if not specified or the associated family name component is not specified.
+     */
+    private static String familyPrefix(Person person) {
+        return hasFamilyName(person) ? person.getPrefixesFamilyName() : null;
+    }
+
+    /**
+     * <strong>maidenPrefix(<i>Person</i>)</strong><br><br>
+     * Checks if the prefixes associated with the maiden name are applicable and specified.
+     * Applicable means that the maiden name component of the given Person's instance is specified.
+     * @param person An instance of any class which has extended the Person class (e.g. client)
+     * @return The prefixes associated with the maiden name when specified in the given instance of the person.
+     * Returns <i>null</i> if not specified or the associated maiden name component is not specified.
+     */
+    private static String maidenPrefix(Person person) {
+        return hasMaidenName(person) ? person.getPrefixesMaidenName() : null;
+    }
+
+    /**
+     * <strong>prefixTitlesIfAllowed(<i>Person, boolean</i>)</strong><br><br>
+     * Implementation of the rule that a title prefix is only included in the formatted name if at least one of the
+     * surname components (family- or maiden name) is specified and the inclusion is requested.
+     * @param person An instance of any class which has extended the Person class (e.g. client)
+     * @param includeTitle A boolean indicating if inclusion of the prefixed titles are requested
+     * @return The prefixed titles if they are requested and are specified, otherwise <i>null</i> is returned.
+     */
+    private static String prefixTitlesIfAllowed(Person person, boolean includeTitle) {
+        return includeTitle && hasSurname(person) ? person.getPrefixTitles() : null;
+    }
+
+    /**
+     * <strong>suffixTitlesIfAllowed(<i>Person, boolean</i>)</strong><br><br>
+     * Implementation of the rule that a title suffix is only included in the formatted name if at least one of the
+     * surname components (family- or maiden name) is specified and the inclusion is requested.
+     * @param person An instance of any class which has extended the Person class (e.g. client)
+     * @param includeTitle A boolean indicating if inclusion of the suffixed titles are requested
+     * @return The suffixed titles if they are requested and are specified, otherwise <i>null</i> is returned.
+     */
+    private static String suffixTitlesIfAllowed(Person person, boolean includeTitle) {
+        return includeTitle && hasSurname(person) ? person.getSuffixTitles() : null;
+    }
+
+    /**
+     * <strong>initialsIfAllowed(<i>Person</i>)</strong><br><br>
+     * Checks if the initials are specified and applicable. The initials are applicable when at least one of the
+     * name components of the given Person's instance (family- or maiden name) is specified.
+     * @param person An instance of any class which has extended the Person class (e.g. client)
+     * @return The specified initials, but only when at least one of the name components (family- or maiden name) is
+     * specified, otherwise, <i>null</i> is returned.
+     */
+    private static String initialsIfAllowed(Person person) {
+        return hasSurname(person) ? person.getInitials() : null;
+    }
+
+    /**
+     * <strong>nicknameInParens(<i>Person</i>)</strong><br><br>
+     * Composes the nickname within parentheses when applicable, which means when the nickname is specified.
+     * @param person An instance of any class which has extended the Person class (e.g. client)
+     * @return The nickname within parentheses. When the nickname isn't specified, <i>null</i> is returned.
+     */
+    private static String nicknameInParenthesis(Person person) {
+        if (person.getNickname() == null || person.getNickname().isBlank())
+            return null;
+        return "(" + person.getNickname().trim() + ")";
+    }
+
+    /**
      * <strong>primarySurname(<i>Person</i>)</strong><br><br>
      * Checks if one of the name components (family- or maiden name) is specified and returns one of them with the
      * family name as the primary (first) one.
@@ -292,64 +394,6 @@ public enum NameFormats {
     }
 
     /**
-     * <strong>prefixTitlesIfAllowed(<i>Person, boolean</i>)</strong><br><br>
-     * Implementation of the rule that a title prefix is only included in the formatted name if at least one of the
-     * surname components (family- or maiden name) is specified and the inclusion is requested.
-     * @param person An instance of any class which has extended the Person class (e.g. client)
-     * @param includeTitle A boolean indicating if inclusion of the prefixed titles are requested
-     * @return The prefixed titles if they are requested and are specified, otherwise <i>null</i> is returned.
-     */
-    private static String prefixTitlesIfAllowed(Person person, boolean includeTitle) {
-        return includeTitle && hasSurname(person) ? person.getPrefixTitles() : null;
-    }
-
-    /**
-     * <strong>suffixTitlesIfAllowed(<i>Person, boolean</i>)</strong><br><br>
-     * Implementation of the rule that a title suffix is only included in the formatted name if at least one of the
-     * surname components (family- or maiden name) is specified and the inclusion is requested.
-     * @param person An instance of any class which has extended the Person class (e.g. client)
-     * @param includeTitle A boolean indicating if inclusion of the suffixed titles are requested
-     * @return The suffixed titles if they are requested and are specified, otherwise <i>null</i> is returned.
-     */
-    private static String suffixTitlesIfAllowed(Person person, boolean includeTitle) {
-        return includeTitle && hasSurname(person) ? person.getSuffixTitles() : null;
-    }
-
-    /**
-     * <strong>familyPrefix(<i>Person</i>)</strong><br><br>
-     * Checks if the prefixes associated with the family name are applicable and specified.
-     * Applicable means that the family name component of the given Person's instance is specified.
-     * @param person An instance of any class which has extended the Person class (e.g. client)
-     * @return The prefixes associated with the family name when specified in the given instance of the person.
-     * Returns <i>null</i> if not specified or the associated family name component is not specified.
-     */
-    private static String familyPrefix(Person person) {
-        return hasFamilyName(person) ? person.getPrefixesFamilyName() : null;
-    }
-
-    /**
-     * <strong>maidenPrefix(<i>Person</i>)</strong><br><br>
-     * Checks if the prefixes associated with the maiden name are applicable and specified.
-     * Applicable means that the maiden name component of the given Person's instance is specified.
-     * @param person An instance of any class which has extended the Person class (e.g. client)
-     * @return The prefixes associated with the maiden name when specified in the given instance of the person.
-     * Returns <i>null</i> if not specified or the associated maiden name component is not specified.
-     */
-    private static String maidenPrefix(Person person) {
-        return hasMaidenName(person) ? person.getPrefixesMaidenName() : null;
-    }
-
-    protected static String secondaryPrefix(Person p) {
-        if (secondarySurname(p) == null)
-            return null;
-
-        if (Objects.equals(secondarySurname(p), p.getFamilyName()))
-            return p.getPrefixesFamilyName();
-        else
-            return p.getPrefixesMaidenName();
-    }
-
-    /**
      * <strong>primaryPrefix(<i>Person</i>)</strong><br><br>
      * Determines the prefix of the name component which is used as primary part of the technical formatted name.
      * @param person An instance of any class which has extended the Person class (e.g. client)
@@ -358,38 +402,14 @@ public enum NameFormats {
      */
     protected static String primaryPrefix(Person person) {
         if (hasSurname(person)) {
-            if (Objects.equals(primarySurname(person), person.getFamilyName())) {
+            if (Objects.equals(primarySurname(person), person.getFamilyName() + ", ")) {
                 return person.getPrefixesFamilyName();
             }
-            if (Objects.equals(primarySurname(person), person.getMaidenName())) {
+            if (Objects.equals(primarySurname(person), person.getMaidenName() + ", ")) {
                 return person.getPrefixesMaidenName();
             }
         }
         return null;
-    }
-
-    /**
-     * <strong>initialsIfAllowed(<i>Person</i>)</strong><br><br>
-     * Checks if the initials are specified and applicable. The initials are applicable when at least one of the
-     * name components of the given Person's instance (family- or maiden name) is specified.
-     * @param person An instance of any class which has extended the Person class (e.g. client)
-     * @return The specified initials, but only when at least one of the name components (family- or maiden name) is
-     * specified, otherwise, <i>null</i> is returned.
-     */
-    private static String initialsIfAllowed(Person person) {
-        return hasSurname(person) ? person.getInitials() : null;
-    }
-
-    /**
-     * <strong>nicknameInParens(<i>Person</i>)</strong><br><br>
-     * Composes the nickname within parentheses when applicable, which means when the nickname is specified.
-     * @param person An instance of any class which has extended the Person class (e.g. client)
-     * @return The nickname within parentheses. When the nickname isn't specified, <i>null</i> is returned.
-     */
-    private static String nicknameInParens(Person person) {
-        if (person.getNickname() == null || person.getNickname().isBlank())
-            return null;
-        return "(" + person.getNickname().trim() + ")";
     }
 
     /**

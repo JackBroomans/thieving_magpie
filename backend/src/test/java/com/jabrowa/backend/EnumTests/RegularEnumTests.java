@@ -141,6 +141,8 @@ public class RegularEnumTests {
                 clientDik.format(NameFormats.INFORMAL_FAMILY_MAIDEN,true));
         assertEquals("Dap, van de Giraffe D. (Dikkertje)",
                 clientDik.format(NameFormats.TECHNICAL,false));
+
+        LOGGER.info(clientDik.format(NameFormats.TECHNICAL,false));
     }
 
     @Test
